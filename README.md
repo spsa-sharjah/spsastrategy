@@ -7,8 +7,12 @@
 
 ## Project Structure
 - User Roles in the Project
-  - Super Admin: Managed by the development team, overseeing the system's overall functionality and user management.
+  - Super Admin: Managed by the development team, responsible for managing the system's overall functionality and user access.
   - Strategic Admin: Responsible for defining SPSA strategic goals and monitoring employee progress toward these goals.
-  - Department Manager: Oversees departmental operations and manages associated users.
-    - Section Manager: Sets goals for their respective sections within the department.
+  - Department Manager: Sets department goals based on the strategic goals, and monitor employees progress toward these goals.
+    - Section Manager: Sets section goals based on the department goals, for their respective sections within the department, and monitor employees progress toward these goals.
     - Employees: Assigned under departments, contributing to the achievement of section and departmental goals.
+
+## Questions
+- If a department includes sections, should employees be required to submit their evidence under the specific section goals, or should they have the option to submit evidence directly under the department goals?
+- 
