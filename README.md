@@ -4,7 +4,6 @@
 - This project will be an internal tool for the SPSA team, designed to help employees manage departments and section goals aligned with the defined strategic goals of SPSA.
 - The objective of this project is to evaluate whether each department and section has achieved its defined goals by tracking evidence and either accepting or rejecting it.
 
-
 ## Project Structure
 - User Roles in the Project
   - Super Admin: Managed by the development team, responsible for managing the system's overall functionality and user access.
