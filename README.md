@@ -15,4 +15,5 @@
 ## Questions
 - If a department includes sections, should employees be required to submit their evidence under the specific section goals, or should they have the option to submit evidence directly under the department goals?
 - Do goals always require a deadline?
-- I noticed a deviation; what should be the expected value for this field?
+- I noticed a reason of deviation and solution provided; which user should fill these fields?
+  
