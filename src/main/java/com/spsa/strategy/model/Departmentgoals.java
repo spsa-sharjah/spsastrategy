@@ -2,6 +2,9 @@ package com.spsa.strategy.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.spsa.strategy.config.Constants;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -20,12 +23,15 @@ public class Departmentgoals {
 	
 	private String goal;
 
+	private String goalar;
+
 	private int yearlyweight;
     
 	private Integer yearlyexpectedweight;
 
 	private String username;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date deadline;
 
 	private String status;
@@ -34,6 +40,7 @@ public class Departmentgoals {
 
 	private String solution;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date date_time;
 
 	public String getId() {
@@ -122,5 +129,13 @@ public class Departmentgoals {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getGoalar() {
+		return goalar;
+	}
+
+	public void setGoalar(String goalar) {
+		this.goalar = goalar;
 	}
 }

@@ -1,7 +1,9 @@
 package com.spsa.strategy.config;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,5 +49,19 @@ public class Utils {
         String uuid = UUID.randomUUID().toString();
         String id = key + dateTime + "-" + uuid;
         return id;
+    }
+    
+    public static Date convertStringToDate(String datestr, String format) {
+
+    	if (format == null)
+    		format = Constants.DATE_FORMAT;
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        try {
+            Date date = formatter.parse(datestr);
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

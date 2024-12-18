@@ -2,12 +2,14 @@ package com.spsa.strategy.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "goalsuserlevel")
-public class Goaluserlevel {
+@IdClass(Restrictedgoalsuserlevel.class)
+@Table(name = "restrictedgoalsuserlevel")
+public class Restrictedgoalsuserlevel {
 	@Id
 	@Size(max = 500)
 	private String goalid;
@@ -16,7 +18,7 @@ public class Goaluserlevel {
 	@Size(max = 500)
 	private String userlevelid;
 
-	public Goaluserlevel() {
+	public Restrictedgoalsuserlevel() {
 	}
 
 	public String getGoalid() {

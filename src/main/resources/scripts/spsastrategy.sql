@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS authoritygoals;
 CREATE TABLE `authoritygoals` (
   `id` VARCHAR(500) NOT NULL,
   `goal` TEXT NOT NULL,
+  `goalar` TEXT NOT NULL,
   `yearlyweight` INT,
   `yearlyexpectedweight` INT,
   `username` VARCHAR(250) NOT NULL,
@@ -23,13 +24,14 @@ CREATE TABLE `departmentgoals` (
   `id` VARCHAR(500) NOT NULL,
   `authgoalid` VARCHAR(500) NOT NULL,
   `goal` TEXT NOT NULL,
+  `goalar` TEXT NOT NULL,
   `yearlyweight` INT,
   `yearlyexpectedweight` INT,
   `username` VARCHAR(250) NOT NULL,
   `deadline` timestamp NULL,
-  `status` VARCHAR(200) NOT NULL,
-  `reason` LONGTEXT NOT NULL,
-  `solution` LONGTEXT NOT NULL,
+  `status` VARCHAR(200) NULL,
+  `reason` LONGTEXT NULL,
+  `solution` LONGTEXT NULL,
   `date_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -39,6 +41,7 @@ CREATE TABLE `sectiongoals` (
   `id` VARCHAR(500) NOT NULL,
   `depgoalid` VARCHAR(500) NOT NULL,
   `goal` TEXT NOT NULL,
+  `goalar` TEXT NOT NULL,
   `yearlyweight` INT,
   `yearlyexpectedweight` INT,
   `username` VARCHAR(250) NOT NULL,
@@ -51,8 +54,8 @@ CREATE TABLE `sectiongoals` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-DROP TABLE IF EXISTS goalsuserlevel;
-CREATE TABLE `goalsuserlevel` (
+DROP TABLE IF EXISTS restrictedgoalsuserlevel;
+CREATE TABLE `restrictedgoalsuserlevel` (
   `goalid` VARCHAR(500),
   `userlevelid` VARCHAR(500) NOT NULL,
   PRIMARY KEY (`goalid`, `userlevelid`)
@@ -128,6 +131,13 @@ ADD COLUMN `goalid` BIGINT NULL AFTER `date_time`;
 ALTER TABLE `evidence` 
 ADD COLUMN `depusername` BIGINT NULL AFTER `goalid`;
 
+INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('sectionmanager', 'sectionmanager', 'SECTION', 'MANAGER');
+INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('sectionemployee', 'sectionemployee', 'SECTION', 'EMPLOYEE');
+INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('departmentmanager', 'departmentmanager', 'DEPARTMENT', 'MANAGER');
+INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('departmentemployee', 'departmentemployee', 'DEPARTMENT', 'EMPLOYEE');
+INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('authoritymanager', 'authoritymanager', 'AUTHORITY', 'MANAGER');
+
+
 
 
 -- AUTH 
@@ -139,8 +149,27 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/authority/goal/save');
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/authority/goal/save');
 
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/authority/goal/remove');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/authority/goal/remove');
+
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/authority/goal/list', b'1');
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('manageauthoritygoals', '/strategy/api/admin/authority/goal/save', b'1', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('manageauthoritygoals', '/strategy/api/admin/authority/goal/remove', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/department/goal/list');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/department/goal/list');
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/department/goal/save');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/department/goal/save');
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/department/goal/remove');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/department/goal/remove');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/department/goal/list', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('manageauthoritygoals', '/strategy/api/admin/department/goal/save', b'1', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('manageauthoritygoals', '/strategy/api/admin/department/goal/remove', b'1');
+
 
 INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`) VALUES ('manageauthoritygoalsen', 'en', 'Authority Goals', 'manageauthoritygoals', 'fa fa-folder-o', 400, 'manageauthoritygoals', 'manageen');
 INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`) VALUES ('manageauthoritygoalsar', 'ar', 'الاهداف الاستراتيجية', 'manageauthoritygoals', 'fa fa-folder-o', 400, 'manageauthoritygoals', 'managear');

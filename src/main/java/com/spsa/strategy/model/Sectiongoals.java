@@ -20,6 +20,8 @@ public class Sectiongoals {
 	
 	private String goal;
 
+	private String goalar;
+
 	private int yearlyweight;
     
 	private Integer yearlyexpectedweight;
@@ -122,5 +124,13 @@ public class Sectiongoals {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getGoalar() {
+		return goalar;
+	}
+
+	public void setGoalar(String goalar) {
+		this.goalar = goalar;
 	}
 }

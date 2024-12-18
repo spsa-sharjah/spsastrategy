@@ -71,18 +71,26 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			Boolean descending, Integer draw, String username, String strategylevelid) {
 		try {
 
+			String getbyusername = null;
 	        Optional<Userlevel> userlevel = userlevelRepository.findById(strategylevelid);
 	        if (!userlevel.isPresent() || 
 	        		userlevel.get().getLevel() == null || 
-	        		!userlevel.get().getLevel().equals(UserLevelEnum.AUTHORITY.name()) ||
 	        		!userlevel.get().getRole().equals(UserRoleEnum.MANAGER.name()))
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("not_authorized_msg", locale), 604));
 	        
 			Page<Authoritygoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, null);
+			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername);
 		    Pageable pageable = PageRequest.of(page, size);
-		    pages = goalsRepository.findAll(spec, pageable);
+		    
+
+	        if (userlevel.isPresent() &&
+		        		userlevel.get().getLevel() != null && 
+		        		userlevel.get().getLevel().equals(UserLevelEnum.DEPARTMENT.name()) &&
+		        		userlevel.get().getRole().equals(UserRoleEnum.MANAGER.name()))
+        		pages = goalsRepository.findnonrestrictedgoals(strategylevelid, pageable);
+	        else
+	        	pages = goalsRepository.findAll(spec, pageable);
 
 			List<Authoritygoals> allusersbysearch = goalsRepository.findAll(spec);
 			long totalrows = allusersbysearch.size();
@@ -105,4 +113,14 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			generateUniqueId();
         return id;
     }
+
+	@Override
+	public ResponseEntity<?> goalremove(Locale locale, String goalid, String username, String strategylevelid) {
+        Optional<Authoritygoals> opt = goalsRepository.findById(goalid);
+		if (opt.isPresent()) {
+			goalsRepository.delete(opt.get());
+		}
+		// TODO remove all related child rows
+		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
+	}
 }

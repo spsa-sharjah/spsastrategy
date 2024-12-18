@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.spsa.strategy.config.SanitizedStringDeserializer;
+import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Authoritygoals;
 
 public class AuthoritygoalSaveRq {
@@ -15,12 +16,15 @@ public class AuthoritygoalSaveRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
     private String goal;
 
-	private Integer yearlyweight;
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String goalar;
 
-	private Integer yearlyexpectedweight;
+	private String yearlyweight;
+
+	private String yearlyexpectedweight;
 
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
-	private Date deadline;
+	private String deadline;
 
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String status;
@@ -30,9 +34,10 @@ public class AuthoritygoalSaveRq {
 		authoritygoals.setDate_time(new Date());
 		authoritygoals.setId(this.id);
 		authoritygoals.setGoal(this.goal);
-		authoritygoals.setYearlyweight(this.yearlyweight);
-		authoritygoals.setYearlyexpectedweight(this.yearlyexpectedweight);
-		authoritygoals.setDeadline(this.deadline);
+		authoritygoals.setGoalar(this.goalar);
+		authoritygoals.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
+		authoritygoals.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));
+		authoritygoals.setDeadline(Utils.convertStringToDate(this.deadline, null));
 		authoritygoals.setStatus(this.status);
 		authoritygoals.setUsername(username);
 		return authoritygoals;
@@ -54,27 +59,27 @@ public class AuthoritygoalSaveRq {
 		this.goal = goal;
 	}
 
-	public Integer getYearlyweight() {
+	public String getYearlyweight() {
 		return yearlyweight;
 	}
 
-	public void setYearlyweight(Integer yearlyweight) {
+	public void setYearlyweight(String yearlyweight) {
 		this.yearlyweight = yearlyweight;
 	}
 
-	public Integer getYearlyexpectedweight() {
+	public String getYearlyexpectedweight() {
 		return yearlyexpectedweight;
 	}
 
-	public void setYearlyexpectedweight(Integer yearlyexpectedweight) {
+	public void setYearlyexpectedweight(String yearlyexpectedweight) {
 		this.yearlyexpectedweight = yearlyexpectedweight;
 	}
 
-	public Date getDeadline() {
+	public String getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(Date deadline) {
+	public void setDeadline(String deadline) {
 		this.deadline = deadline;
 	}
 
@@ -84,5 +89,13 @@ public class AuthoritygoalSaveRq {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getGoalar() {
+		return goalar;
+	}
+
+	public void setGoalar(String goalar) {
+		this.goalar = goalar;
 	}
 }

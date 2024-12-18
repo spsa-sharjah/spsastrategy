@@ -30,6 +30,9 @@ public class AdminController {
 	@Autowired
 	private DepartmentgoalService departmentgoalService;
 
+//	@Autowired
+//	private SectiongoalService sectiongoalService;
+
 	@RequestMapping(value = "/authority/goal/list", method = RequestMethod.POST)
 	public ResponseEntity<?> authoritygoallist(HttpServletRequest request,
 								  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
@@ -52,6 +55,16 @@ public class AdminController {
 
         String strategylevelid = (String) request.getAttribute("strategylevelid");
 		return authoritygoalService.goalsave(locale, req, username, strategylevelid);
+	}
+	
+	@RequestMapping(value = "/authority/goal/remove", method = RequestMethod.POST)
+	public ResponseEntity<?> authoritygoalremove(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @RequestHeader(name = "username", required = true) String username,
+											  @RequestHeader(name = "goalid", required = true) String goalid) {
+
+        String strategylevelid = (String) request.getAttribute("strategylevelid");
+		return authoritygoalService.goalremove(locale, goalid, username, strategylevelid);
 	}
 	
 
@@ -79,5 +92,15 @@ public class AdminController {
 
         String strategylevelid = (String) request.getAttribute("strategylevelid");
 		return departmentgoalService.goalsave(locale, req, username, strategylevelid);
+	}
+	
+	@RequestMapping(value = "/department/goal/remove", method = RequestMethod.POST)
+	public ResponseEntity<?> departmentgoalremove(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @RequestHeader(name = "username", required = true) String username,
+											  @RequestHeader(name = "goalid", required = true) String goalid) {
+
+        String strategylevelid = (String) request.getAttribute("strategylevelid");
+		return departmentgoalService.goalremove(locale, goalid, username, strategylevelid);
 	}
 }

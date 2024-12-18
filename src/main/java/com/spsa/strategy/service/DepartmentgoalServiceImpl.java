@@ -104,4 +104,15 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			generateUniqueId();
         return id;
     }
+
+	@Override
+	public ResponseEntity<?> goalremove(Locale locale, String goalid, String username, String strategylevelid) {
+
+        Optional<Departmentgoals> opt = goalsRepository.findById(goalid);
+		if (opt.isPresent()) {
+			goalsRepository.delete(opt.get());
+		}
+		// TODO remove all related child rows
+		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
+	}
 }

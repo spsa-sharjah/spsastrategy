@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.spsa.strategy.model.Authoritygoals;
@@ -18,4 +20,7 @@ public interface AuthoritygoalsRepository extends JpaRepository<Authoritygoals, 
 
 	List<Authoritygoals> findAll(Specification<Authoritygoals> spec);
 
+    @Query(value = "SELECT * FROM authoritygoals a WHERE a.id NOT IN (SELECT goalid FROM restrictedgoalsuserlevel WHERE userlevelid = :userlevelid)", nativeQuery = true)
+    Page<Authoritygoals> findnonrestrictedgoals(@Param("userlevelid") String userlevelid, Pageable pageable);
+	
 }

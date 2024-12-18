@@ -14,4 +14,6 @@ public interface DepartmentgoalService {
 
 	ResponseEntity<?> goalsave(Locale locale, @Valid DepartmentgoalSaveRq req, String username, String strategylevelid);
 
+	ResponseEntity<?> goalremove(Locale locale, String goalid, String username, String strategylevelid);
+
 }
