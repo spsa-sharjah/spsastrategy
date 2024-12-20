@@ -2,6 +2,9 @@ package com.spsa.strategy.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.spsa.strategy.config.Constants;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -28,6 +31,7 @@ public class Sectiongoals {
 
 	private String username;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date deadline;
 
 	private String status;
@@ -36,6 +40,7 @@ public class Sectiongoals {
 
 	private String solution;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date date_time;
 
 	public String getId() {

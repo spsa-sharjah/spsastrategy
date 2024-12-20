@@ -16,4 +16,6 @@ public interface AuthoritygoalService {
 
 	ResponseEntity<?> goalremove(Locale locale, String goalid, String username, String strategylevelid);
 
+	ResponseEntity<?> details(Locale locale, String goalid, String username, String strategylevelid);
+
 }

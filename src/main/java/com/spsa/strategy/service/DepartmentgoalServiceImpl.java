@@ -115,4 +115,14 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 		// TODO remove all related child rows
 		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
 	}
+
+	@Override
+	public ResponseEntity<?> details(Locale locale, String goalid, String username, String strategylevelid) {
+
+        Optional<Departmentgoals> opt = goalsRepository.findById(goalid);
+		if (opt.isPresent()) {
+			return ResponseEntity.ok(opt.get());
+		}
+		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
+	}
 }
