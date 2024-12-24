@@ -17,12 +17,9 @@ import com.spsa.strategy.builder.response.DatatableResponse;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
-import com.spsa.strategy.enumeration.UserLevelEnum;
-import com.spsa.strategy.enumeration.UserRoleEnum;
 import com.spsa.strategy.model.Sectiongoals;
-import com.spsa.strategy.model.Userlevel;
+import com.spsa.strategy.model.Users;
 import com.spsa.strategy.repository.SectiongoalsRepository;
-import com.spsa.strategy.repository.UserlevelRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -36,19 +33,9 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 	
 	@Autowired
 	SectiongoalsRepository goalsRepository;
-	
-	@Autowired
-	UserlevelRepository userlevelRepository;
 
 	@Override
-	public ResponseEntity<?> goalsave(Locale locale, @Valid SectiongoalSaveRq req, String username, String strategylevelid) {
-
-        Optional<Userlevel> userlevel = userlevelRepository.findById(strategylevelid);
-        if (!userlevel.isPresent() || 
-        		userlevel.get().getLevel() == null || 
-        		userlevel.get().getLevel().equals(UserLevelEnum.SECTION.name()) ||
-        		!userlevel.get().getRole().equals(UserRoleEnum.MANAGER.name()))
-			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("not_authorized_msg", locale), 604));
+	public ResponseEntity<?> goalsave(Locale locale, @Valid SectiongoalSaveRq req, String username, Users user) {
         
 		if (req.getId() != null && !req.getId().trim().equals("")) {
 			Optional<Sectiongoals> opt = goalsRepository.findById(req.getId());
@@ -67,16 +54,8 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 
 	@Override
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
-			Boolean descending, Integer draw, String goalid, String strategylevelid) {
+			Boolean descending, Integer draw, String goalid, Users user) {
 		try {
-
-	        Optional<Userlevel> userlevel = userlevelRepository.findById(strategylevelid);
-	        if (!userlevel.isPresent() || 
-	        		userlevel.get().getLevel() == null || 
-	        		userlevel.get().getLevel().equals(UserLevelEnum.SECTION.name()) ||
-	        		!userlevel.get().getRole().equals(UserRoleEnum.MANAGER.name()))
-				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("not_authorized_msg", locale), 604));
-	        
 			Page<Sectiongoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
 			Specification<Sectiongoals> spec = JPASpecification.returnSectiongoalSpecification(search, sortcolumn, descending, goalid);
@@ -106,7 +85,7 @@ public class SectiongoalServiceImpl implements SectiongoalService {
     }
 
 	@Override
-	public ResponseEntity<?> goalremove(Locale locale, String goalid, String username, String strategylevelid) {
+	public ResponseEntity<?> goalremove(Locale locale, String goalid, String username, Users user) {
 
         Optional<Sectiongoals> opt = goalsRepository.findById(goalid);
 		if (opt.isPresent()) {
@@ -117,7 +96,7 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 	}
 
 	@Override
-	public ResponseEntity<?> details(Locale locale, String goalid, String username, String strategylevelid) {
+	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user) {
 
         Optional<Sectiongoals> opt = goalsRepository.findById(goalid);
 		if (opt.isPresent()) {

@@ -53,6 +53,8 @@ public class Utils {
     
     public static Date convertStringToDate(String datestr, String format) {
 
+    	if (datestr == null || datestr.equals(""))
+    		return null;
     	if (format == null)
     		format = Constants.DATE_FORMAT;
         SimpleDateFormat formatter = new SimpleDateFormat(format);

@@ -35,6 +35,12 @@ public class DepartmentgoalSaveRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String status;
 
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String reason;
+
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String solution;
+
 	public Departmentgoals returnDepartmentgoals(String username) {
 		Departmentgoals goal = new Departmentgoals();
 		goal.setDate_time(new Date());
@@ -47,6 +53,8 @@ public class DepartmentgoalSaveRq {
 		goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
 		goal.setStatus(this.status);
 		goal.setUsername(username);
+		goal.setReason(this.reason);
+		goal.setSolution(this.solution);
 		return goal;
 	}
 	
@@ -104,5 +112,29 @@ public class DepartmentgoalSaveRq {
 
 	public void setGoalar(String goalar) {
 		this.goalar = goalar;
+	}
+
+	public String getAuthgoalid() {
+		return authgoalid;
+	}
+
+	public void setAuthgoalid(String authgoalid) {
+		this.authgoalid = authgoalid;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
 	}
 }

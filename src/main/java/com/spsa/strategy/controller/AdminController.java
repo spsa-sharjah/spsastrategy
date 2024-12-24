@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spsa.strategy.builder.request.AuthoritygoalSaveRq;
 import com.spsa.strategy.builder.request.DepartmentgoalSaveRq;
 import com.spsa.strategy.builder.request.SectiongoalSaveRq;
+import com.spsa.strategy.model.Users;
 import com.spsa.strategy.service.AuthoritygoalService;
 import com.spsa.strategy.service.DepartmentgoalService;
 import com.spsa.strategy.service.SectiongoalService;
@@ -45,8 +46,8 @@ public class AdminController {
 								  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
 						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return authoritygoalService.list(locale, page, size, search, sortcolumn, descending, draw, null, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return authoritygoalService.list(locale, page, size, search, sortcolumn, descending, draw, null, user);
 	}
 	
 	@RequestMapping(value = "/authority/goal/save", method = RequestMethod.POST)
@@ -55,8 +56,8 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 									  		  @Valid @RequestBody AuthoritygoalSaveRq req) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return authoritygoalService.goalsave(locale, req, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return authoritygoalService.goalsave(locale, req, username, user);
 	}
 	
 	@RequestMapping(value = "/authority/goal/remove", method = RequestMethod.POST)
@@ -65,8 +66,8 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return authoritygoalService.goalremove(locale, goalid, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return authoritygoalService.goalremove(locale, goalid, username, user);
 	}
 	
 	@RequestMapping(value = "/authority/goal/details", method = RequestMethod.POST)
@@ -75,8 +76,8 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return authoritygoalService.details(locale, goalid, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return authoritygoalService.details(locale, goalid, username, user);
 	}
 
 
@@ -91,8 +92,8 @@ public class AdminController {
 						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
 						          @RequestHeader(name = "goalid", required = true) String goalid) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return departmentgoalService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return departmentgoalService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
 	}
 	
 	@RequestMapping(value = "/department/goal/save", method = RequestMethod.POST)
@@ -101,8 +102,8 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 									  		  @Valid @RequestBody DepartmentgoalSaveRq req) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return departmentgoalService.goalsave(locale, req, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return departmentgoalService.goalsave(locale, req, username, user);
 	}
 	
 	@RequestMapping(value = "/department/goal/remove", method = RequestMethod.POST)
@@ -111,8 +112,8 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return departmentgoalService.goalremove(locale, goalid, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return departmentgoalService.goalremove(locale, goalid, username, user);
 	}
 	
 	@RequestMapping(value = "/department/goal/details", method = RequestMethod.POST)
@@ -121,8 +122,8 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return departmentgoalService.details(locale, goalid, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return departmentgoalService.details(locale, goalid, username, user);
 	}
 	
 	@RequestMapping(value = "/section/goal/list", method = RequestMethod.POST)
@@ -136,8 +137,8 @@ public class AdminController {
 						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
 						          @RequestHeader(name = "goalid", required = true) String goalid) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return sectiongoalService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return sectiongoalService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
 	}
 	
 	@RequestMapping(value = "/section/goal/save", method = RequestMethod.POST)
@@ -146,8 +147,8 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 									  		  @Valid @RequestBody SectiongoalSaveRq req) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return sectiongoalService.goalsave(locale, req, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return sectiongoalService.goalsave(locale, req, username, user);
 	}
 	
 	@RequestMapping(value = "/section/goal/remove", method = RequestMethod.POST)
@@ -156,8 +157,8 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return sectiongoalService.goalremove(locale, goalid, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return sectiongoalService.goalremove(locale, goalid, username, user);
 	}
 	
 	@RequestMapping(value = "/section/goal/details", method = RequestMethod.POST)
@@ -166,7 +167,7 @@ public class AdminController {
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
-        String strategylevelid = (String) request.getAttribute("strategylevelid");
-		return sectiongoalService.details(locale, goalid, username, strategylevelid);
+        Users user = (Users) request.getAttribute("user");
+		return sectiongoalService.details(locale, goalid, username, user);
 	}
 }

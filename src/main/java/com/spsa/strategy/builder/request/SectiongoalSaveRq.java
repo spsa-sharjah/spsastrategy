@@ -35,6 +35,12 @@ public class SectiongoalSaveRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String status;
 
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String reason;
+
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String solution;
+
 	public Sectiongoals returnSectiongoals(String username) {
 		Sectiongoals goal = new Sectiongoals();
 		goal.setDate_time(new Date());
@@ -47,6 +53,8 @@ public class SectiongoalSaveRq {
 		goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
 		goal.setStatus(this.status);
 		goal.setUsername(username);
+		goal.setReason(this.reason);
+		goal.setSolution(this.solution);
 		return goal;
 	}
 	
@@ -104,5 +112,29 @@ public class SectiongoalSaveRq {
 
 	public void setGoalar(String goalar) {
 		this.goalar = goalar;
+	}
+
+	public String getDepgoalid() {
+		return depgoalid;
+	}
+
+	public void setDepgoalid(String depgoalid) {
+		this.depgoalid = depgoalid;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
 	}
 }

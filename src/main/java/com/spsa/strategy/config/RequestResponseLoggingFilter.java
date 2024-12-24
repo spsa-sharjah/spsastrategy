@@ -112,7 +112,7 @@ public class RequestResponseLoggingFilter implements Filter {
 			if (spsaauth != null && spsaauth.getBody() instanceof Users) { // success
 
 				Users user = (Users) spsaauth.getBody();
-		        req.setAttribute("strategylevelid", user.getStrategylevelid());
+		        req.setAttribute("user", user);
 		        
 				chain.doFilter(request, response);
 				System.out.println("Logging Response : " + res.getContentType());
