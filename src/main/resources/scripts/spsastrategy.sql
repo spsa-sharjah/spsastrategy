@@ -158,7 +158,7 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/authority/goal/list', b'1');
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('manageauthoritygoals', '/strategy/api/admin/authority/goal/save', b'1', b'1');
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('manageauthoritygoals', '/strategy/api/admin/authority/goal/remove', b'1');
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/authority/goal/details', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managedepartmentgoals', '/strategy/api/admin/authority/goal/details', b'1');
 
 
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/department/goal/list');
@@ -173,10 +173,10 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/department/goal/details');
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/department/goal/details');
 
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/department/goal/list', b'1');
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('manageauthoritygoals', '/strategy/api/admin/department/goal/save', b'1', b'1');
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('manageauthoritygoals', '/strategy/api/admin/department/goal/remove', b'1');
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/department/goal/details', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managedepartmentgoals', '/strategy/api/admin/department/goal/list', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('managedepartmentgoals', '/strategy/api/admin/department/goal/save', b'1', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managedepartmentgoals', '/strategy/api/admin/department/goal/remove', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/department/goal/details', b'1');
 
 
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/section/goal/list');
@@ -191,10 +191,10 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/section/goal/details');
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/section/goal/details');
 
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/section/goal/list', b'1');
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('manageauthoritygoals', '/strategy/api/admin/section/goal/save', b'1', b'1');
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('manageauthoritygoals', '/strategy/api/admin/section/goal/remove', b'1');
-INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/section/goal/details', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/list', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/save', b'1', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/remove', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/details', b'1');
 
 
 INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`) VALUES ('manageauthoritygoalsen', 'en', 'Authority Goals', 'manageauthoritygoals', 'fa fa-folder-o', 400, 'manageauthoritygoals', 'manageen');
@@ -206,4 +206,33 @@ INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('manageauthoritygoalsen
 INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('manageauthoritygoalsar', 'Admin');
 INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('manageauthoritygoalsar', 'GRCAdmin');
 
+
+
+INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managedepartmentgoalsen', 'en', 'Department Goals', 'managedepartmentgoals', 'fa fa-folder-o', 400, 'managedepartmentgoals', 'manageauthoritygoalsen', b'0');
+INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managedepartmentgoalsar', 'ar', 'أهداف القسم', 'managedepartmentgoals', 'fa fa-folder-o', 400, 'managedepartmentgoals', 'manageauthoritygoalsar', b'0');
+
+
+INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managedepartmentgoalsen', 'Admin');
+INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managedepartmentgoalsen', 'GRCAdmin');
+INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managedepartmentgoalsar', 'Admin');
+INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managedepartmentgoalsar', 'GRCAdmin');
+
+
+
+INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managesectiongoalsen', 'en', 'Section Goals', 'managesectiongoals', 'fa fa-folder-o', 400, 'managesectiongoals', 'managedepartmentgoalsen', b'0');
+INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managesectiongoalsar', 'ar', 'أهداف القسم', 'managesectiongoals', 'fa fa-folder-o', 400, 'managesectiongoals', 'managedepartmentgoalsar', b'0');
+
+
+INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managesectiongoalsen', 'Admin');
+INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managesectiongoalsen', 'GRCAdmin');
+INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managesectiongoalsar', 'Admin');
+INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managesectiongoalsar', 'GRCAdmin');
+
+
+UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete` = b'1', `isconfiguration` = b'1' WHERE (`id` = 'managedepartmentgoalsar');
+UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete` = b'1', `isconfiguration` = b'1' WHERE (`id` = 'managedepartmentgoalsen');
+UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete` = b'1', `isconfiguration` = b'1' WHERE (`id` = 'managesectiongoalsar');
+UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete` = b'1', `isconfiguration` = b'1' WHERE (`id` = 'managesectiongoalsen');
+UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete` = b'1', `isconfiguration` = b'1' WHERE (`id` = 'manageauthoritygoalsar');
+UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete` = b'1', `isconfiguration` = b'1' WHERE (`id` = 'manageauthoritygoalsen');
 
