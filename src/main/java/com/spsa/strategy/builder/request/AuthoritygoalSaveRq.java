@@ -29,18 +29,34 @@ public class AuthoritygoalSaveRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String status;
 
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String year;
+
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String quarter;
+
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String fromdate;
+
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String todate;
+
 	public Authoritygoals returnAuthoritygoals(String username) {
-		Authoritygoals authoritygoals = new Authoritygoals();
-		authoritygoals.setDate_time(new Date());
-		authoritygoals.setId(this.id);
-		authoritygoals.setGoal(this.goal);
-		authoritygoals.setGoalar(this.goalar);
-		authoritygoals.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
-		authoritygoals.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));
-		authoritygoals.setDeadline(Utils.convertStringToDate(this.deadline, null));
-		authoritygoals.setStatus(this.status);
-		authoritygoals.setUsername(username);
-		return authoritygoals;
+		Authoritygoals goal = new Authoritygoals();
+		goal.setDate_time(new Date());
+		goal.setId(this.id);
+		goal.setGoal(this.goal);
+		goal.setGoalar(this.goalar);
+		goal.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
+		goal.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));
+		goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
+		goal.setStatus(this.status);
+		goal.setUsername(username);
+		goal.setYear(this.year);
+		goal.setQuarter(this.quarter);
+		goal.setFromdate(Utils.convertStringToDate(this.fromdate, null));
+		goal.setTodate(Utils.convertStringToDate(this.todate, null));
+		return goal;
 	}
 	
 	public String getId() {
@@ -97,5 +113,37 @@ public class AuthoritygoalSaveRq {
 
 	public void setGoalar(String goalar) {
 		this.goalar = goalar;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getQuarter() {
+		return quarter;
+	}
+
+	public void setQuarter(String quarter) {
+		this.quarter = quarter;
+	}
+
+	public String getFromdate() {
+		return fromdate;
+	}
+
+	public void setFromdate(String fromdate) {
+		this.fromdate = fromdate;
+	}
+
+	public String getTodate() {
+		return todate;
+	}
+
+	public void setTodate(String todate) {
+		this.todate = todate;
 	}
 }

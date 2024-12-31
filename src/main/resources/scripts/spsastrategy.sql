@@ -137,6 +137,11 @@ INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('departmentmanag
 INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('departmentemployee', 'departmentemployee', 'DEPARTMENT', 'EMPLOYEE');
 INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('authoritymanager', 'authoritymanager', 'AUTHORITY', 'MANAGER');
 
+ALTER TABLE `authoritygoals` 
+ADD COLUMN `quarter` VARCHAR(250) NULL AFTER `goalar`,
+ADD COLUMN `fromdate` TIMESTAMP NULL AFTER `quarter`,
+ADD COLUMN `todate` TIMESTAMP NULL AFTER `fromdate`,
+ADD COLUMN `year` VARCHAR(20) NULL AFTER `todate`;
 
 
 
@@ -236,3 +241,25 @@ UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete`
 UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete` = b'1', `isconfiguration` = b'1' WHERE (`id` = 'manageauthoritygoalsar');
 UPDATE `menu` SET `isget` = b'1', `ispost` = b'1', `isupdate` = b'1', `isdelete` = b'1', `isconfiguration` = b'1' WHERE (`id` = 'manageauthoritygoalsen');
 
+
+
+
+UPDATE `menu` SET `additionalconfig` = 'Current User Access' WHERE (`id` = 'managedepartmentgoalsar');
+UPDATE `menu` SET `additionalconfig` = 'Current User Access' WHERE (`id` = 'manageauthoritygoalsen');
+UPDATE `menu` SET `additionalconfig` = 'Current User Access' WHERE (`id` = 'manageauthoritygoalsar');
+UPDATE `menu` SET `additionalconfig` = 'Current User Access' WHERE (`id` = 'managedepartmentgoalsen');
+UPDATE `menu` SET `additionalconfig` = 'Current User Access' WHERE (`id` = 'managesectiongoalsar');
+UPDATE `menu` SET `additionalconfig` = 'Current User Access' WHERE (`id` = 'managesectiongoalsen');
+
+
+UPDATE `menu` SET `showdropdownlist` = b'0' WHERE (`id` = 'manageauthoritygoalsar');
+UPDATE `menu` SET `showdropdownlist` = b'0' WHERE (`id` = 'manageauthoritygoalsen');
+UPDATE `menu` SET `showdropdownlist` = b'0' WHERE (`id` = 'managedepartmentgoalsar');
+UPDATE `menu` SET `showdropdownlist` = b'0' WHERE (`id` = 'managedepartmentgoalsen');
+UPDATE `menu` SET `showdropdownlist` = b'0' WHERE (`id` = 'managesectiongoalsen');
+UPDATE `menu` SET `showdropdownlist` = b'0' WHERE (`id` = 'managesectiongoalsar');
+
+UPDATE `menu` SET `parent_id` = 'managear' WHERE (`id` = 'managedepartmentgoalsar');
+UPDATE `menu` SET `parent_id` = 'manageen' WHERE (`id` = 'managedepartmentgoalsen');
+UPDATE `menu` SET `parent_id` = 'manageen' WHERE (`id` = 'managesectiongoalsen');
+UPDATE `menu` SET `parent_id` = 'managear' WHERE (`id` = 'managesectiongoalsar');

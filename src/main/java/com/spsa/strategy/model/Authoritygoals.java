@@ -33,6 +33,16 @@ public class Authoritygoals {
 
 	private String status;
 
+	private String year;
+
+	private String quarter;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
+	private Date fromdate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
+	private Date todate;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date date_time;
 
@@ -109,5 +119,37 @@ public class Authoritygoals {
 
 	public void setGoalar(String goalar) {
 		this.goalar = goalar;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getQuarter() {
+		return quarter;
+	}
+
+	public void setQuarter(String quarter) {
+		this.quarter = quarter;
+	}
+
+	public Date getFromdate() {
+		return fromdate;
+	}
+
+	public void setFromdate(Date fromdate) {
+		this.fromdate = fromdate;
+	}
+
+	public Date getTodate() {
+		return todate;
+	}
+
+	public void setTodate(Date todate) {
+		this.todate = todate;
 	}
 }
