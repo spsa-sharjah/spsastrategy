@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spsa.strategy.builder.request.AuthoritygoalSaveRq;
 import com.spsa.strategy.builder.request.DepartmentgoalSaveRq;
+import com.spsa.strategy.builder.request.ResrictedGoalRolesRq;
 import com.spsa.strategy.builder.request.SectiongoalSaveRq;
 import com.spsa.strategy.model.Users;
+import com.spsa.strategy.service.AuthService;
 import com.spsa.strategy.service.AuthoritygoalService;
 import com.spsa.strategy.service.DepartmentgoalService;
 import com.spsa.strategy.service.SectiongoalService;
@@ -35,6 +37,9 @@ public class AdminController {
 
 	@Autowired
 	private SectiongoalService sectiongoalService;
+
+	@Autowired
+	private AuthService authService;
 
 	@RequestMapping(value = "/authority/goal/list", method = RequestMethod.POST)
 	public ResponseEntity<?> authoritygoallist(HttpServletRequest request,
@@ -169,5 +174,16 @@ public class AdminController {
 
         Users user = (Users) request.getAttribute("user");
 		return sectiongoalService.details(locale, goalid, username, user);
+	}
+
+	
+	@RequestMapping(value = "/role/goals/access/save", method = RequestMethod.POST)
+	public ResponseEntity<?> rolegoalsaccesssave(HttpServletRequest request,
+												 @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+												 @RequestHeader(name = "username", required = true) String username,
+												 @Valid @RequestBody ResrictedGoalRolesRq req) {
+
+        Users user = (Users) request.getAttribute("user");
+		return authService.rolegoalsaccesssave(locale, user, req);
 	}
 }

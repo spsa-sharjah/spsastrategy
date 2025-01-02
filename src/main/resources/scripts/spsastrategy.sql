@@ -57,7 +57,7 @@ CREATE TABLE `sectiongoals` (
 DROP TABLE IF EXISTS restrictedgoalsuserlevel;
 CREATE TABLE `restrictedgoalsuserlevel` (
   `goalid` VARCHAR(500),
-  `userlevelid` VARCHAR(500) NOT NULL,
+  `userrole` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`goalid`, `userlevelid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

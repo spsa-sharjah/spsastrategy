@@ -1,15 +1,23 @@
 package com.spsa.strategy.service;
 
+import java.util.Locale;
+
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.spsa.strategy.builder.request.ResrictedGoalRolesRq;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.model.Restrictedgoalsuserlevel;
 import com.spsa.strategy.model.Users;
+import com.spsa.strategy.repository.RestrictedgoalsuserlevelRepository;
 import com.spsa.strategy.rest.call.VerifyAuth;
+
+import jakarta.validation.Valid;
 
 
 
@@ -18,6 +26,12 @@ public class AuthServiceImpl implements AuthService {
 
 	@Value("${spring.spsa.auth.api}") 
 	private String api;
+
+	@Autowired
+	MessageService messageService;
+
+	@Autowired
+	RestrictedgoalsuserlevelRepository restrictedgoalsuserlevelRepository;
 	
 	@Override
 	public ResponseEntity<?> callAuth(String apikey, String apisecret, String username, String token, String url, String lang) {
@@ -50,6 +64,28 @@ public class AuthServiceImpl implements AuthService {
 				return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.OK);
 			}
 			return new ResponseEntity<Users>(user, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			MessageResponse messageResponse = new MessageResponse(e.getMessage(), 314);
+			return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.OK);
+			
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> rolegoalsaccesssave(Locale locale, Users user, @Valid ResrictedGoalRolesRq req) {
+		try {
+			if (req.getRoles() == null || req.getRoles().size() == 0)
+				return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("success_operation", locale)), HttpStatus.OK);
+			
+			restrictedgoalsuserlevelRepository.deleteByGoalid(req.getGoalid());
+			for (String restrictrole : req.getRoles()) {
+				Restrictedgoalsuserlevel restrictedgoalsuserlevel = new Restrictedgoalsuserlevel(req.getGoalid(), restrictrole);
+				restrictedgoalsuserlevelRepository.save(restrictedgoalsuserlevel);
+			}
+			
+			return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("success_operation", locale)), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 

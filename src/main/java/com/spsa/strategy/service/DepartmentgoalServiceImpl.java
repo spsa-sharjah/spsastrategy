@@ -59,7 +59,7 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			
 			Page<Departmentgoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Departmentgoals> spec = JPASpecification.returnDepartmentgoalSpecification(search, sortcolumn, descending, goalid);
+			Specification<Departmentgoals> spec = JPASpecification.returnDepartmentgoalSpecification(search, sortcolumn, descending, goalid, user.getUser_role());
 		    Pageable pageable = PageRequest.of(page, size);
 		    pages = goalsRepository.findAll(spec, pageable);
 

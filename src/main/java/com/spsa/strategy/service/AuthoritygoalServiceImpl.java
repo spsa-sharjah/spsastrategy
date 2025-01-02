@@ -60,7 +60,7 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			String getbyusername = null;
 			Page<Authoritygoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername);
+			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername, user.getUser_role());
 		    Pageable pageable = PageRequest.of(page, size);
 		    
 

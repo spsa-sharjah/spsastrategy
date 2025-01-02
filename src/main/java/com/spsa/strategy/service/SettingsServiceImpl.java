@@ -14,6 +14,9 @@ public class SettingsServiceImpl implements SettingsService {
 
 	@Value("${spring.admin.key}") 
 	private String adminkey;
+
+	@Value("${spring.spsalogs.api.key}") 
+	private String spsalogsapikey;
 	
 	@Autowired
 	private SettingsRepository settingsRepository;
@@ -28,5 +31,10 @@ public class SettingsServiceImpl implements SettingsService {
 		}
 
 		return settings.get(0);
+	}
+
+	@Override
+	public String getspsalogskey() {
+		return spsalogsapikey;
 	}
 }

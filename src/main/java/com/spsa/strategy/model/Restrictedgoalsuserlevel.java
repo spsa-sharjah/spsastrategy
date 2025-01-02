@@ -15,8 +15,14 @@ public class Restrictedgoalsuserlevel {
 	private String goalid;
 
 	@Id
-	@Size(max = 500)
-	private String userlevelid;
+	@Size(max = 50)
+	private String userrole;
+
+	public Restrictedgoalsuserlevel(@Size(max = 500) String goalid, @Size(max = 50) String userrole) {
+		super();
+		this.goalid = goalid;
+		this.userrole = userrole;
+	}
 
 	public Restrictedgoalsuserlevel() {
 	}
@@ -29,11 +35,11 @@ public class Restrictedgoalsuserlevel {
 		this.goalid = goalid;
 	}
 
-	public String getUserlevelid() {
-		return userlevelid;
+	public String getUserrole() {
+		return userrole;
 	}
 
-	public void setUserlevelid(String userlevelid) {
-		this.userlevelid = userlevelid;
+	public void setUserrole(String userrole) {
+		this.userrole = userrole;
 	}
 }
