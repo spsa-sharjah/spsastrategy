@@ -41,7 +41,7 @@ public class DepartmentgoalSaveRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String solution;
 
-	public Departmentgoals returnDepartmentgoals(String username) {
+	public Departmentgoals returnDepartmentgoals(String username, String userrole) {
 		Departmentgoals goal = new Departmentgoals();
 		goal.setDate_time(new Date());
 		goal.setAuthgoalid(this.authgoalid);
@@ -55,6 +55,7 @@ public class DepartmentgoalSaveRq {
 		goal.setUsername(username);
 		goal.setReason(this.reason);
 		goal.setSolution(this.solution);
+		goal.setUserrole(userrole);
 		return goal;
 	}
 	

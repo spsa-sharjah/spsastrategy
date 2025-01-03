@@ -1,10 +1,10 @@
 package com.spsa.strategy.enumeration;
 
-public enum UserLevelEnum {
+public enum LevelEnum {
 	AUTHORITY, DEPARTMENT, SECTION;
 	
     public static boolean contains(String value) {
-        for (UserLevelEnum enumValue : UserLevelEnum.values()) {
+        for (LevelEnum enumValue : LevelEnum.values()) {
             if (enumValue.name().equalsIgnoreCase(value)) {
                 return true;
             }

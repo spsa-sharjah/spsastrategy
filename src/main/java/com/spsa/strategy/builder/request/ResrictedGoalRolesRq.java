@@ -12,6 +12,16 @@ public class ResrictedGoalRolesRq {
     
 	private List<String> roles;
 
+	public ResrictedGoalRolesRq() {
+		super();
+	}
+
+	public ResrictedGoalRolesRq(String goalid, List<String> roles) {
+		super();
+		this.goalid = goalid;
+		this.roles = roles;
+	}
+
 	public String getGoalid() {
 		return goalid;
 	}

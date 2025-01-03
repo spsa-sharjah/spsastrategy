@@ -41,7 +41,7 @@ public class SectiongoalSaveRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String solution;
 
-	public Sectiongoals returnSectiongoals(String username) {
+	public Sectiongoals returnSectiongoals(String username, String userrole) {
 		Sectiongoals goal = new Sectiongoals();
 		goal.setDate_time(new Date());
 		goal.setDepgoalid(this.depgoalid);
@@ -55,6 +55,7 @@ public class SectiongoalSaveRq {
 		goal.setUsername(username);
 		goal.setReason(this.reason);
 		goal.setSolution(this.solution);
+		goal.setUserrole(userrole);
 		return goal;
 	}
 	

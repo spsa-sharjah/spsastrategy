@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.spsa.strategy.builder.request.AuthoritygoalSaveRq;
+import com.spsa.strategy.builder.request.ResrictedGoalRolesRq;
 import com.spsa.strategy.builder.response.DatatableResponse;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
@@ -35,6 +36,9 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 	@Autowired
 	AuthoritygoalsRepository goalsRepository;
 
+	@Autowired
+	private AuthService authService;
+	
 	@Override
 	public ResponseEntity<?> goalsave(Locale locale, @Valid AuthoritygoalSaveRq req, String username, Users user) {
         
@@ -48,8 +52,12 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 		else
 			req.setId(generateUniqueId());
 		
-		Authoritygoals obj = req.returnAuthoritygoals(username);
+		Authoritygoals obj = req.returnAuthoritygoals(username, user.getUser_role());
 		obj = goalsRepository.save(obj);
+		
+		ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
+		authService.rolegoalsaccesssave(locale, user, rq);
+		
 		return ResponseEntity.ok(obj);
 	}
 

@@ -15,4 +15,6 @@ public interface AuthService {
 
 	ResponseEntity<?> rolegoalsaccesssave(Locale locale, Users user, @Valid ResrictedGoalRolesRq req);
 
+	ResponseEntity<?> rolegoalaccesslist(Locale locale, Users user, String goalid);
+
 }

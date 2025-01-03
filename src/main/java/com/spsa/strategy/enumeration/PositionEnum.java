@@ -1,10 +1,10 @@
 package com.spsa.strategy.enumeration;
 
-public enum UserRoleEnum {
+public enum PositionEnum {
 	MANAGER, EMPLOYEE;
 	
     public static boolean contains(String value) {
-        for (UserRoleEnum enumValue : UserRoleEnum.values()) {
+        for (PositionEnum enumValue : PositionEnum.values()) {
             if (enumValue.name().equalsIgnoreCase(value)) {
                 return true;
             }

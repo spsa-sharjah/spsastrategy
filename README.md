@@ -17,3 +17,14 @@
 - Do goals always require a deadline?
 - I noticed a reason of deviation and solution provided; which user should fill these fields?
   
+  
+## Tricky Logic
+- There is relation difference between the Authority with the Department team and Department with the Section team
+	- Authority - Department 
+		- Authority can specify which department to see the created goal
+	- Department - Section
+		- Department can specify which section to see the created goal
+		- Section should by default see their parent department goals + previous restricted condition if exist
+		
+		
+		

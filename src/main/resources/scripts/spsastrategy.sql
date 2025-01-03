@@ -263,3 +263,22 @@ UPDATE `menu` SET `parent_id` = 'managear' WHERE (`id` = 'managedepartmentgoalsa
 UPDATE `menu` SET `parent_id` = 'manageen' WHERE (`id` = 'managedepartmentgoalsen');
 UPDATE `menu` SET `parent_id` = 'manageen' WHERE (`id` = 'managesectiongoalsen');
 UPDATE `menu` SET `parent_id` = 'managear' WHERE (`id` = 'managesectiongoalsar');
+
+ALTER TABLE `authoritygoals` 
+ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
+
+ALTER TABLE `departmentgoals` 
+ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
+
+ALTER TABLE `sectiongoals` 
+ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/auth/api/admin/role/goals/access/list', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/role/goal/access/list');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/role/goal/access/list');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/role/goal/access/list', b'1');
+
+

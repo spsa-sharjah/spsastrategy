@@ -61,7 +61,7 @@ public class JPASpecification {
 	}
 
 	public static Specification<Departmentgoals> returnDepartmentgoalSpecification(String search, String sortColumn,
-			boolean descending, String goalid, String currrentuserrole) {
+			boolean descending, String goalid, String currrentuserrole, String parentrole) {
 		 return (root, query, criteriaBuilder) -> {
 		      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
 		
@@ -70,7 +70,11 @@ public class JPASpecification {
 		      else 
 		          query.orderBy(criteriaBuilder.asc(root.get(sortColumn)));
 		      
-		      andPredicates.add(criteriaBuilder.equal(root.get("authgoalid"), goalid));
+		      if (goalid != null)
+		    	  andPredicates.add(criteriaBuilder.equal(root.get("authgoalid"), goalid));
+
+		      if (parentrole != null)
+		    	  andPredicates.add(criteriaBuilder.equal(root.get("userrole"), parentrole));
 		      
 		      if (search != null) {
 		          String searchPattern =  "%" + search + "%";
@@ -104,7 +108,7 @@ public class JPASpecification {
 		  };
 	}
 
-	public static Specification<Sectiongoals> returnSectiongoalSpecification(String search, String sortColumn, Boolean descending, String goalid) {
+	public static Specification<Sectiongoals> returnSectiongoalSpecification(String search, String sortColumn, Boolean descending, String goalid, String parentrole) {
 
 		 return (root, query, criteriaBuilder) -> {
 		      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
@@ -113,8 +117,12 @@ public class JPASpecification {
 		          query.orderBy(criteriaBuilder.desc(root.get(sortColumn)));
 		      else 
 		          query.orderBy(criteriaBuilder.asc(root.get(sortColumn)));
-		      
-		      andPredicates.add(criteriaBuilder.equal(root.get("depgoalid"), goalid));
+
+		      if (goalid != null)
+		    	  andPredicates.add(criteriaBuilder.equal(root.get("depgoalid"), goalid));
+
+		      if (parentrole != null)
+		    	  andPredicates.add(criteriaBuilder.equal(root.get("userrole"), parentrole));
 		      
 		      if (search != null) {
 		          String searchPattern =  "%" + search + "%";

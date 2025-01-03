@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spsa.strategy.builder.request.AuthoritygoalSaveRq;
 import com.spsa.strategy.builder.request.DepartmentgoalSaveRq;
-import com.spsa.strategy.builder.request.ResrictedGoalRolesRq;
 import com.spsa.strategy.builder.request.SectiongoalSaveRq;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.service.AuthService;
@@ -95,7 +94,7 @@ public class AdminController {
 								  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
 								  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
 						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
-						          @RequestHeader(name = "goalid", required = true) String goalid) {
+						          @RequestHeader(name = "goalid", required = false) String goalid) {
 
         Users user = (Users) request.getAttribute("user");
 		return departmentgoalService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
@@ -132,7 +131,7 @@ public class AdminController {
 	}
 	
 	@RequestMapping(value = "/section/goal/list", method = RequestMethod.POST)
-	public ResponseEntity<?> sectiongoallist(HttpServletRequest request,
+	public ResponseEntity<?> sectionparentgoallist(HttpServletRequest request,
 								  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 								  @RequestHeader(name = "page", required = false, defaultValue = "0") Integer page,
 								  @RequestHeader(name = "size", required = false, defaultValue = "0") Integer size,
@@ -140,7 +139,7 @@ public class AdminController {
 								  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
 								  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
 						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
-						          @RequestHeader(name = "goalid", required = true) String goalid) {
+						          @RequestHeader(name = "goalid", required = false) String goalid) {
 
         Users user = (Users) request.getAttribute("user");
 		return sectiongoalService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
@@ -177,13 +176,13 @@ public class AdminController {
 	}
 
 	
-	@RequestMapping(value = "/role/goals/access/save", method = RequestMethod.POST)
-	public ResponseEntity<?> rolegoalsaccesssave(HttpServletRequest request,
+	@RequestMapping(value = "/role/goal/access/list", method = RequestMethod.POST)
+	public ResponseEntity<?> rolegoalaccesslist(HttpServletRequest request,
 												 @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 												 @RequestHeader(name = "username", required = true) String username,
-												 @Valid @RequestBody ResrictedGoalRolesRq req) {
+												 @RequestHeader(name = "goalid", required = true) String goalid) {
 
         Users user = (Users) request.getAttribute("user");
-		return authService.rolegoalsaccesssave(locale, user, req);
+		return authService.rolegoalaccesslist(locale, user, goalid);
 	}
 }

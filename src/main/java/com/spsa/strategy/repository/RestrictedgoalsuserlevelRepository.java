@@ -1,5 +1,7 @@
 package com.spsa.strategy.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
@@ -14,5 +16,7 @@ public interface RestrictedgoalsuserlevelRepository extends JpaRepository<Restri
     @Modifying
     @Transactional
 	void deleteByGoalid(String goalid);
+
+	List<Restrictedgoalsuserlevel> findByGoalid(String goalid);
 
 }

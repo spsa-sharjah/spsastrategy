@@ -43,6 +43,9 @@ public class Sectiongoals {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date date_time;
 
+	@Size(max = 50)
+	private String userrole;
+
 	public String getId() {
 		return id;
 	}
@@ -137,5 +140,13 @@ public class Sectiongoals {
 
 	public void setGoalar(String goalar) {
 		this.goalar = goalar;
+	}
+
+	public String getUserrole() {
+		return userrole;
+	}
+
+	public void setUserrole(String userrole) {
+		this.userrole = userrole;
 	}
 }

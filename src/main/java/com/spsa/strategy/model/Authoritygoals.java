@@ -46,6 +46,9 @@ public class Authoritygoals {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date date_time;
 
+	@Size(max = 50)
+	private String userrole;
+
 	public Authoritygoals() {
 	}
 
@@ -151,5 +154,13 @@ public class Authoritygoals {
 
 	public void setTodate(Date todate) {
 		this.todate = todate;
+	}
+
+	public String getUserrole() {
+		return userrole;
+	}
+
+	public void setUserrole(String userrole) {
+		this.userrole = userrole;
 	}
 }

@@ -2,6 +2,7 @@ package com.spsa.strategy.builder.request;
 
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.spsa.strategy.config.SanitizedStringDeserializer;
@@ -40,8 +41,10 @@ public class AuthoritygoalSaveRq {
 
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String todate;
+    
+	private List<String> roles;
 
-	public Authoritygoals returnAuthoritygoals(String username) {
+	public Authoritygoals returnAuthoritygoals(String username, String userrole) {
 		Authoritygoals goal = new Authoritygoals();
 		goal.setDate_time(new Date());
 		goal.setId(this.id);
@@ -56,6 +59,7 @@ public class AuthoritygoalSaveRq {
 		goal.setQuarter(this.quarter);
 		goal.setFromdate(Utils.convertStringToDate(this.fromdate, null));
 		goal.setTodate(Utils.convertStringToDate(this.todate, null));
+		goal.setUserrole(userrole);
 		return goal;
 	}
 	
@@ -145,5 +149,13 @@ public class AuthoritygoalSaveRq {
 
 	public void setTodate(String todate) {
 		this.todate = todate;
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 }

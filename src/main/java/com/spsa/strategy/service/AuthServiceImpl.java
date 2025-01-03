@@ -1,5 +1,6 @@
 package com.spsa.strategy.service;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONObject;
@@ -76,9 +77,6 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public ResponseEntity<?> rolegoalsaccesssave(Locale locale, Users user, @Valid ResrictedGoalRolesRq req) {
 		try {
-			if (req.getRoles() == null || req.getRoles().size() == 0)
-				return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("success_operation", locale)), HttpStatus.OK);
-			
 			restrictedgoalsuserlevelRepository.deleteByGoalid(req.getGoalid());
 			for (String restrictrole : req.getRoles()) {
 				Restrictedgoalsuserlevel restrictedgoalsuserlevel = new Restrictedgoalsuserlevel(req.getGoalid(), restrictrole);
@@ -86,6 +84,21 @@ public class AuthServiceImpl implements AuthService {
 			}
 			
 			return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("success_operation", locale)), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			MessageResponse messageResponse = new MessageResponse(e.getMessage(), 314);
+			return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.OK);
+			
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> rolegoalaccesslist(Locale locale, Users user, String goalid) {
+		try {
+			List<Restrictedgoalsuserlevel> restrictedgoalsuserlevels = restrictedgoalsuserlevelRepository.findByGoalid(goalid);
+			
+			return new ResponseEntity<List<Restrictedgoalsuserlevel>>(restrictedgoalsuserlevels, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 
