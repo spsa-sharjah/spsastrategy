@@ -8,14 +8,11 @@ import com.spsa.strategy.config.SanitizedStringDeserializer;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Sectiongoals;
 
-import jakarta.validation.constraints.NotNull;
-
 public class SectiongoalSaveRq {
 	
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
     private String id;
 	
-    @NotNull
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
     private String depgoalid;
 

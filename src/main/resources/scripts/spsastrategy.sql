@@ -213,8 +213,8 @@ INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('manageauthoritygoalsar
 
 
 
-INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managedepartmentgoalsen', 'en', 'Department Goals', 'managedepartmentgoals', 'fa fa-folder-o', 400, 'managedepartmentgoals', 'manageauthoritygoalsen', b'0');
-INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managedepartmentgoalsar', 'ar', 'أهداف القسم', 'managedepartmentgoals', 'fa fa-folder-o', 400, 'managedepartmentgoals', 'manageauthoritygoalsar', b'0');
+INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managedepartmentgoalsen', 'en', 'Department Goals', 'managedepartmentgoals', 'fa fa-folder-o', 400, 'managedepartmentgoals', 'manageauthoritygoalsen', b'1');
+INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managedepartmentgoalsar', 'ar', 'أهداف القسم', 'managedepartmentgoals', 'fa fa-folder-o', 400, 'managedepartmentgoals', 'manageauthoritygoalsar', b'1');
 
 
 INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managedepartmentgoalsen', 'Admin');
@@ -224,8 +224,8 @@ INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managedepartmentgoalsa
 
 
 
-INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managesectiongoalsen', 'en', 'Section Goals', 'managesectiongoals', 'fa fa-folder-o', 400, 'managesectiongoals', 'managedepartmentgoalsen', b'0');
-INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managesectiongoalsar', 'ar', 'أهداف القسم', 'managesectiongoals', 'fa fa-folder-o', 400, 'managesectiongoals', 'managedepartmentgoalsar', b'0');
+INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managesectiongoalsen', 'en', 'Section Goals', 'managesectiongoals', 'fa fa-folder-o', 400, 'managesectiongoals', 'managedepartmentgoalsen', b'1');
+INSERT INTO `menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `auth_id`, `parent_id`, `show`) VALUES ('managesectiongoalsar', 'ar', 'أهداف القسم', 'managesectiongoals', 'fa fa-folder-o', 400, 'managesectiongoals', 'managedepartmentgoalsar', b'1');
 
 
 INSERT INTO `menu_role` (`menu_id`, `user_role`) VALUES ('managesectiongoalsen', 'Admin');

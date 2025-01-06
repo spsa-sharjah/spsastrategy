@@ -11,7 +11,7 @@ import jakarta.validation.Valid;
 
 public interface AuthoritygoalService {
 	ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
-			Boolean descending, Integer draw, String username, Users user);
+			Boolean descending, Integer draw, String username, Users user, Boolean all);
 
 	ResponseEntity<?> goalsave(Locale locale, @Valid AuthoritygoalSaveRq req, String username, Users user);
 

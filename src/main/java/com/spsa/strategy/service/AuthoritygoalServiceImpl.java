@@ -63,14 +63,20 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 
 	@Override
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
-			Boolean descending, Integer draw, String username, Users user) {
+			Boolean descending, Integer draw, String username, Users user, Boolean all) {
 		try {
+			
 			String getbyusername = null;
 			Page<Authoritygoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
 			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername, user.getUser_role());
-		    Pageable pageable = PageRequest.of(page, size);
-		    
+
+			if (all != null && all == true) {
+				List<Authoritygoals> allusersbysearch = goalsRepository.findAll(spec);
+				return ResponseEntity.ok(allusersbysearch);
+			}
+			
+			Pageable pageable = PageRequest.of(page, size);
 
 	        pages = goalsRepository.findAll(spec, pageable);
 

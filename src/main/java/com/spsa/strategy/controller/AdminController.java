@@ -48,10 +48,11 @@ public class AdminController {
 								  @RequestHeader(name = "search", required = false) String search,
 								  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
 								  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
-						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw) {
+						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
+								  @RequestHeader(name = "all", required = false, defaultValue = "false") Boolean all) {
 
         Users user = (Users) request.getAttribute("user");
-		return authoritygoalService.list(locale, page, size, search, sortcolumn, descending, draw, null, user);
+		return authoritygoalService.list(locale, page, size, search, sortcolumn, descending, draw, null, user, all);
 	}
 	
 	@RequestMapping(value = "/authority/goal/save", method = RequestMethod.POST)
@@ -94,10 +95,11 @@ public class AdminController {
 								  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
 								  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
 						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
-						          @RequestHeader(name = "goalid", required = false) String goalid) {
+						          @RequestHeader(name = "goalid", required = false) String goalid,
+								  @RequestHeader(name = "all", required = false, defaultValue = "false") Boolean all) {
 
         Users user = (Users) request.getAttribute("user");
-		return departmentgoalService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
+		return departmentgoalService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user, all);
 	}
 	
 	@RequestMapping(value = "/department/goal/save", method = RequestMethod.POST)

@@ -2,20 +2,18 @@ package com.spsa.strategy.builder.request;
 
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.spsa.strategy.config.SanitizedStringDeserializer;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Departmentgoals;
 
-import jakarta.validation.constraints.NotNull;
-
 public class DepartmentgoalSaveRq {
 	
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
     private String id;
 	
-    @NotNull
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
     private String authgoalid;
 
@@ -40,6 +38,8 @@ public class DepartmentgoalSaveRq {
 
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String solution;
+    
+	private List<String> roles;
 
 	public Departmentgoals returnDepartmentgoals(String username, String userrole) {
 		Departmentgoals goal = new Departmentgoals();
@@ -137,5 +137,13 @@ public class DepartmentgoalSaveRq {
 
 	public void setSolution(String solution) {
 		this.solution = solution;
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
 	}
 }

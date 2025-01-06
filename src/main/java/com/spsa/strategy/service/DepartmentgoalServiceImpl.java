@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.spsa.strategy.builder.request.DepartmentgoalSaveRq;
+import com.spsa.strategy.builder.request.ResrictedGoalRolesRq;
 import com.spsa.strategy.builder.response.DatatableResponse;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
@@ -36,6 +37,9 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 	@Autowired
 	DepartmentgoalsRepository goalsRepository;
 
+	@Autowired
+	private AuthService authService;
+
 	@Override
 	public ResponseEntity<?> goalsave(Locale locale, @Valid DepartmentgoalSaveRq req, String username, Users user) {
         
@@ -51,12 +55,16 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 		
 		Departmentgoals obj = req.returnDepartmentgoals(username, user.getUser_role());
 		obj = goalsRepository.save(obj);
+		
+		ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
+		authService.rolegoalsaccesssave(locale, user, rq);
+		
 		return ResponseEntity.ok(obj);
 	}
 
 	@Override
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
-			Boolean descending, Integer draw, String goalid, Users user) {
+			Boolean descending, Integer draw, String goalid, Users user, Boolean all) {
 		try {
 
 			String parentrole = null;
@@ -73,7 +81,13 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			Page<Departmentgoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
 			Specification<Departmentgoals> spec = JPASpecification.returnDepartmentgoalSpecification(search, sortcolumn, descending, goalid, user.getUser_role(), parentrole);
-		    Pageable pageable = PageRequest.of(page, size);
+
+			if (all != null && all == true) {
+				List<Departmentgoals> allusersbysearch = goalsRepository.findAll(spec);
+				return ResponseEntity.ok(allusersbysearch);
+			}
+			
+			Pageable pageable = PageRequest.of(page, size);
 		    pages = goalsRepository.findAll(spec, pageable);
 
 			List<Departmentgoals> allusersbysearch = goalsRepository.findAll(spec);
