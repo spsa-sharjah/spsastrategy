@@ -19,8 +19,6 @@ public class Evidence {
 	private String username;
 	
 	private String comment;
-
-	private String quarterid;
     
 	private String goalid;
 
@@ -40,14 +38,6 @@ public class Evidence {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public String getQuarterid() {
-		return quarterid;
-	}
-
-	public void setQuarterid(String quarterid) {
-		this.quarterid = quarterid;
 	}
 
 	public String getGoalid() {

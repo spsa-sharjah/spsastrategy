@@ -68,7 +68,7 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 		try {
 
 			String parentrole = null;
-			if (user.getLevel() != null) {
+			if (user.getLevel() != null && user.getPosition() != null) {
 				if (user.getLevel().equalsIgnoreCase(LevelEnum.SECTION.name().toLowerCase()) &&
 						user.getPosition().equalsIgnoreCase(PositionEnum.MANAGER.name().toLowerCase()))
 					parentrole = user.getParentrole();

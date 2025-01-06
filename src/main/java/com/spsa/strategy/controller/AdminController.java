@@ -18,6 +18,7 @@ import com.spsa.strategy.model.Users;
 import com.spsa.strategy.service.AuthService;
 import com.spsa.strategy.service.AuthoritygoalService;
 import com.spsa.strategy.service.DepartmentgoalService;
+import com.spsa.strategy.service.EvidenceService;
 import com.spsa.strategy.service.SectiongoalService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +40,9 @@ public class AdminController {
 
 	@Autowired
 	private AuthService authService;
+
+	@Autowired
+	private EvidenceService evidenceService;
 
 	@RequestMapping(value = "/authority/goal/list", method = RequestMethod.POST)
 	public ResponseEntity<?> authoritygoallist(HttpServletRequest request,
@@ -187,4 +191,84 @@ public class AdminController {
         Users user = (Users) request.getAttribute("user");
 		return authService.rolegoalaccesslist(locale, user, goalid);
 	}
+
+	
+	@RequestMapping(value = "/goal/evidence/list", method = RequestMethod.POST)
+	public ResponseEntity<?> goalevidencelist(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @RequestHeader(name = "page", required = false, defaultValue = "0") Integer page,
+											  @RequestHeader(name = "size", required = false, defaultValue = "0") Integer size,
+											  @RequestHeader(name = "search", required = false) String search,
+											  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
+											  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
+									          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
+									          @RequestHeader(name = "goalid", required = false) String goalid) {
+
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
+	}
+
+	
+//	@RequestMapping(value = "/goal/evidence/files/list", method = RequestMethod.POST)
+//	public ResponseEntity<?> goalevidencefileslist(HttpServletRequest request,
+//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+//									          @RequestHeader(name = "evidenceid", required = true) Long evidenceid) {
+//
+//        Users user = (Users) request.getAttribute("user");
+//		return evidenceService.fileslist(locale, evidenceid, user);
+//	}
+
+//	@RequestMapping(value = "/goal/evidence/file/upload", method = RequestMethod.POST)
+//	public ResponseEntity<?> goalevidencefileupload(HttpServletRequest request,
+//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+//									          @RequestHeader(name = "evidenceid", required = true) Long evidenceid) {
+//
+//        Users user = (Users) request.getAttribute("user");
+//		return evidenceService.goalevidencefileupload(locale, evidenceid, user);
+//	}
+//
+//	@RequestMapping(value = "/goal/evidence/files/upload", method = RequestMethod.POST)
+//	public ResponseEntity<?> goalevidencefilesupload(HttpServletRequest request,
+//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+//									          @RequestHeader(name = "evidenceid", required = true) Long evidenceid) {
+//
+//        Users user = (Users) request.getAttribute("user");
+//		return evidenceService.goalevidencefilesupload(locale, evidenceid, user);
+//	}
+//
+//	@RequestMapping(value = "/goal/evidence/file/remove", method = RequestMethod.POST)
+//	public ResponseEntity<?> goalevidencefileremove(HttpServletRequest request,
+//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+//									          @RequestHeader(name = "id", required = true) Long id) {
+//
+//        Users user = (Users) request.getAttribute("user");
+//		return evidenceService.goalevidencefileremove(locale, id, user);
+//	}
+//	
+//	@RequestMapping(value = "/goal/evidence/comment/list", method = RequestMethod.POST)
+//	public ResponseEntity<?> goalevidencecommentlist(HttpServletRequest request,
+//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+//									          @RequestHeader(name = "id", required = true) Long id) {
+//
+//        Users user = (Users) request.getAttribute("user");
+//		return evidenceService.goalevidencecommentlist(locale, id, user);
+//	}
+//
+//	@RequestMapping(value = "/goal/evidence/comment/save", method = RequestMethod.POST)
+//	public ResponseEntity<?> goalevidencecommentsave(HttpServletRequest request,
+//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+//									          @RequestHeader(name = "id", required = true) Long id) {
+//
+//        Users user = (Users) request.getAttribute("user");
+//		return evidenceService.goalevidencecommentsave(locale, id, user);
+//	}
+//
+//	@RequestMapping(value = "/goal/evidence/comment/remove", method = RequestMethod.POST)
+//	public ResponseEntity<?> goalevidencecommentremove(HttpServletRequest request,
+//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+//									          @RequestHeader(name = "id", required = true) Long id) {
+//
+//        Users user = (Users) request.getAttribute("user");
+//		return evidenceService.goalevidencecommentremove(locale, id, user);
+//	}
 }

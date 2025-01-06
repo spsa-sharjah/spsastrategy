@@ -73,27 +73,12 @@ CREATE TABLE `userlevel` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-DROP TABLE IF EXISTS quarters;
-CREATE TABLE `quarters` (
-  `id` VARCHAR(500) NOT NULL,
-  `name` VARCHAR(500),
-  `year` VARCHAR(500),
-  `quarternumber` INT,
-  `goalid` VARCHAR(500) NOT NULL,
-  `expectedweight` INT,
-  `weight` INT,
-  `status` VARCHAR(200) NOT NULL,
-  `deadline` timestamp NULL,
-  `date_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 DROP TABLE IF EXISTS evidence;
 CREATE TABLE `evidence` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(250) NOT NULL,
   `comment` longtext,
-  `quarterid` VARCHAR(500) NOT NULL,
+  `goalid` VARCHAR(500) NOT NULL,
   `date_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -195,6 +180,12 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/section/goal/details');
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/section/goal/details');
+
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/goal/evidence/list', b'1');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/list');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/list');
+
 
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/list', b'1');
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/save', b'1', b'1');
