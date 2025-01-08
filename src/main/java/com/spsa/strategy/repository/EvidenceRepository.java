@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.spsa.strategy.model.Evidence;
 
 @Repository
-public interface EvidenceRepository extends JpaRepository<Evidence, String> {
+public interface EvidenceRepository extends JpaRepository<Evidence, Long> {
 
 	Page<Evidence> findAll(Specification<Evidence> spec, Pageable pageable);
 

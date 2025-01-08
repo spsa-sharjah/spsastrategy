@@ -5,14 +5,18 @@ import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.spsa.strategy.builder.request.AuthoritygoalSaveRq;
 import com.spsa.strategy.builder.request.DepartmentgoalSaveRq;
+import com.spsa.strategy.builder.request.EvidenceCommentSaveRq;
 import com.spsa.strategy.builder.request.SectiongoalSaveRq;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.service.AuthService;
@@ -209,66 +213,84 @@ public class AdminController {
 	}
 
 	
-//	@RequestMapping(value = "/goal/evidence/files/list", method = RequestMethod.POST)
-//	public ResponseEntity<?> goalevidencefileslist(HttpServletRequest request,
-//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
-//									          @RequestHeader(name = "evidenceid", required = true) Long evidenceid) {
-//
-//        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.fileslist(locale, evidenceid, user);
-//	}
+	@RequestMapping(value = "/goal/evidence/files/list", method = RequestMethod.POST)
+	public ResponseEntity<?> goalevidencefileslist(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+									          @RequestHeader(name = "evidenceid", required = true) Long evidenceid) {
 
-//	@RequestMapping(value = "/goal/evidence/file/upload", method = RequestMethod.POST)
-//	public ResponseEntity<?> goalevidencefileupload(HttpServletRequest request,
-//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
-//									          @RequestHeader(name = "evidenceid", required = true) Long evidenceid) {
-//
-//        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.goalevidencefileupload(locale, evidenceid, user);
-//	}
-//
-//	@RequestMapping(value = "/goal/evidence/files/upload", method = RequestMethod.POST)
-//	public ResponseEntity<?> goalevidencefilesupload(HttpServletRequest request,
-//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
-//									          @RequestHeader(name = "evidenceid", required = true) Long evidenceid) {
-//
-//        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.goalevidencefilesupload(locale, evidenceid, user);
-//	}
-//
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.fileslist(locale, evidenceid, user);
+	}
+	
+
+	@RequestMapping(value = "/goal/evidence/file/upload", method = RequestMethod.POST)
+    public ResponseEntity<?> uploadfiles(HttpServletRequest request, 
+			  							@RequestHeader(name = "Accept-Language", required = false) Locale locale,
+										@RequestHeader(name = "comment", required = false) String comment,
+										@RequestHeader(name = "evidenceid", required = false) Long evidenceid,
+										@RequestParam("file") MultipartFile file) {
+ 
+        Users user = (Users) request.getAttribute("user");
+        return evidenceService.uploadfile(locale, user, file, evidenceid, comment);
+    }
+
+	@RequestMapping(value = "/goal/evidence/file/{fileName}", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadfile(HttpServletRequest request, 
+										@RequestHeader(name = "Accept-Language", required = false) Locale locale,
+										@PathVariable String fileName) {
+
+        Users user = (Users) request.getAttribute("user");
+        return evidenceService.downloadfile(locale, user, fileName);
+    }
+
 //	@RequestMapping(value = "/goal/evidence/file/remove", method = RequestMethod.POST)
 //	public ResponseEntity<?> goalevidencefileremove(HttpServletRequest request,
 //											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 //									          @RequestHeader(name = "id", required = true) Long id) {
 //
 //        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.goalevidencefileremove(locale, id, user);
+//		return evidenceService.removefile(locale, id, user);
 //	}
-//	
-//	@RequestMapping(value = "/goal/evidence/comment/list", method = RequestMethod.POST)
-//	public ResponseEntity<?> goalevidencecommentlist(HttpServletRequest request,
+
+//	@RequestMapping(value = "/goal/evidence/remove", method = RequestMethod.POST)
+//	public ResponseEntity<?> goalevidenceremove(HttpServletRequest request,
 //											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 //									          @RequestHeader(name = "id", required = true) Long id) {
 //
 //        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.goalevidencecommentlist(locale, id, user);
+//		return evidenceService.remove(locale, id, user);
 //	}
-//
-//	@RequestMapping(value = "/goal/evidence/comment/save", method = RequestMethod.POST)
-//	public ResponseEntity<?> goalevidencecommentsave(HttpServletRequest request,
-//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
-//									          @RequestHeader(name = "id", required = true) Long id) {
-//
-//        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.goalevidencecommentsave(locale, id, user);
-//	}
-//
-//	@RequestMapping(value = "/goal/evidence/comment/remove", method = RequestMethod.POST)
-//	public ResponseEntity<?> goalevidencecommentremove(HttpServletRequest request,
-//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
-//									          @RequestHeader(name = "id", required = true) Long id) {
-//
-//        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.goalevidencecommentremove(locale, id, user);
-//	}
+	
+	@RequestMapping(value = "/goal/evidence/comment/list", method = RequestMethod.POST)
+	public ResponseEntity<?> goalevidencecommentlist(HttpServletRequest request,
+													  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+													  @RequestHeader(name = "page", required = false, defaultValue = "0") Integer page,
+													  @RequestHeader(name = "size", required = false, defaultValue = "0") Integer size,
+													  @RequestHeader(name = "search", required = false) String search,
+													  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
+													  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
+											          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
+											          @RequestHeader(name = "id", required = true, defaultValue = "1") Long evidenceid) {
+
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.commentlist(locale, page, size, search, sortcolumn, descending, draw, evidenceid, user);
+	}
+
+	@RequestMapping(value = "/goal/evidence/comment/save", method = RequestMethod.POST)
+	public ResponseEntity<?> goalevidencecommentsave(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+									  		  @Valid @RequestBody EvidenceCommentSaveRq req) {
+
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.commentsave(locale, req, user);
+	}
+
+	@RequestMapping(value = "/goal/evidence/comment/remove", method = RequestMethod.POST)
+	public ResponseEntity<?> goalevidencecommentremove(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+									          @RequestHeader(name = "id", required = true) Long id) {
+
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.commentremove(locale, id, user);
+	}
 }

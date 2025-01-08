@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Evidence;
+import com.spsa.strategy.model.EvidenceReply;
 import com.spsa.strategy.model.Restrictedgoalsuserlevel;
 import com.spsa.strategy.model.Sectiongoals;
 
@@ -159,6 +160,36 @@ public class JPASpecification {
 		      if (currentuser != null)
 		    	  andPredicates.add(criteriaBuilder.equal(root.get("username"), currentuser));
 		      
+		      if (search != null) {
+		          String searchPattern =  "%" + search + "%";
+		          // Combine OR predicates into one OR condition
+		          Predicate orCondition = criteriaBuilder.or(
+		                  criteriaBuilder.like(root.get("username"), searchPattern),
+		                  criteriaBuilder.like(root.get("comment"), searchPattern)
+		              );
+		
+		          // Add the OR condition to the list of AND predicates
+		          andPredicates.add(orCondition);
+		      }
+		
+		      // Combine all AND predicates with an AND condition
+		      return criteriaBuilder.and(andPredicates.toArray(new Predicate[0]));
+		  };
+	}
+
+	public static Specification<EvidenceReply> returnEvidenceReplySpecification(String search, String sortColumn,
+			Boolean descending, Long evidenceid) {
+
+		 return (root, query, criteriaBuilder) -> {
+		      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
+		
+		      if (descending) 
+		          query.orderBy(criteriaBuilder.desc(root.get(sortColumn)));
+		      else 
+		          query.orderBy(criteriaBuilder.asc(root.get(sortColumn)));
+
+	    	  andPredicates.add(criteriaBuilder.equal(root.get("evidenceid"), evidenceid));
+
 		      if (search != null) {
 		          String searchPattern =  "%" + search + "%";
 		          // Combine OR predicates into one OR condition

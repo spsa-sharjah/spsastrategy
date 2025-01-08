@@ -127,8 +127,24 @@ ADD COLUMN `quarter` VARCHAR(250) NULL AFTER `goalar`,
 ADD COLUMN `fromdate` TIMESTAMP NULL AFTER `quarter`,
 ADD COLUMN `todate` TIMESTAMP NULL AFTER `fromdate`,
 ADD COLUMN `year` VARCHAR(20) NULL AFTER `todate`;
+ALTER TABLE `evidence_files` 
+ADD COLUMN `filetype` VARCHAR(200) NULL AFTER `username`;
+ALTER TABLE `evidence_files` 
+ADD COLUMN `fileimage` TEXT NULL AFTER `filetype`;
 
+ALTER TABLE `evidence_files` 
+ADD COLUMN `width` VARCHAR(200) NULL DEFAULT '120px';
 
+ALTER TABLE `evidence_files` 
+ADD COLUMN `date_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE `evidence` 
+ADD COLUMN `status` VARCHAR(200) NULL AFTER `goalid`;
+
+ALTER TABLE `evidence_files` 
+ADD COLUMN `filename` VARCHAR(400) NULL AFTER `date_time`,
+ADD COLUMN `username` VARCHAR(250) NULL AFTER `filename`,
+ADD COLUMN `filesize` BIGINT NULL AFTER `username`;
 
 -- AUTH 
 
@@ -273,3 +289,38 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/role/goal/access/list', b'1');
 
 
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/comment/list');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/comment/list');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/comment/list', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/comment/list', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/role/goal/access/save');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/role/goal/access/save');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/comment/save', b'1', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`, `isupdate`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/comment/save', b'1', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/role/goal/access/remove');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/role/goal/access/remove');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/comment/remove', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/comment/remove', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/files/list');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/files/list');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/files/list', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/files/list', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/files/upload');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/files/upload');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/files/upload', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/files/upload', b'1');

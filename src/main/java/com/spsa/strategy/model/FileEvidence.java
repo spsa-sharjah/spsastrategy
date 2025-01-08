@@ -13,20 +13,34 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "evidence_reply", uniqueConstraints = { @UniqueConstraint(columnNames = "id") })
-public class EvidenceReply {
+@Table(name = "evidence_files", uniqueConstraints = { @UniqueConstraint(columnNames = "id") })
+public class FileEvidence {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	private Long evidenceid;
+	
+	private String filename;
 	
 	private String username;
 	
-	private String comment;
+	private long filesize;
+	
+	private String filepath;
+	
+	private String filetype;
+
+	private String fileimage;
+	
+	private String width;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date date_time;
+	
+	public FileEvidence() {
+	}
 
 	public Long getId() {
 		return id;
@@ -44,12 +58,12 @@ public class EvidenceReply {
 		this.evidenceid = evidenceid;
 	}
 
-	public String getComment() {
-		return comment;
+	public String getFilepath() {
+		return filepath;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
 	}
 
 	public Date getDate_time() {
@@ -60,11 +74,51 @@ public class EvidenceReply {
 		this.date_time = date_time;
 	}
 
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public long getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(long filesize) {
+		this.filesize = filesize;
+	}
+
 	public String getUsername() {
 		return username;
 	}
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getFiletype() {
+		return filetype;
+	}
+
+	public void setFiletype(String filetype) {
+		this.filetype = filetype;
+	}
+
+	public String getFileimage() {
+		return fileimage;
+	}
+
+	public void setFileimage(String fileimage) {
+		this.fileimage = fileimage;
+	}
+
+	public String getWidth() {
+		return width;
+	}
+
+	public void setWidth(String width) {
+		this.width = width;
 	}
 }
