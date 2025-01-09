@@ -19,7 +19,11 @@ public interface EvidenceService {
 
 	ResponseEntity<?> uploadfile(Locale locale, Users user, MultipartFile file, Long evidenceid, String comment);
 
-	ResponseEntity<?> downloadfile(Locale locale, Users user, String fileName);
+	ResponseEntity<?> uploadfiles(Locale locale, Users user, MultipartFile[] files, Long evidenceid, String comment, String goalid);
+
+	ResponseEntity<?> downloadfile(Users user, String fileName);
+	
+	ResponseEntity<?> returnbase64file(Users user, String fileName);
 
 	ResponseEntity<?> commentlist(Locale locale, Integer page, Integer size, String search, String sortcolumn,
 			Boolean descending, Integer draw, Long evidenceid, Users user);
@@ -29,4 +33,6 @@ public interface EvidenceService {
 	ResponseEntity<?> commentremove(Locale locale, Long id, Users user);
 
 	ResponseEntity<?> remove(Locale locale, Long id, Users user);
+
+	ResponseEntity<?> removefile(Locale locale, Long id, Users user);
 }

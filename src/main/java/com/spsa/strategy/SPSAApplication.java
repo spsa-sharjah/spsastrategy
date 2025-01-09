@@ -35,7 +35,7 @@ public class SPSAApplication {
 
     @Bean
     SecurityFilterChain configure(HttpSecurity http) throws Exception {
-         
+        
     	http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());

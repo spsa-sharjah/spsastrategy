@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spsa.strategy.builder.request.EvidenceCommentSaveRq;
 import com.spsa.strategy.builder.response.DatatableResponse;
+import com.spsa.strategy.builder.response.IdRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
@@ -38,7 +40,6 @@ import com.spsa.strategy.repository.EvidenceRepository;
 import com.spsa.strategy.repository.FileEvidenceRepository;
 
 import jakarta.validation.Valid;
-
 
 
 @Service
@@ -57,7 +58,10 @@ public class EvidenceServiceImpl implements EvidenceService {
 	EvidenceReplyRepository evidenceReplyRepository;
 
 	@Value("${spring.file.uploaddir}") 
-    private String uploaddir;
+    private String fileuploaddir;
+
+	@Value("${spring.file.accessurl}") 
+    private String fileaccessurl;
 
 	@Override
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
@@ -133,46 +137,124 @@ public class EvidenceServiceImpl implements EvidenceService {
             }
             evidence.setComment(comment);
             evidence = evidenceRepository.save(evidence);
-	        
-            String originalFilename = file.getOriginalFilename();
-            String fileName = Utils.generateUniqueString(Constants.EVIDENCE_KEY) + originalFilename;
-            
-            // Save file metadata to the database
-            FileEvidence metadata = new FileEvidence();
-            metadata.setFilename(originalFilename);
-            metadata.setFilepath(uploaddir + fileName);
-            metadata.setUsername(user.getUsername()); // uploaded by username
-            metadata.setDate_time(new Date());
-            metadata.setEvidenceid(evidence.getId());
-            metadata = fileEvidenceRepository.save(metadata);
-            
-            Path filePath = Paths.get(uploaddir, fileName);
-
-            // Save file to the server
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 	
-	        return ResponseEntity.ok(metadata);
+	        return ResponseEntity.ok(savefile(user, file, evidence));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
     }
- 
+
 	@Override
-	public ResponseEntity<?> downloadfile(Locale locale, Users user, String fileName) {
+	public ResponseEntity<?> uploadfiles(Locale locale, Users user, MultipartFile[] files, Long evidenceid, String comment, String goalid) {
+
 		try {
-	        Path filePath = Paths.get("/opt/uploads").resolve(fileName).normalize();
+	        Evidence evidence = null;
+            if (evidenceid != null) {
+
+            	Optional<Evidence> opt = evidenceRepository.findById(evidenceid);
+            	if (!opt.isPresent())
+        			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
+            		
+        		evidence = opt.get();
+            }
+            if (evidence == null) {
+                evidence = new Evidence();
+                evidence.setDate_time(new Date());
+                evidence.setUsername(user.getUsername());
+                evidence.setGoalid(goalid);
+            }
+            evidence.setComment(comment);
+            evidence = evidenceRepository.save(evidence);
+
+            List<FileEvidence> savedfiles = new ArrayList<FileEvidence>();
+            for (MultipartFile file : files)
+            	savedfiles.add(savefile(user, file, evidence));
+            	
+        	return ResponseEntity.ok(savedfiles);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
+		}
+    }
+	
+	private FileEvidence savefile(Users user, MultipartFile file, Evidence evidence) {
+
+		try {
+	        
+            String originalFilename = file.getOriginalFilename();
+            String fileName = Utils.generateUniqueString(Constants.EVIDENCE_KEY) + "_" + originalFilename;
+            
+            // Save file metadata to the database
+            FileEvidence metadata = new FileEvidence();
+            metadata.setFilename(fileName);
+            metadata.setFilepath(fileaccessurl + fileName);
+            metadata.setFileimage(metadata.getFilepath());
+            metadata.setUsername(user.getUsername()); // uploaded by username
+            metadata.setDate_time(new Date());
+            metadata.setEvidenceid(evidence.getId());
+            metadata.setFilesize(file.getSize());
+            metadata.setWidth(Constants.DEFAULT_WIDTH);
+            metadata = fileEvidenceRepository.save(metadata);
+            
+            Path filePath = Paths.get(fileuploaddir, fileName);
+
+            // Save file to the server
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+	
+	        return metadata;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	 
+	@Override
+	public ResponseEntity<?> downloadfile(Users user, String fileName) {
+		try {
+	        Path filePath = Paths.get(fileuploaddir).resolve(fileName).normalize();
 	        Resource resource = new UrlResource(filePath.toUri());
 	
 	        if (!resource.exists()) 
-				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("resource_not_found", locale), 111));
+				return ResponseEntity.ok(new MessageResponse("resource_not_found", 111));
 	
 	        return ResponseEntity.ok()
 	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 	                .body(resource);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
+			return ResponseEntity.ok(new MessageResponse("exception_case", 111));
+		}
+	}
+	 
+	@Override
+	public ResponseEntity<?> returnbase64file(Users user, String fileName) {
+		try {
+	        Path filePath = Paths.get(fileuploaddir).resolve(fileName).normalize();
+	        Resource resource = new UrlResource(filePath.toUri());
+	
+	        if (!resource.exists()) 
+				return ResponseEntity.ok(new MessageResponse("resource_not_found", 111));
+
+	        byte[] fileBytes = Files.readAllBytes(filePath);
+
+	        // Encode the byte array into Base64
+	        String base64EncodedFile = Base64.getEncoder().encodeToString(fileBytes);
+
+	        // Get MIME type for the file (e.g., image/jpeg, application/pdf)
+	        String mimeType = Files.probeContentType(filePath);
+
+//		        // Return the Base64 encoded string in the response body
+//		        return ResponseEntity.ok()
+//		                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+//		                .contentType(MediaType.parseMediaType(mimeType))
+//		                .body("data:" + mimeType + ";base64," + base64EncodedFile);
+
+//				return ResponseEntity.ok(new MessageResponse("data:" + mimeType + ";base64," + base64EncodedFile));
+			return ResponseEntity.ok("data:" + mimeType + ";base64," + base64EncodedFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse("exception_case", 111));
 		}
 	}
 
@@ -180,7 +262,6 @@ public class EvidenceServiceImpl implements EvidenceService {
 	public ResponseEntity<?> commentlist(Locale locale, Integer page, Integer size, String search, String sortcolumn,
 			Boolean descending, Integer draw, Long evidenceid, Users user) {
 		try {
-			
 			Page<EvidenceReply> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
 			Specification<EvidenceReply> spec = JPASpecification.returnEvidenceReplySpecification(search, sortcolumn, descending, evidenceid);
@@ -204,46 +285,80 @@ public class EvidenceServiceImpl implements EvidenceService {
 
 	@Override
 	public ResponseEntity<?> commentsave(Locale locale, @Valid EvidenceCommentSaveRq req, Users user) {
-
-		EvidenceReply obj = null;
-		if (req.getId() != null) {
-			Optional<EvidenceReply> opt = evidenceReplyRepository.findById(req.getId());
-			if (opt.isPresent())
-				obj = opt.get();
+		try {
+			EvidenceReply obj = null;
+			if (req.getId() != null) {
+				Optional<EvidenceReply> opt = evidenceReplyRepository.findById(req.getId());
+				if (opt.isPresent())
+					obj = opt.get();
+			}
+			if (obj == null) {
+				obj = new EvidenceReply();
+				obj.setDate_time(new Date());
+				obj.setEvidenceid(req.getEvidenceid());
+				obj.setUsername(user.getUsername());
+			}
+			obj.setComment(req.getComment());
+			
+			obj = evidenceReplyRepository.save(obj);
+			
+			return ResponseEntity.ok(obj);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
-		if (obj == null) {
-			obj = new EvidenceReply();
-			obj.setDate_time(new Date());
-			obj.setEvidenceid(req.getEvidenceid());
-			obj.setUsername(user.getUsername());
-		}
-		obj.setComment(req.getComment());
-		
-		obj = evidenceReplyRepository.save(obj);
-		
-		return ResponseEntity.ok(obj);
 	}
 
 	@Override
 	public ResponseEntity<?> commentremove(Locale locale, Long id, Users user) {
-
-        Optional<EvidenceReply> opt = evidenceReplyRepository.findById(id);
-		if (opt.isPresent()) {
-			evidenceReplyRepository.delete(opt.get());
+		try {
+	        Optional<EvidenceReply> opt = evidenceReplyRepository.findById(id);
+			if (opt.isPresent()) {
+				evidenceReplyRepository.delete(opt.get());
+			}
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
-		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
 	}
 
 	@Override
 	public ResponseEntity<?> remove(Locale locale, Long id, Users user) {
-
-        Optional<Evidence> opt = evidenceRepository.findById(id);
-		if (opt.isPresent()) {
-			evidenceReplyRepository.deleteByEvidenceid(id);
-			fileEvidenceRepository.deleteByEvidenceid(id);
-			evidenceRepository.delete(opt.get());
+		try {
+	        Optional<Evidence> opt = evidenceRepository.findById(id);
+			if (opt.isPresent()) {
+				evidenceReplyRepository.deleteByEvidenceid(id);
+				fileEvidenceRepository.deleteByEvidenceid(id);
+				evidenceRepository.delete(opt.get());
+			}
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
-		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
+	}
+
+	@Override
+	public ResponseEntity<?> removefile(Locale locale, Long id, Users user) {
+		try {
+			
+			Optional<FileEvidence> opt = fileEvidenceRepository.findById(id);
+			
+			if (opt.isPresent()) {
+				FileEvidence fe = opt.get();
+				long evidenceid = fe.getEvidenceid();
+				fileEvidenceRepository.delete(fe);
+				IdRs rs = new IdRs();
+				rs.setId(evidenceid);
+				return ResponseEntity.ok(rs);
+			}
+
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 222));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
+		}
 	}
 
 }

@@ -233,7 +233,7 @@ public class AdminController {
 	
 
 	@RequestMapping(value = "/goal/evidence/file/upload", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadfiles(HttpServletRequest request, 
+    public ResponseEntity<?> uploadfile(HttpServletRequest request, 
 			  							@RequestHeader(name = "Accept-Language", required = false) Locale locale,
 										@RequestHeader(name = "comment", required = false) String comment,
 										@RequestHeader(name = "evidenceid", required = false) Long evidenceid,
@@ -242,24 +242,28 @@ public class AdminController {
         Users user = (Users) request.getAttribute("user");
         return evidenceService.uploadfile(locale, user, file, evidenceid, comment);
     }
+	
 
-	@RequestMapping(value = "/goal/evidence/file/{fileName}", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadfile(HttpServletRequest request, 
-										@RequestHeader(name = "Accept-Language", required = false) Locale locale,
-										@PathVariable String fileName) {
-
+	@RequestMapping(value = "/goal/evidence/files/upload", method = RequestMethod.POST)
+    public ResponseEntity<?> uploadfiles(HttpServletRequest request, 
+			  							@RequestHeader(name = "Accept-Language", required = false) Locale locale,
+										@RequestHeader(name = "comment", required = false) String comment,
+										@RequestHeader(name = "evidenceid", required = false) Long evidenceid,
+										@RequestHeader(name = "goalid", required = false) String goalid,
+										@RequestParam("file") MultipartFile[] files) {
+ 
         Users user = (Users) request.getAttribute("user");
-        return evidenceService.downloadfile(locale, user, fileName);
+        return evidenceService.uploadfiles(locale, user, files, evidenceid, comment, goalid);
     }
 
-//	@RequestMapping(value = "/goal/evidence/file/remove", method = RequestMethod.POST)
-//	public ResponseEntity<?> goalevidencefileremove(HttpServletRequest request,
-//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
-//									          @RequestHeader(name = "id", required = true) Long id) {
-//
-//        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.removefile(locale, id, user);
-//	}
+	@RequestMapping(value = "/goal/evidence/file/remove/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> goalevidencefileremove(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @PathVariable(name = "id", required = true) Long id) {
+
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.removefile(locale, id, user);
+	}
 	
 	@RequestMapping(value = "/goal/evidence/comment/list", method = RequestMethod.POST)
 	public ResponseEntity<?> goalevidencecommentlist(HttpServletRequest request,

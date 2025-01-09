@@ -27,7 +27,8 @@ public class Constants {
 	public static final String AUTHORITY_KEY = "AUTH-";
 	public static final String DEPARTMENT_KEY = "DEPT-";
 	public static final String SECTION_KEY = "SECT-";
-	public static final String EVIDENCE_KEY = "EVID-";
+	public static final String EVIDENCE_KEY = "EVID";
+	public static final String DEFAULT_WIDTH = "120px";
 	
 	public static String generateOTP(int length) {
 		String numbers = "0123456789";

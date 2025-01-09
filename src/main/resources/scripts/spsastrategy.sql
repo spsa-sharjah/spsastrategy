@@ -319,16 +319,30 @@ INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manag
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/files/list', b'1');
 
 
-INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/files/upload');
-INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/files/upload');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/file/upload');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/file/upload');
 
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/file/upload', b'1');
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/file/upload', b'1');
 
 
-INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin//goal/evidence/remove');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/files/upload');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/files/upload');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/files/upload', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/files/upload', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/remove');
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/remove');
 
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/remove', b'1');
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/remove', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/file/remove');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/file/remove');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/file/remove', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/file/remove', b'1');
 
