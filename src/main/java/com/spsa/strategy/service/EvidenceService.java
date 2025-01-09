@@ -27,4 +27,6 @@ public interface EvidenceService {
 	ResponseEntity<?> commentsave(Locale locale, @Valid EvidenceCommentSaveRq req, Users user);
 
 	ResponseEntity<?> commentremove(Locale locale, Long id, Users user);
+
+	ResponseEntity<?> remove(Locale locale, Long id, Users user);
 }

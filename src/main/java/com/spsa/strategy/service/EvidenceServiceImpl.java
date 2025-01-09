@@ -215,6 +215,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 			obj = new EvidenceReply();
 			obj.setDate_time(new Date());
 			obj.setEvidenceid(req.getEvidenceid());
+			obj.setUsername(user.getUsername());
 		}
 		obj.setComment(req.getComment());
 		
@@ -229,6 +230,18 @@ public class EvidenceServiceImpl implements EvidenceService {
         Optional<EvidenceReply> opt = evidenceReplyRepository.findById(id);
 		if (opt.isPresent()) {
 			evidenceReplyRepository.delete(opt.get());
+		}
+		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
+	}
+
+	@Override
+	public ResponseEntity<?> remove(Locale locale, Long id, Users user) {
+
+        Optional<Evidence> opt = evidenceRepository.findById(id);
+		if (opt.isPresent()) {
+			evidenceReplyRepository.deleteByEvidenceid(id);
+			fileEvidenceRepository.deleteByEvidenceid(id);
+			evidenceRepository.delete(opt.get());
 		}
 		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
 	}

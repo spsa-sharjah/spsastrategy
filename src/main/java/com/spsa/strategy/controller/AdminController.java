@@ -212,6 +212,15 @@ public class AdminController {
 		return evidenceService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
 	}
 
+	@RequestMapping(value = "/goal/evidence/remove", method = RequestMethod.POST)
+	public ResponseEntity<?> goalevidenceremove(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+									          @RequestHeader(name = "id", required = true) Long id) {
+
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.remove(locale, id, user);
+	}
+
 	
 	@RequestMapping(value = "/goal/evidence/files/list", method = RequestMethod.POST)
 	public ResponseEntity<?> goalevidencefileslist(HttpServletRequest request,
@@ -250,15 +259,6 @@ public class AdminController {
 //
 //        Users user = (Users) request.getAttribute("user");
 //		return evidenceService.removefile(locale, id, user);
-//	}
-
-//	@RequestMapping(value = "/goal/evidence/remove", method = RequestMethod.POST)
-//	public ResponseEntity<?> goalevidenceremove(HttpServletRequest request,
-//											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
-//									          @RequestHeader(name = "id", required = true) Long id) {
-//
-//        Users user = (Users) request.getAttribute("user");
-//		return evidenceService.remove(locale, id, user);
 //	}
 	
 	@RequestMapping(value = "/goal/evidence/comment/list", method = RequestMethod.POST)
