@@ -25,7 +25,7 @@ public class Authoritygoals {
 
 	private int yearlyweight;
     
-	private Integer yearlyexpectedweight;
+	private int yearlyexpectedweight;
 
 	private String username;
 
@@ -81,11 +81,11 @@ public class Authoritygoals {
 		this.yearlyweight = yearlyweight;
 	}
 
-	public Integer getYearlyexpectedweight() {
+	public int getYearlyexpectedweight() {
 		return yearlyexpectedweight;
 	}
 
-	public void setYearlyexpectedweight(Integer yearlyexpectedweight) {
+	public void setYearlyexpectedweight(int yearlyexpectedweight) {
 		this.yearlyexpectedweight = yearlyexpectedweight;
 	}
 

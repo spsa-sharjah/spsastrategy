@@ -19,7 +19,7 @@ public interface SectiongoalsRepository extends JpaRepository<Sectiongoals, Stri
 
 	List<Sectiongoals> findAll(Specification<Sectiongoals> spec);
 
-    @Query("SELECT SUM(g.yearlyweight) FROM Sectiongoals g WHERE g.depgoalid = :depgoalid")
+    @Query("SELECT SUM(g.yearlyexpectedweight) FROM Sectiongoals g WHERE g.depgoalid = :depgoalid")
     Integer findSumOfGoalsByDepgoalid(@Param("depgoalid") String depgoalid);
 
 }

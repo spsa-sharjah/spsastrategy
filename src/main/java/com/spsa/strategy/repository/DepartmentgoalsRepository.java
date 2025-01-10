@@ -20,6 +20,6 @@ public interface DepartmentgoalsRepository extends JpaRepository<Departmentgoals
 
 	List<Departmentgoals> findAll(Specification<Departmentgoals> spec);
 
-    @Query("SELECT SUM(g.yearlyweight) FROM Departmentgoals g WHERE g.authgoalid = :authgoalid")
+    @Query("SELECT SUM(g.yearlyexpectedweight) FROM Departmentgoals g WHERE g.authgoalid = :authgoalid")
     Integer findSumOfGoalsByAuthgoalid(@Param("authgoalid") String authgoalid);
 }
