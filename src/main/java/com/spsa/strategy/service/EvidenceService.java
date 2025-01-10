@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spsa.strategy.builder.request.EvidenceCommentSaveRq;
+import com.spsa.strategy.builder.request.EvidenceSaveRq;
 import com.spsa.strategy.model.Users;
 
 import jakarta.validation.Valid;
@@ -17,9 +18,7 @@ public interface EvidenceService {
 
 	ResponseEntity<?> fileslist(Locale locale, Long evidenceid, Users user);
 
-	ResponseEntity<?> uploadfile(Locale locale, Users user, MultipartFile file, Long evidenceid, String comment);
-
-	ResponseEntity<?> uploadfiles(Locale locale, Users user, MultipartFile[] files, Long evidenceid, String comment, String goalid);
+	ResponseEntity<?> uploadfiles(Locale locale, Users user, MultipartFile[] files, Long evidenceid, String goalid);
 
 	ResponseEntity<?> downloadfile(Users user, String fileName);
 	
@@ -35,4 +34,6 @@ public interface EvidenceService {
 	ResponseEntity<?> remove(Locale locale, Long id, Users user);
 
 	ResponseEntity<?> removefile(Locale locale, Long id, Users user);
+
+	ResponseEntity<?> save(Locale locale, @Valid EvidenceSaveRq req, Users user);
 }

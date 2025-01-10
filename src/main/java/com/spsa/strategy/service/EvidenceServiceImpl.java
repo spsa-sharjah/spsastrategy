@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spsa.strategy.builder.request.EvidenceCommentSaveRq;
+import com.spsa.strategy.builder.request.EvidenceSaveRq;
 import com.spsa.strategy.builder.response.DatatableResponse;
 import com.spsa.strategy.builder.response.IdRs;
 import com.spsa.strategy.builder.response.MessageResponse;
@@ -118,35 +119,7 @@ public class EvidenceServiceImpl implements EvidenceService {
 	}
 
 	@Override
-	public ResponseEntity<?> uploadfile(Locale locale, Users user, MultipartFile file, Long evidenceid, String comment) {
-
-		try {
-	        Evidence evidence = null;
-            if (evidenceid != null) {
-
-            	Optional<Evidence> opt = evidenceRepository.findById(evidenceid);
-            	if (!opt.isPresent())
-        			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
-            		
-        		evidence = opt.get();
-            }
-            if (evidence == null) {
-                evidence = new Evidence();
-                evidence.setDate_time(new Date());
-                evidence.setUsername(user.getUsername());
-            }
-            evidence.setComment(comment);
-            evidence = evidenceRepository.save(evidence);
-	
-	        return ResponseEntity.ok(savefile(user, file, evidence));
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
-		}
-    }
-
-	@Override
-	public ResponseEntity<?> uploadfiles(Locale locale, Users user, MultipartFile[] files, Long evidenceid, String comment, String goalid) {
+	public ResponseEntity<?> uploadfiles(Locale locale, Users user, MultipartFile[] files, Long evidenceid, String goalid) {
 
 		try {
 	        Evidence evidence = null;
@@ -163,9 +136,8 @@ public class EvidenceServiceImpl implements EvidenceService {
                 evidence.setDate_time(new Date());
                 evidence.setUsername(user.getUsername());
                 evidence.setGoalid(goalid);
+                evidence = evidenceRepository.save(evidence);
             }
-            evidence.setComment(comment);
-            evidence = evidenceRepository.save(evidence);
 
             List<FileEvidence> savedfiles = new ArrayList<FileEvidence>();
             for (MultipartFile file : files)
@@ -197,8 +169,10 @@ public class EvidenceServiceImpl implements EvidenceService {
             metadata.setWidth(Constants.DEFAULT_WIDTH);
             metadata = fileEvidenceRepository.save(metadata);
             
+            checkAndCreateDirectory(fileuploaddir);
             Path filePath = Paths.get(fileuploaddir, fileName);
 
+            
             // Save file to the server
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 	
@@ -208,6 +182,18 @@ public class EvidenceServiceImpl implements EvidenceService {
 			return null;
 		}
 	}
+	public static void checkAndCreateDirectory(String filePath){
+		try {
+	        Path path = Paths.get(filePath);
+	
+	        if (Files.notExists(path)) {
+	            Files.createDirectories(path);
+	            System.out.println("Directory created: " + path.toString());
+	        }
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 	 
 	@Override
 	public ResponseEntity<?> downloadfile(Users user, String fileName) {
@@ -355,6 +341,35 @@ public class EvidenceServiceImpl implements EvidenceService {
 			}
 
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 222));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
+		}
+	}
+
+	@Override
+	public ResponseEntity<?> save(Locale locale, @Valid EvidenceSaveRq req, Users user) {
+		try {
+	        Evidence evidence = null;
+            if (req.getId() != null) {
+
+            	Optional<Evidence> opt = evidenceRepository.findById(req.getId());
+            	if (!opt.isPresent())
+        			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
+            		
+        		evidence = opt.get();
+            }
+            if (evidence == null) {
+                evidence = new Evidence();
+                evidence.setDate_time(new Date());
+                evidence.setUsername(user.getUsername());
+                evidence.setGoalid(req.getGoalid());
+            }
+            evidence.setComment(req.getComment());
+            evidence.setStatus(req.getStatus());
+            evidence = evidenceRepository.save(evidence);
+        	return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
+        	
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));

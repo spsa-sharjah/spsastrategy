@@ -346,3 +346,10 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/file/remove', b'1');
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isdelete`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/file/remove', b'1');
 
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/save');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/save');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/save', b'1');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/save', b'1');
+

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spsa.strategy.builder.request.AuthoritygoalSaveRq;
 import com.spsa.strategy.builder.request.DepartmentgoalSaveRq;
 import com.spsa.strategy.builder.request.EvidenceCommentSaveRq;
+import com.spsa.strategy.builder.request.EvidenceSaveRq;
 import com.spsa.strategy.builder.request.SectiongoalSaveRq;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.service.AuthService;
@@ -212,6 +213,15 @@ public class AdminController {
 		return evidenceService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
 	}
 
+	@RequestMapping(value = "/goal/evidence/save", method = RequestMethod.POST)
+	public ResponseEntity<?> goalevidencesave(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @Valid @RequestBody EvidenceSaveRq req) {
+
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.save(locale, req, user);
+	}
+	
 	@RequestMapping(value = "/goal/evidence/remove", method = RequestMethod.POST)
 	public ResponseEntity<?> goalevidenceremove(HttpServletRequest request,
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
@@ -221,7 +231,6 @@ public class AdminController {
 		return evidenceService.remove(locale, id, user);
 	}
 
-	
 	@RequestMapping(value = "/goal/evidence/files/list", method = RequestMethod.POST)
 	public ResponseEntity<?> goalevidencefileslist(HttpServletRequest request,
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
@@ -231,29 +240,15 @@ public class AdminController {
 		return evidenceService.fileslist(locale, evidenceid, user);
 	}
 	
-
-	@RequestMapping(value = "/goal/evidence/file/upload", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadfile(HttpServletRequest request, 
-			  							@RequestHeader(name = "Accept-Language", required = false) Locale locale,
-										@RequestHeader(name = "comment", required = false) String comment,
-										@RequestHeader(name = "evidenceid", required = false) Long evidenceid,
-										@RequestParam("file") MultipartFile file) {
- 
-        Users user = (Users) request.getAttribute("user");
-        return evidenceService.uploadfile(locale, user, file, evidenceid, comment);
-    }
-	
-
 	@RequestMapping(value = "/goal/evidence/files/upload", method = RequestMethod.POST)
     public ResponseEntity<?> uploadfiles(HttpServletRequest request, 
 			  							@RequestHeader(name = "Accept-Language", required = false) Locale locale,
-										@RequestHeader(name = "comment", required = false) String comment,
 										@RequestHeader(name = "evidenceid", required = false) Long evidenceid,
 										@RequestHeader(name = "goalid", required = false) String goalid,
 										@RequestParam("file") MultipartFile[] files) {
  
         Users user = (Users) request.getAttribute("user");
-        return evidenceService.uploadfiles(locale, user, files, evidenceid, comment, goalid);
+        return evidenceService.uploadfiles(locale, user, files, evidenceid, goalid);
     }
 
 	@RequestMapping(value = "/goal/evidence/file/remove/{id}", method = RequestMethod.POST)
