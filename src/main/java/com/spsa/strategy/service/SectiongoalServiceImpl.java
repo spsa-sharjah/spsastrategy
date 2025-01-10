@@ -19,8 +19,10 @@ import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.enumeration.PositionEnum;
 import com.spsa.strategy.enumeration.LevelEnum;
+import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Sectiongoals;
 import com.spsa.strategy.model.Users;
+import com.spsa.strategy.repository.DepartmentgoalsRepository;
 import com.spsa.strategy.repository.SectiongoalsRepository;
 
 import jakarta.transaction.Transactional;
@@ -35,6 +37,9 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 	
 	@Autowired
 	SectiongoalsRepository goalsRepository;
+
+	@Autowired
+	DepartmentgoalsRepository departmentgoalsRepository;
 
 	@Override
 	public ResponseEntity<?> goalsave(Locale locale, @Valid SectiongoalSaveRq req, String username, Users user) {
@@ -106,11 +111,19 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 	}
 
 	@Override
-	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user) {
+	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean wheightcalculation) {
 
         Optional<Sectiongoals> opt = goalsRepository.findById(goalid);
 		if (opt.isPresent()) {
-			return ResponseEntity.ok(opt.get());
+			Sectiongoals goal = opt.get();
+			if (wheightcalculation != null && wheightcalculation == true) {
+				Optional<Departmentgoals> departmentgoalsopt = departmentgoalsRepository.findById(goal.getDepgoalid());
+				Integer parentgoalweight = departmentgoalsopt.get().getYearlyweight();
+				Integer sum = goalsRepository.findSumOfGoalsByDepgoalid(goal.getDepgoalid());
+				if (sum == null) sum = 0;
+				goal.setRemainingwheight(parentgoalweight - sum);
+			}
+			return ResponseEntity.ok(goal);
 		}
 		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
 	}

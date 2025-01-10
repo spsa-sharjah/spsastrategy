@@ -88,10 +88,11 @@ public class AdminController {
 	public ResponseEntity<?> authoritygoaldetails(HttpServletRequest request,
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
-											  @RequestHeader(name = "goalid", required = true) String goalid) {
+											  @RequestHeader(name = "goalid", required = true) String goalid,
+											  @RequestHeader(name = "wheightcalculation", required = false) Boolean wheightcalculation) {
 
         Users user = (Users) request.getAttribute("user");
-		return authoritygoalService.details(locale, goalid, username, user);
+		return authoritygoalService.details(locale, goalid, username, user, wheightcalculation);
 	}
 
 
@@ -135,10 +136,11 @@ public class AdminController {
 	public ResponseEntity<?> departmentgoaldetails(HttpServletRequest request,
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
-											  @RequestHeader(name = "goalid", required = true) String goalid) {
+											  @RequestHeader(name = "goalid", required = true) String goalid,
+											  @RequestHeader(name = "wheightcalculation", required = false) Boolean wheightcalculation) {
 
         Users user = (Users) request.getAttribute("user");
-		return departmentgoalService.details(locale, goalid, username, user);
+		return departmentgoalService.details(locale, goalid, username, user, wheightcalculation);
 	}
 	
 	@RequestMapping(value = "/section/goal/list", method = RequestMethod.POST)
@@ -180,10 +182,11 @@ public class AdminController {
 	public ResponseEntity<?> sectiongoaldetails(HttpServletRequest request,
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
-											  @RequestHeader(name = "goalid", required = true) String goalid) {
+											  @RequestHeader(name = "goalid", required = true) String goalid,
+											  @RequestHeader(name = "wheightcalculation", required = false) Boolean wheightcalculation) {
 
         Users user = (Users) request.getAttribute("user");
-		return sectiongoalService.details(locale, goalid, username, user);
+		return sectiongoalService.details(locale, goalid, username, user, wheightcalculation);
 	}
 
 	
@@ -240,6 +243,7 @@ public class AdminController {
 		return evidenceService.fileslist(locale, evidenceid, user);
 	}
 	
+
 	@RequestMapping(value = "/goal/evidence/files/upload", method = RequestMethod.POST)
     public ResponseEntity<?> uploadfiles(HttpServletRequest request, 
 			  							@RequestHeader(name = "Accept-Language", required = false) Locale locale,

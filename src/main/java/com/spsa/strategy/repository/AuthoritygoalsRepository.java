@@ -22,5 +22,7 @@ public interface AuthoritygoalsRepository extends JpaRepository<Authoritygoals, 
 
     @Query(value = "SELECT * FROM authoritygoals a WHERE a.id NOT IN (SELECT goalid FROM restrictedgoalsuserlevel WHERE userlevelid = :userlevelid)", nativeQuery = true)
     Page<Authoritygoals> findnonrestrictedgoals(@Param("userlevelid") String userlevelid, Pageable pageable);
-	
+    
+    @Query("SELECT SUM(g.yearlyweight) FROM Authoritygoals g WHERE g.year = :year")
+    Integer findSumOfGoalsByYear(@Param("year") String year);
 }

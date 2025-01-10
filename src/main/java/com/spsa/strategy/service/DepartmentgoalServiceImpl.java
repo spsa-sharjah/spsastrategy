@@ -20,8 +20,10 @@ import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.enumeration.LevelEnum;
 import com.spsa.strategy.enumeration.PositionEnum;
+import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Users;
+import com.spsa.strategy.repository.AuthoritygoalsRepository;
 import com.spsa.strategy.repository.DepartmentgoalsRepository;
 
 import jakarta.transaction.Transactional;
@@ -39,6 +41,9 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 
 	@Autowired
 	private AuthService authService;
+	
+	@Autowired
+	AuthoritygoalsRepository authoritygoalsRepository;
 
 	@Override
 	public ResponseEntity<?> goalsave(Locale locale, @Valid DepartmentgoalSaveRq req, String username, Users user) {
@@ -124,11 +129,19 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 	}
 
 	@Override
-	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user) {
+	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean wheightcalculation) {
 
         Optional<Departmentgoals> opt = goalsRepository.findById(goalid);
 		if (opt.isPresent()) {
-			return ResponseEntity.ok(opt.get());
+			Departmentgoals goal = opt.get();
+			if (wheightcalculation != null && wheightcalculation == true) {
+				Optional<Authoritygoals> authoritygoalsopt = authoritygoalsRepository.findById(goal.getAuthgoalid());
+				Integer parentgoalweight = authoritygoalsopt.get().getYearlyweight();
+				Integer sum = goalsRepository.findSumOfGoalsByAuthgoalid(goal.getAuthgoalid());
+				if (sum == null) sum = 0;
+				goal.setRemainingwheight(parentgoalweight - sum);
+			}
+			return ResponseEntity.ok(goal);
 		}
 		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
 	}

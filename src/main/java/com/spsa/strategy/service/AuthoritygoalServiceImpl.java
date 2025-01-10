@@ -113,10 +113,17 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 	}
 
 	@Override
-	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user) {
+	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean wheightcalculation) {
 		Optional<Authoritygoals> opt = goalsRepository.findById(goalid);
 		if (opt.isPresent()) {
-			return ResponseEntity.ok(opt.get());
+			Authoritygoals goal = opt.get();
+			if (wheightcalculation != null && wheightcalculation == true) {
+				Integer sum = goalsRepository.findSumOfGoalsByYear(goal.getYear());
+				if (sum == null) sum = 0;
+				goal.setRemainingwheight(100 - sum);
+			}
+			
+			return ResponseEntity.ok(goal);
 		}
 		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
 	}

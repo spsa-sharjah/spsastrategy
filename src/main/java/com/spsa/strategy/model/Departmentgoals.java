@@ -8,6 +8,7 @@ import com.spsa.strategy.config.Constants;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Size;
 
@@ -45,6 +46,10 @@ public class Departmentgoals {
 
 	@Size(max = 50)
 	private String userrole;
+
+//	Wheight calculation fields - per parent goal id
+	@Transient
+	private Integer remainingwheight;
 
 	public String getId() {
 		return id;
@@ -148,5 +153,13 @@ public class Departmentgoals {
 
 	public void setUserrole(String userrole) {
 		this.userrole = userrole;
+	}
+
+	public Integer getRemainingwheight() {
+		return remainingwheight;
+	}
+
+	public void setRemainingwheight(Integer remainingwheight) {
+		this.remainingwheight = remainingwheight;
 	}
 }
