@@ -129,17 +129,17 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 	}
 
 	@Override
-	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean wheightcalculation) {
+	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean weightcalculation) {
 
         Optional<Departmentgoals> opt = goalsRepository.findById(goalid);
 		if (opt.isPresent()) {
 			Departmentgoals goal = opt.get();
-			if (wheightcalculation != null && wheightcalculation == true) {
+			if (weightcalculation != null && weightcalculation == true) {
 				Optional<Authoritygoals> authoritygoalsopt = authoritygoalsRepository.findById(goal.getAuthgoalid());
 				Integer parentgoalweight = authoritygoalsopt.get().getYearlyweight();
 				Integer sum = goalsRepository.findSumOfGoalsByAuthgoalid(goal.getAuthgoalid());
 				if (sum == null) sum = 0;
-				goal.setRemainingwheight(parentgoalweight - sum);
+				goal.setRemainingweight(parentgoalweight - sum);
 			}
 			return ResponseEntity.ok(goal);
 		}

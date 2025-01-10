@@ -111,17 +111,17 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 	}
 
 	@Override
-	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean wheightcalculation) {
+	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean weightcalculation) {
 
         Optional<Sectiongoals> opt = goalsRepository.findById(goalid);
 		if (opt.isPresent()) {
 			Sectiongoals goal = opt.get();
-			if (wheightcalculation != null && wheightcalculation == true) {
+			if (weightcalculation != null && weightcalculation == true) {
 				Optional<Departmentgoals> departmentgoalsopt = departmentgoalsRepository.findById(goal.getDepgoalid());
 				Integer parentgoalweight = departmentgoalsopt.get().getYearlyweight();
 				Integer sum = goalsRepository.findSumOfGoalsByDepgoalid(goal.getDepgoalid());
 				if (sum == null) sum = 0;
-				goal.setRemainingwheight(parentgoalweight - sum);
+				goal.setRemainingweight(parentgoalweight - sum);
 			}
 			return ResponseEntity.ok(goal);
 		}

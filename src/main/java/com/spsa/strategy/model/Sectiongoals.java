@@ -47,9 +47,9 @@ public class Sectiongoals {
 	@Size(max = 50)
 	private String userrole;
 
-//	Wheight calculation fields - per parent goal id
+//	weight calculation fields - per parent goal id
 	@Transient
-	private Integer remainingwheight;
+	private Integer remainingweight;
 
 	public String getId() {
 		return id;
@@ -155,11 +155,11 @@ public class Sectiongoals {
 		this.userrole = userrole;
 	}
 
-	public Integer getRemainingwheight() {
-		return remainingwheight;
+	public Integer getRemainingweight() {
+		return remainingweight;
 	}
 
-	public void setRemainingwheight(Integer remainingwheight) {
-		this.remainingwheight = remainingwheight;
+	public void setRemainingweight(Integer remainingweight) {
+		this.remainingweight = remainingweight;
 	}
 }

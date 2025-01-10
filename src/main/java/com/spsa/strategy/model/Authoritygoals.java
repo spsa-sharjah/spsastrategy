@@ -50,9 +50,9 @@ public class Authoritygoals {
 	@Size(max = 50)
 	private String userrole;
 	
-//	Wheight calculation fields - per year
+//	weight calculation fields - per year
 	@Transient
-	private Integer remainingwheight;
+	private Integer remainingweight;
 
 	public Authoritygoals() {
 	}
@@ -169,11 +169,11 @@ public class Authoritygoals {
 		this.userrole = userrole;
 	}
 
-	public Integer getRemainingwheight() {
-		return remainingwheight;
+	public Integer getRemainingweight() {
+		return remainingweight;
 	}
 
-	public void setRemainingwheight(Integer remainingwheight) {
-		this.remainingwheight = remainingwheight;
+	public void setRemainingweight(Integer remainingweight) {
+		this.remainingweight = remainingweight;
 	}
 }

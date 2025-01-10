@@ -17,6 +17,6 @@ public interface DepartmentgoalService {
 
 	ResponseEntity<?> goalremove(Locale locale, String goalid, String username, Users user);
 
-	ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean wheightcalculation);
+	ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean weightcalculation);
 
 }

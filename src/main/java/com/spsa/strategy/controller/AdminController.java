@@ -89,10 +89,10 @@ public class AdminController {
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid,
-											  @RequestHeader(name = "wheightcalculation", required = false) Boolean wheightcalculation) {
+											  @RequestHeader(name = "weightcalculation", required = false) Boolean weightcalculation) {
 
         Users user = (Users) request.getAttribute("user");
-		return authoritygoalService.details(locale, goalid, username, user, wheightcalculation);
+		return authoritygoalService.details(locale, goalid, username, user, weightcalculation);
 	}
 
 
@@ -137,10 +137,10 @@ public class AdminController {
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid,
-											  @RequestHeader(name = "wheightcalculation", required = false) Boolean wheightcalculation) {
+											  @RequestHeader(name = "weightcalculation", required = false) Boolean weightcalculation) {
 
         Users user = (Users) request.getAttribute("user");
-		return departmentgoalService.details(locale, goalid, username, user, wheightcalculation);
+		return departmentgoalService.details(locale, goalid, username, user, weightcalculation);
 	}
 	
 	@RequestMapping(value = "/section/goal/list", method = RequestMethod.POST)
@@ -183,10 +183,10 @@ public class AdminController {
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
 											  @RequestHeader(name = "goalid", required = true) String goalid,
-											  @RequestHeader(name = "wheightcalculation", required = false) Boolean wheightcalculation) {
+											  @RequestHeader(name = "weightcalculation", required = false) Boolean weightcalculation) {
 
         Users user = (Users) request.getAttribute("user");
-		return sectiongoalService.details(locale, goalid, username, user, wheightcalculation);
+		return sectiongoalService.details(locale, goalid, username, user, weightcalculation);
 	}
 
 	
