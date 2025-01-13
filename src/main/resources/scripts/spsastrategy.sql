@@ -353,3 +353,20 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managedepartmentgoals', '/strategy/api/admin/goal/evidence/save', b'1');
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `ispost`) VALUES ('managesectiongoals', '/strategy/api/admin/goal/evidence/save', b'1');
 
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/authority/goal/weight');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/authority/goal/weight');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/authority/goal/weight', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/department/goal/weight');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/department/goal/weight');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managedepartmentgoals', '/strategy/api/admin/department/goal/weight', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/section/goal/weight');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/section/goal/weight');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/weight', b'1');

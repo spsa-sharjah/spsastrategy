@@ -17,6 +17,11 @@ public interface DepartmentgoalService {
 
 	ResponseEntity<?> goalremove(Locale locale, String goalid, String username, Users user);
 
-	ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean weightcalculation);
+	ResponseEntity<?> details(Locale locale, String goalid, String username, Users user);
+
+	ResponseEntity<?> departmentgoalweight(Locale locale, String username, Users user, String authgoalid,
+			String depgoalid);
+
+	String deletebyauthgoalid(Locale locale, Users user, String authgoalid);
 
 }

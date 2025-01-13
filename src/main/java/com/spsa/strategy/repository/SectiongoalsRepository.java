@@ -18,8 +18,13 @@ public interface SectiongoalsRepository extends JpaRepository<Sectiongoals, Stri
 	Page<Sectiongoals> findAll(Specification<Sectiongoals> spec, Pageable pageable);
 
 	List<Sectiongoals> findAll(Specification<Sectiongoals> spec);
+	
+	List <Sectiongoals> findByDepgoalid(String depgoalid);
 
     @Query("SELECT SUM(g.yearlyexpectedweight) FROM Sectiongoals g WHERE g.depgoalid = :depgoalid")
     Integer findSumOfGoalsByDepgoalid(@Param("depgoalid") String depgoalid);
+
+    @Query("SELECT SUM(g.yearlyexpectedweight) FROM Sectiongoals g WHERE g.depgoalid = :depgoalid AND g.id <> :goalid")
+	Integer findSumOfGoalsByDepgoalidNotMatchingGoalid(@Param("depgoalid") String depgoalid, @Param("goalid") String goalid);
 
 }

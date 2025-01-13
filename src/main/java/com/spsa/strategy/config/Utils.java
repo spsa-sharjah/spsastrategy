@@ -39,7 +39,7 @@ public class Utils {
     		return Integer.parseInt(strnbr);
     	}catch (Exception e) {
 		}
-    	return 1;
+    	return -1;
     }
     
     public static String generateId(String key) {

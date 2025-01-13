@@ -64,6 +64,9 @@ public class EvidenceServiceImpl implements EvidenceService {
 	@Value("${spring.file.accessurl}") 
     private String fileaccessurl;
 
+	@Value("${spring.file.trash.dir}") 
+    private String filetrashdir;
+
 	@Override
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
 			Boolean descending, Integer draw, String goalid, Users user) {
@@ -333,6 +336,9 @@ public class EvidenceServiceImpl implements EvidenceService {
 			
 			if (opt.isPresent()) {
 				FileEvidence fe = opt.get();
+				
+				movefiletotrash(fileuploaddir + fe.getFilename(), filetrashdir + fe.getFilename());
+				
 				long evidenceid = fe.getEvidenceid();
 				fileEvidenceRepository.delete(fe);
 				IdRs rs = new IdRs();
@@ -344,6 +350,24 @@ public class EvidenceServiceImpl implements EvidenceService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
+		}
+	}
+	
+	private void movefiletotrash(String filepath, String trashpath) {
+
+		try {
+			Path sourcePath = Paths.get(filepath);
+
+	        Path destinationPath = Paths.get(trashpath);
+	        if (!Files.exists(destinationPath.getParent())) {
+	            Files.createDirectories(destinationPath.getParent());
+	        }
+
+            Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+            System.out.println("File moved successfully!");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -374,6 +398,16 @@ public class EvidenceServiceImpl implements EvidenceService {
 			e.printStackTrace();
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
+	}
+
+	@Override
+	public String removebygoalid(Locale locale, Users user, String goalid) {
+		List<Evidence> evidencelist = evidenceRepository.findByGoalid(goalid);
+		if (evidencelist != null)
+			for (Evidence evidence : evidencelist)
+				remove(locale, evidence.getId(), user);
+		
+		return "success";
 	}
 
 }

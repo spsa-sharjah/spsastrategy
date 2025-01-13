@@ -5,12 +5,17 @@ import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.spsa.strategy.builder.request.AuthoritygoalSaveRq;
 import com.spsa.strategy.builder.request.ResrictedGoalRolesRq;
 import com.spsa.strategy.builder.response.DatatableResponse;
+import com.spsa.strategy.builder.response.IntRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
@@ -20,11 +25,6 @@ import com.spsa.strategy.repository.AuthoritygoalsRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 @Transactional
 @Service
@@ -38,27 +38,44 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 
 	@Autowired
 	private AuthService authService;
+
+	@Autowired
+	DepartmentgoalService departmentgoalService;
 	
 	@Override
 	public ResponseEntity<?> goalsave(Locale locale, @Valid AuthoritygoalSaveRq req, String username, Users user) {
-        
-		if (req.getId() != null && !req.getId().trim().equals("")) {
-			Optional<Authoritygoals> opt = goalsRepository.findById(req.getId());
-			if (opt.isPresent())
-				req.setId(opt.get().getId());
-			else 
+
+		try {
+			Integer remainingweight = calculateweight(req.getYear(), req.getId());
+			if (req.getId() != null && !req.getId().trim().equals("")) {
+				Optional<Authoritygoals> opt = goalsRepository.findById(req.getId());
+				if (opt.isPresent())
+					req.setId(opt.get().getId());
+				else 
+					req.setId(generateUniqueId());
+			}
+			else
 				req.setId(generateUniqueId());
+
+			int yearlyweight = Utils.concertStringtoInteger(req.getYearlyweight());
+			int yearlyexpectedweight = Utils.concertStringtoInteger(req.getYearlyexpectedweight());
+			if(yearlyweight < 0 || yearlyexpectedweight < 0)
+				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 112));
+
+			if(yearlyweight > remainingweight || yearlyexpectedweight > remainingweight)
+				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 113));
+			
+			Authoritygoals obj = req.returnAuthoritygoals(username, user.getUser_role());
+			obj = goalsRepository.save(obj);
+			
+			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
+			authService.rolegoalsaccesssave(locale, user, rq);
+			
+			return ResponseEntity.ok(obj);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
-		else
-			req.setId(generateUniqueId());
-		
-		Authoritygoals obj = req.returnAuthoritygoals(username, user.getUser_role());
-		obj = goalsRepository.save(obj);
-		
-		ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
-		authService.rolegoalsaccesssave(locale, user, rq);
-		
-		return ResponseEntity.ok(obj);
 	}
 
 	@Override
@@ -104,27 +121,60 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 
 	@Override
 	public ResponseEntity<?> goalremove(Locale locale, String goalid, String username, Users user) {
-        Optional<Authoritygoals> opt = goalsRepository.findById(goalid);
-		if (opt.isPresent()) {
-			goalsRepository.delete(opt.get());
+		try {
+	        Optional<Authoritygoals> opt = goalsRepository.findById(goalid);
+			if (opt.isPresent()) {
+				departmentgoalService.goalremove(locale, goalid, username, user);
+				goalsRepository.delete(opt.get());
+			}
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
-		// TODO remove all related child rows
-		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
 	}
 
 	@Override
-	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user, Boolean weightcalculation) {
-		Optional<Authoritygoals> opt = goalsRepository.findById(goalid);
-		if (opt.isPresent()) {
-			Authoritygoals goal = opt.get();
-			if (weightcalculation != null && weightcalculation == true) {
-				Integer sum = goalsRepository.findSumOfGoalsByYear(goal.getYear());
-				if (sum == null) sum = 0;
-				goal.setRemainingweight(100 - sum);
+	public ResponseEntity<?> details(Locale locale, String goalid, String username, Users user) {
+		try {
+			Optional<Authoritygoals> opt = goalsRepository.findById(goalid);
+			if (opt.isPresent()) {
+				Authoritygoals goal = opt.get();
+				
+				return ResponseEntity.ok(goal);
 			}
-			
-			return ResponseEntity.ok(goal);
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
-		return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 111));
+	}
+
+	@Override
+	public ResponseEntity<?> authoritygoalweight(Locale locale, String username, Users user, String year, String goalid) {
+		try {
+			IntRs val = new IntRs(calculateweight(year, goalid));
+			return ResponseEntity.ok(val);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
+		}
+	}
+
+	private Integer calculateweight (String year, String goalid) throws Exception{
+
+		Integer sum = 0;
+		if (goalid != null) {
+			Optional<Authoritygoals> opt = goalsRepository.findById(goalid);
+			if (opt.isPresent()) 
+				sum = goalsRepository.findSumOfGoalsByYearNotMatchingGoalid(year, goalid);
+			else
+				sum = goalsRepository.findSumOfGoalsByYear(year);
+		}
+		else
+			sum = goalsRepository.findSumOfGoalsByYear(year);
+		if (sum == null) sum = 0;
+		
+		return 100 - sum;
 	}
 }

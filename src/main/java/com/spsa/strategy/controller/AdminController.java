@@ -88,11 +88,21 @@ public class AdminController {
 	public ResponseEntity<?> authoritygoaldetails(HttpServletRequest request,
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
-											  @RequestHeader(name = "goalid", required = true) String goalid,
-											  @RequestHeader(name = "weightcalculation", required = false) Boolean weightcalculation) {
+											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
         Users user = (Users) request.getAttribute("user");
-		return authoritygoalService.details(locale, goalid, username, user, weightcalculation);
+		return authoritygoalService.details(locale, goalid, username, user);
+	}
+	
+	@RequestMapping(value = "/authority/goal/weight", method = RequestMethod.POST)
+	public ResponseEntity<?> authoritygoalweight(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @RequestHeader(name = "username", required = true) String username,
+											  @RequestHeader(name = "year", required = true) String year,
+											  @RequestHeader(name = "goalid", required = false) String goalid) {
+
+        Users user = (Users) request.getAttribute("user");
+		return authoritygoalService.authoritygoalweight(locale, username, user, year, goalid);
 	}
 
 
@@ -136,11 +146,21 @@ public class AdminController {
 	public ResponseEntity<?> departmentgoaldetails(HttpServletRequest request,
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
-											  @RequestHeader(name = "goalid", required = true) String goalid,
-											  @RequestHeader(name = "weightcalculation", required = false) Boolean weightcalculation) {
+											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
         Users user = (Users) request.getAttribute("user");
-		return departmentgoalService.details(locale, goalid, username, user, weightcalculation);
+		return departmentgoalService.details(locale, goalid, username, user);
+	}
+
+	@RequestMapping(value = "/department/goal/weight", method = RequestMethod.POST)
+	public ResponseEntity<?> departmentgoalweight(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @RequestHeader(name = "username", required = true) String username,
+											  @RequestHeader(name = "authgoalid", required = true) String authgoalid,
+											  @RequestHeader(name = "goalid", required = false) String goalid) {
+
+        Users user = (Users) request.getAttribute("user");
+		return departmentgoalService.departmentgoalweight(locale, username, user, authgoalid, goalid);
 	}
 	
 	@RequestMapping(value = "/section/goal/list", method = RequestMethod.POST)
@@ -182,11 +202,21 @@ public class AdminController {
 	public ResponseEntity<?> sectiongoaldetails(HttpServletRequest request,
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestHeader(name = "username", required = true) String username,
-											  @RequestHeader(name = "goalid", required = true) String goalid,
-											  @RequestHeader(name = "weightcalculation", required = false) Boolean weightcalculation) {
+											  @RequestHeader(name = "goalid", required = true) String goalid) {
 
         Users user = (Users) request.getAttribute("user");
-		return sectiongoalService.details(locale, goalid, username, user, weightcalculation);
+		return sectiongoalService.details(locale, goalid, username, user);
+	}
+
+	@RequestMapping(value = "/section/goal/weight", method = RequestMethod.POST)
+	public ResponseEntity<?> sectiongoalweight(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @RequestHeader(name = "username", required = true) String username,
+											  @RequestHeader(name = "depgoalid", required = true) String depgoalid,
+											  @RequestHeader(name = "goalid", required = false) String goalid) {
+
+        Users user = (Users) request.getAttribute("user");
+		return sectiongoalService.sectiongoalweight(locale, username, user, depgoalid, goalid);
 	}
 
 	

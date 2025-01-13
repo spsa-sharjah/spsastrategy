@@ -36,4 +36,6 @@ public interface EvidenceService {
 	ResponseEntity<?> removefile(Locale locale, Long id, Users user);
 
 	ResponseEntity<?> save(Locale locale, @Valid EvidenceSaveRq req, Users user);
+
+	String removebygoalid(Locale locale, Users user, String goalid);
 }

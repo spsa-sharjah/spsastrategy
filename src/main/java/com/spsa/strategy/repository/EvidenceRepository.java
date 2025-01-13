@@ -17,4 +17,6 @@ public interface EvidenceRepository extends JpaRepository<Evidence, Long> {
 
 	List<Evidence> findAll(Specification<Evidence> spec);
 
+	List<Evidence> findByGoalid(String goalid);
+
 }

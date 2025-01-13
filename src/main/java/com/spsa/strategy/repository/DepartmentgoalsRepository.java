@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.spsa.strategy.model.Departmentgoals;
+import com.spsa.strategy.model.Sectiongoals;
 
 @Repository
 public interface DepartmentgoalsRepository extends JpaRepository<Departmentgoals, String> {
@@ -22,4 +23,9 @@ public interface DepartmentgoalsRepository extends JpaRepository<Departmentgoals
 
     @Query("SELECT SUM(g.yearlyexpectedweight) FROM Departmentgoals g WHERE g.authgoalid = :authgoalid")
     Integer findSumOfGoalsByAuthgoalid(@Param("authgoalid") String authgoalid);
+
+    @Query("SELECT SUM(g.yearlyexpectedweight) FROM Departmentgoals g WHERE g.authgoalid = :authgoalid AND g.id <> :goalid")
+    Integer findSumOfGoalsByAuthgoalidYearNotMatchingGoalid(@Param("authgoalid") String authgoalid, @Param("goalid") String goalid);
+
+	List<Sectiongoals> findByAuthgoalid(String authgoalid);
 }

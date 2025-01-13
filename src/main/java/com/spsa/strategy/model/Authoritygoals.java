@@ -8,7 +8,6 @@ import com.spsa.strategy.config.Constants;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Size;
 
@@ -50,10 +49,6 @@ public class Authoritygoals {
 	@Size(max = 50)
 	private String userrole;
 	
-//	weight calculation fields - per year
-	@Transient
-	private Integer remainingweight;
-
 	public Authoritygoals() {
 	}
 
@@ -167,13 +162,5 @@ public class Authoritygoals {
 
 	public void setUserrole(String userrole) {
 		this.userrole = userrole;
-	}
-
-	public Integer getRemainingweight() {
-		return remainingweight;
-	}
-
-	public void setRemainingweight(Integer remainingweight) {
-		this.remainingweight = remainingweight;
 	}
 }
