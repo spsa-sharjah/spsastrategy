@@ -40,9 +40,11 @@ import com.spsa.strategy.repository.EvidenceReplyRepository;
 import com.spsa.strategy.repository.EvidenceRepository;
 import com.spsa.strategy.repository.FileEvidenceRepository;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 
+@Transactional
 @Service
 public class EvidenceServiceImpl implements EvidenceService {
 
@@ -318,7 +320,12 @@ public class EvidenceServiceImpl implements EvidenceService {
 	        Optional<Evidence> opt = evidenceRepository.findById(id);
 			if (opt.isPresent()) {
 				evidenceReplyRepository.deleteByEvidenceid(id);
-				fileEvidenceRepository.deleteByEvidenceid(id);
+
+				List<FileEvidence> fileevidencelist = fileEvidenceRepository.findByEvidenceid(id);
+				if (fileevidencelist != null && fileevidencelist.size() > 0)
+					for (FileEvidence fe : fileevidencelist)
+						removefile(locale, fe.getId(), user);
+				
 				evidenceRepository.delete(opt.get());
 			}
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));

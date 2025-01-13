@@ -67,6 +67,9 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 
 			if(yearlyweight > remainingweight || yearlyexpectedweight > remainingweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 113));
+
+			if(yearlyweight > yearlyexpectedweight)
+				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
 			
 			Sectiongoals obj = req.returnSectiongoals(username, user.getUser_role());
 			obj = goalsRepository.save(obj);
