@@ -35,8 +35,6 @@ public class Authoritygoals {
 
 	private String year;
 
-	private String quarter;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private Date fromdate;
 
@@ -130,14 +128,6 @@ public class Authoritygoals {
 
 	public void setYear(String year) {
 		this.year = year;
-	}
-
-	public String getQuarter() {
-		return quarter;
-	}
-
-	public void setQuarter(String quarter) {
-		this.quarter = quarter;
 	}
 
 	public Date getFromdate() {

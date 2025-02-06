@@ -24,7 +24,9 @@ import com.spsa.strategy.service.AuthService;
 import com.spsa.strategy.service.AuthoritygoalService;
 import com.spsa.strategy.service.DepartmentgoalService;
 import com.spsa.strategy.service.EvidenceService;
+import com.spsa.strategy.service.GoalStatusService;
 import com.spsa.strategy.service.SectiongoalService;
+import com.spsa.strategy.service.SettingsService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -48,6 +50,12 @@ public class AdminController {
 
 	@Autowired
 	private EvidenceService evidenceService;
+	
+	@Autowired
+	private GoalStatusService goalStatusService;
+	
+	@Autowired
+	private SettingsService settingsService;
 
 	@RequestMapping(value = "/authority/goal/list", method = RequestMethod.POST)
 	public ResponseEntity<?> authoritygoallist(HttpServletRequest request,
@@ -58,10 +66,11 @@ public class AdminController {
 								  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
 								  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
 						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
-								  @RequestHeader(name = "all", required = false, defaultValue = "false") Boolean all) {
+								  @RequestHeader(name = "all", required = false, defaultValue = "false") Boolean all,
+								  @RequestHeader(name = "year", required = false) String year) {
 
         Users user = (Users) request.getAttribute("user");
-		return authoritygoalService.list(locale, page, size, search, sortcolumn, descending, draw, null, user, all);
+		return authoritygoalService.list(locale, page, size, search, sortcolumn, descending, draw, null, user, all, year);
 	}
 	
 	@RequestMapping(value = "/authority/goal/save", method = RequestMethod.POST)
@@ -243,7 +252,22 @@ public class AdminController {
 									          @RequestHeader(name = "goalid", required = false) String goalid) {
 
         Users user = (Users) request.getAttribute("user");
-		return evidenceService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user);
+		return evidenceService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user, false);
+	}
+	
+	@RequestMapping(value = "/user/goal/evidence/list", method = RequestMethod.POST)
+	public ResponseEntity<?> usergoalevidencelist(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+											  @RequestHeader(name = "page", required = false, defaultValue = "0") Integer page,
+											  @RequestHeader(name = "size", required = false, defaultValue = "0") Integer size,
+											  @RequestHeader(name = "search", required = false) String search,
+											  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
+											  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
+									          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
+									          @RequestHeader(name = "goalid", required = false) String goalid) {
+
+        Users user = (Users) request.getAttribute("user");
+		return evidenceService.list(locale, page, size, search, sortcolumn, descending, draw, goalid, user, true);
 	}
 
 	@RequestMapping(value = "/goal/evidence/save", method = RequestMethod.POST)
@@ -325,5 +349,20 @@ public class AdminController {
 
         Users user = (Users) request.getAttribute("user");
 		return evidenceService.commentremove(locale, id, user);
+	}
+
+	@RequestMapping(value = "/goal/status/list", method = RequestMethod.GET)
+	public ResponseEntity<?> goalstatuslist(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
+
+        Users user = (Users) request.getAttribute("user");
+		return goalStatusService.list(locale, user);
+	}
+
+	@RequestMapping(value = "/year/list", method = RequestMethod.GET)
+	public ResponseEntity<?> yearlist(HttpServletRequest request,
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
+
+		return settingsService.yearslist(2023);
 	}
 }

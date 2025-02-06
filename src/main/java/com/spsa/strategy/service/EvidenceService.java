@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 public interface EvidenceService {
 
 	ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
-			Boolean descending, Integer draw, String goalid, Users user);
+			Boolean descending, Integer draw, String goalid, Users user, boolean showcurrentuserlist);
 
 	ResponseEntity<?> fileslist(Locale locale, Long evidenceid, Users user);
 

@@ -18,7 +18,7 @@ import jakarta.persistence.criteria.Subquery;
 
 public class JPASpecification {
 	
-	public static Specification<Authoritygoals> returnAuthoritygoalSpecification(String search, String sortColumn, boolean descending, String username, String currrentuserrole) {
+	public static Specification<Authoritygoals> returnAuthoritygoalSpecification(String search, String sortColumn, boolean descending, String username, String currrentuserrole, String year) {
 	  return (root, query, criteriaBuilder) -> {
 	      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
 	
@@ -30,12 +30,16 @@ public class JPASpecification {
 	      if (username != null)
 		      andPredicates.add(criteriaBuilder.equal(root.get("username"), username));
 	      
+	      if (year != null)
+		      andPredicates.add(criteriaBuilder.equal(root.get("year"), year));
+	      
 	      if (search != null) {
 	          String searchPattern =  "%" + search + "%";
 	          // Combine OR predicates into one OR condition
 	          Predicate orCondition = criteriaBuilder.or(
 	                  criteriaBuilder.like(root.get("username"), searchPattern),
-	                  criteriaBuilder.like(root.get("goal"), searchPattern)
+	                  criteriaBuilder.like(root.get("goal"), searchPattern),
+	                  criteriaBuilder.like(root.get("year"), searchPattern)
 	              );
 	
 	          // Add the OR condition to the list of AND predicates

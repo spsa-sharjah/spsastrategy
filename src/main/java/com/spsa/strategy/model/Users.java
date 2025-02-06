@@ -33,8 +33,6 @@ public class Users {
 	
 	private String otp;
 	
-	private String position;
-	private String level;
 	private String parentrole;
 	
     private List<String> authorizedapis;
@@ -56,8 +54,6 @@ public class Users {
 		this.last_name_ar = verifyAuthResponse.has("last_name_ar") && !verifyAuthResponse.get("last_name_ar").equals(null) ? verifyAuthResponse.getString("last_name_ar") : null;
 		this.date_time = verifyAuthResponse.has("date_time") && !verifyAuthResponse.get("date_time").equals(null) ? verifyAuthResponse.getString("date_time") : null;
 		
-		this.position = verifyAuthResponse.has("position") && !verifyAuthResponse.get("position").equals(null) ? verifyAuthResponse.getString("position") : null;
-		this.level = verifyAuthResponse.has("level") && !verifyAuthResponse.get("level").equals(null) ? verifyAuthResponse.getString("level") : null;
 		this.parentrole = verifyAuthResponse.has("parentrole") && !verifyAuthResponse.get("parentrole").equals(null) ? verifyAuthResponse.getString("parentrole") : null;
 		
 		JSONArray authorizedapisarray = verifyAuthResponse.has("authorizedapis") && !verifyAuthResponse.get("authorizedapis").equals(null) ? verifyAuthResponse.getJSONArray("authorizedapis") : new JSONArray();
@@ -180,22 +176,6 @@ public class Users {
 		this.authorizedapis = authorizedapis;
 	}
 
-	public String getPosition() {
-		return position;
-	}
-
-	public void setPosition(String position) {
-		this.position = position;
-	}
-
-	public String getLevel() {
-		return level;
-	}
-
-	public void setLevel(String level) {
-		this.level = level;
-	}
-
 	public String getParentrole() {
 		return parentrole;
 	}
@@ -203,6 +183,4 @@ public class Users {
 	public void setParentrole(String parentrole) {
 		this.parentrole = parentrole;
 	}
-	
-	
 }

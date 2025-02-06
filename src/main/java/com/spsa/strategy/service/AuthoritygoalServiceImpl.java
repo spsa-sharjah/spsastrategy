@@ -46,6 +46,7 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 	public ResponseEntity<?> goalsave(Locale locale, @Valid AuthoritygoalSaveRq req, String username, Users user) {
 
 		try {
+			
 			Integer remainingweight = calculateweight(req.getYear(), req.getId());
 			if (req.getId() != null && !req.getId().trim().equals("")) {
 				Optional<Authoritygoals> opt = goalsRepository.findById(req.getId());
@@ -68,7 +69,7 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
 			
-			Authoritygoals obj = req.returnAuthoritygoals(username, user.getUser_role());
+			Authoritygoals obj = req.returnAuthoritygoals(username, user.getUser_role(), user.getAuthorizedapis());
 			obj = goalsRepository.save(obj);
 			
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
@@ -83,13 +84,13 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 
 	@Override
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
-			Boolean descending, Integer draw, String username, Users user, Boolean all) {
+			Boolean descending, Integer draw, String username, Users user, Boolean all, String year) {
 		try {
 			
 			String getbyusername = null;
 			Page<Authoritygoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername, user.getUser_role());
+			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername, user.getUser_role(), year);
 
 			if (all != null && all == true) {
 				List<Authoritygoals> allusersbysearch = goalsRepository.findAll(spec);

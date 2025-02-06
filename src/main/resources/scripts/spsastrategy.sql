@@ -146,6 +146,20 @@ ADD COLUMN `filename` VARCHAR(400) NULL AFTER `date_time`,
 ADD COLUMN `username` VARCHAR(250) NULL AFTER `filename`,
 ADD COLUMN `filesize` BIGINT NULL AFTER `username`;
 
+CREATE TABLE `goalstatus` (
+  `nameen` NVARCHAR(200) NOT NULL,
+  `namear` NVARCHAR(200) NULL,
+  `description` LONGTEXT NULL,
+  PRIMARY KEY (`nameen`));
+
+INSERT INTO `goalstatus` (`nameen`, `namear`) VALUES ('New', 'New');
+INSERT INTO `goalstatus` (`nameen`, `namear`) VALUES ('In Progress', 'In Progress');
+INSERT INTO `goalstatus` (`nameen`, `namear`) VALUES ('Partially Done', 'Partially Done');
+INSERT INTO `goalstatus` (`nameen`, `namear`) VALUES ('Not Done', 'Not Done');
+INSERT INTO `goalstatus` (`nameen`, `namear`) VALUES ('Done', 'Done');
+
+
+
 -- AUTH 
 
 
@@ -201,6 +215,7 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/goal/evidence/list', b'1');
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/evidence/list');
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/evidence/list');
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managedepartmentgoals', '/strategy/api/goal/evidence/list', b'1');
 
 
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/list', b'1');
@@ -370,3 +385,21 @@ INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api
 INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/section/goal/weight');
 
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('managesectiongoals', '/strategy/api/admin/section/goal/weight', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/year/list');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/year/list');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/year/list', b'1');
+
+
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('Admin', '/strategy/api/admin/goal/status/list');
+INSERT INTO `authorization` (`user_role`, `api`) VALUES ('GRCAdmin', '/strategy/api/admin/goal/status/list');
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/strategy/api/admin/goal/status/list', b'1');
+
+ 
+
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`, `accessibleaction`) VALUES ('manageauthoritygoals', 'UpdateExpectedWeight', b'0', b'1', b'1', b'0', b'0', 'Update Expected Weight');
+

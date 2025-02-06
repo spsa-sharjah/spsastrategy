@@ -18,8 +18,6 @@ import com.spsa.strategy.builder.response.IntRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
-import com.spsa.strategy.enumeration.LevelEnum;
-import com.spsa.strategy.enumeration.PositionEnum;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Sectiongoals;
 import com.spsa.strategy.model.Users;
@@ -84,17 +82,9 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
 			Boolean descending, Integer draw, String goalid, Users user) {
 		try {
-
-			String parentrole = null;
-			if (user.getLevel() != null && user.getPosition() != null) {
-				if (user.getLevel().equalsIgnoreCase(LevelEnum.SECTION.name().toLowerCase()) &&
-						user.getPosition().equalsIgnoreCase(PositionEnum.EMPLOYEE.name().toLowerCase()))
-					parentrole = user.getParentrole();
-			}
-			
 			Page<Sectiongoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Sectiongoals> spec = JPASpecification.returnSectiongoalSpecification(search, sortcolumn, descending, goalid, parentrole);
+			Specification<Sectiongoals> spec = JPASpecification.returnSectiongoalSpecification(search, sortcolumn, descending, goalid, user.getParentrole());
 		    Pageable pageable = PageRequest.of(page, size);
 		    pages = goalsRepository.findAll(spec, pageable);
 

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.SanitizedStringDeserializer;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Authoritygoals;
@@ -34,9 +35,6 @@ public class AuthoritygoalSaveRq {
 	private String year;
 
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
-	private String quarter;
-
-    @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String fromdate;
 
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
@@ -44,19 +42,19 @@ public class AuthoritygoalSaveRq {
     
 	private List<String> roles;
 
-	public Authoritygoals returnAuthoritygoals(String username, String userrole) {
+	public Authoritygoals returnAuthoritygoals(String username, String userrole, List<String> authorizedapis) {
 		Authoritygoals goal = new Authoritygoals();
 		goal.setDate_time(new Date());
 		goal.setId(this.id);
 		goal.setGoal(this.goal);
 		goal.setGoalar(this.goalar);
 		goal.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
-		goal.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));
+		if (authorizedapis.contains(Constants.UpdateExpectedWeight))
+			goal.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));
 		goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
 		goal.setStatus(this.status);
 		goal.setUsername(username);
 		goal.setYear(this.year);
-		goal.setQuarter(this.quarter);
 		goal.setFromdate(Utils.convertStringToDate(this.fromdate, null));
 		goal.setTodate(Utils.convertStringToDate(this.todate, null));
 		goal.setUserrole(userrole);
@@ -125,14 +123,6 @@ public class AuthoritygoalSaveRq {
 
 	public void setYear(String year) {
 		this.year = year;
-	}
-
-	public String getQuarter() {
-		return quarter;
-	}
-
-	public void setQuarter(String quarter) {
-		this.quarter = quarter;
 	}
 
 	public String getFromdate() {

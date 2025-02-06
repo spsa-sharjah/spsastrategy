@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +32,6 @@ import com.spsa.strategy.builder.response.IdRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
-import com.spsa.strategy.enumeration.PositionEnum;
 import com.spsa.strategy.model.Evidence;
 import com.spsa.strategy.model.EvidenceReply;
 import com.spsa.strategy.model.FileEvidence;
@@ -71,15 +71,10 @@ public class EvidenceServiceImpl implements EvidenceService {
 
 	@Override
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
-			Boolean descending, Integer draw, String goalid, Users user) {
+			Boolean descending, Integer draw, String goalid, Users user, boolean showcurrentuserlist) {
 		try {
 
-			String currentuser = null;
-			if (user.getPosition() != null) {
-				if (user.getPosition().equalsIgnoreCase(PositionEnum.EMPLOYEE.name().toLowerCase()))
-					currentuser = user.getUsername();
-			}
-			
+			String currentuser = showcurrentuserlist ? user.getUsername() : null;
 			Page<Evidence> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
 			Specification<Evidence> spec = JPASpecification.returnGoalevidenceSpecification(search, sortcolumn, descending, goalid, user.getUser_role(), currentuser);
@@ -209,13 +204,23 @@ public class EvidenceServiceImpl implements EvidenceService {
 	        if (!resource.exists()) 
 				return ResponseEntity.ok(new MessageResponse("resource_not_found", 111));
 	
+	        String contentType = getFileContentType(resource);
 	        return ResponseEntity.ok()
+	                .contentType(MediaType.parseMediaType(contentType))
 	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 	                .body(resource);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.ok(new MessageResponse("exception_case", 111));
 		}
+	}
+	private String getFileContentType(Resource resource) {
+	    try {
+	        // Use Java's built-in file type detection
+	        return Files.probeContentType(resource.getFile().toPath());
+	    } catch (Exception e) {
+	        return "application/octet-stream";
+	    }
 	}
 	 
 	@Override

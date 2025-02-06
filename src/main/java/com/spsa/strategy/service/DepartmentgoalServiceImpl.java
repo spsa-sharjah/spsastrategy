@@ -19,8 +19,6 @@ import com.spsa.strategy.builder.response.IntRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
-import com.spsa.strategy.enumeration.LevelEnum;
-import com.spsa.strategy.enumeration.PositionEnum;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Sectiongoals;
@@ -93,21 +91,9 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
 			Boolean descending, Integer draw, String goalid, Users user, Boolean all) {
 		try {
-
-			String parentrole = null;
-			if (user.getLevel() != null && user.getPosition() != null) {
-				if (user.getLevel().equalsIgnoreCase(LevelEnum.SECTION.name().toLowerCase()) &&
-						user.getPosition().equalsIgnoreCase(PositionEnum.MANAGER.name().toLowerCase()))
-					parentrole = user.getParentrole();
-	
-				else if (user.getLevel().equalsIgnoreCase(LevelEnum.DEPARTMENT.name().toLowerCase()) &&
-						user.getPosition().equalsIgnoreCase(PositionEnum.EMPLOYEE.name().toLowerCase()))
-					parentrole = user.getParentrole();
-			}
-			
 			Page<Departmentgoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Departmentgoals> spec = JPASpecification.returnDepartmentgoalSpecification(search, sortcolumn, descending, goalid, user.getUser_role(), parentrole);
+			Specification<Departmentgoals> spec = JPASpecification.returnDepartmentgoalSpecification(search, sortcolumn, descending, goalid, user.getUser_role(), user.getParentrole());
 
 			if (all != null && all == true) {
 				List<Departmentgoals> allusersbysearch = goalsRepository.findAll(spec);
