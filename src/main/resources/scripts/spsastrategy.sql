@@ -58,7 +58,7 @@ DROP TABLE IF EXISTS restrictedgoalsuserlevel;
 CREATE TABLE `restrictedgoalsuserlevel` (
   `goalid` VARCHAR(500),
   `userrole` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`goalid`, `userlevelid`)
+  PRIMARY KEY (`goalid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
@@ -112,8 +112,6 @@ INSERT INTO `settings` (`id`, `adminkey`, `isdefault`) VALUES ('1', 'wsTk5JDXd74
 
 
 ALTER TABLE `evidence` 
-ADD COLUMN `goalid` BIGINT NULL AFTER `date_time`;
-ALTER TABLE `evidence` 
 ADD COLUMN `depusername` BIGINT NULL AFTER `goalid`;
 
 INSERT INTO `userlevel` (`id`, `name`, `level`, `role`) VALUES ('sectionmanager', 'sectionmanager', 'SECTION', 'MANAGER');
@@ -128,7 +126,7 @@ ADD COLUMN `fromdate` TIMESTAMP NULL AFTER `quarter`,
 ADD COLUMN `todate` TIMESTAMP NULL AFTER `fromdate`,
 ADD COLUMN `year` VARCHAR(20) NULL AFTER `todate`;
 ALTER TABLE `evidence_files` 
-ADD COLUMN `filetype` VARCHAR(200) NULL AFTER `username`;
+ADD COLUMN `filetype` VARCHAR(200) NULL;
 ALTER TABLE `evidence_files` 
 ADD COLUMN `fileimage` TEXT NULL AFTER `filetype`;
 
@@ -158,6 +156,14 @@ INSERT INTO `goalstatus` (`nameen`, `namear`) VALUES ('Partially Done', 'Partial
 INSERT INTO `goalstatus` (`nameen`, `namear`) VALUES ('Not Done', 'Not Done');
 INSERT INTO `goalstatus` (`nameen`, `namear`) VALUES ('Done', 'Done');
 
+ALTER TABLE `authoritygoals` 
+ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
+
+ALTER TABLE `departmentgoals` 
+ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
+
+ALTER TABLE `sectiongoals` 
+ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
 
 
 -- AUTH 
@@ -286,14 +292,6 @@ UPDATE `menu` SET `parent_id` = 'manageen' WHERE (`id` = 'managedepartmentgoalse
 UPDATE `menu` SET `parent_id` = 'manageen' WHERE (`id` = 'managesectiongoalsen');
 UPDATE `menu` SET `parent_id` = 'managear' WHERE (`id` = 'managesectiongoalsar');
 
-ALTER TABLE `authoritygoals` 
-ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
-
-ALTER TABLE `departmentgoals` 
-ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
-
-ALTER TABLE `sectiongoals` 
-ADD COLUMN `userrole` VARCHAR(50) NOT NULL ;
 
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manageauthoritygoals', '/auth/api/admin/role/goals/access/list', b'1');
 
@@ -403,3 +401,51 @@ INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`) VALUES ('manag
 
 INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`, `accessibleaction`) VALUES ('manageauthoritygoals', 'UpdateExpectedWeight', b'0', b'1', b'1', b'0', b'0', 'Update Expected Weight');
 
+
+INSERT INTO `menu_authorization` (`menu_auth_id`, `api`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`, `accessibleaction`) VALUES ('manageauthoritygoals', 'UpdateWeight', b'0', b'1', b'1', b'0', b'0', 'Update Weight');
+
+INSERT INTO `menu` (`id`, `lang`, `name`, `icon`, `order`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`, `date_time`, `auth_id`, `show`, `showdropdownlist`, `opendropdownlist`) VALUES ('managestrategyar', 'ar', 'إدارة الاستراتيجية', 'fa fa-folder-o', '300', b'0', b'0', b'0', b'0', b'0', '2025-01-14 09:18:15', 'managestrategy', b'1', b'1', b'0');
+INSERT INTO `menu` (`id`, `lang`, `name`, `icon`, `order`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`, `date_time`, `auth_id`, `show`, `showdropdownlist`, `opendropdownlist`) VALUES ('managestrategyen', 'en', 'Manage Strategy', 'fa fa-folder-o', '300', b'0', b'0', b'0', b'0', b'0', '2025-01-14 09:18:15', 'managestrategy', b'1', b'1', b'0');
+
+
+UPDATE `menu` SET `parent_id` = 'managestrategyar' WHERE (`id` = 'manageauthoritygoalsar');
+UPDATE `menu` SET `parent_id` = 'managestrategyen' WHERE (`id` = 'manageauthoritygoalsen');
+UPDATE `menu` SET `parent_id` = 'managestrategyen' WHERE (`id` = 'managedepartmentgoalsen');
+UPDATE `menu` SET `parent_id` = 'managestrategyar' WHERE (`id` = 'managedepartmentgoalsar');
+UPDATE `menu` SET `parent_id` = 'managestrategyen' WHERE (`id` = 'managesectiongoalsen');
+UPDATE `menu` SET `parent_id` = 'managestrategyar' WHERE (`id` = 'managesectiongoalsar');
+UPDATE `menu` SET `order` = '1000' WHERE (`id` = 'settingsar');
+UPDATE `menu` SET `order` = '1000' WHERE (`id` = 'settingsen');
+
+
+UPDATE `menu` SET `parent_id` = NULL WHERE (`id` = 'logouten');
+UPDATE `menu` SET `parent_id` = NULL WHERE (`id` = 'logoutar');
+
+
+
+UPDATE `auth`.`menu` SET `icon` = 'fa fa-superpowers', `additionalconfig` = 'Retun All Users', `accessibleactions` = 'Update Expected Weight,Update Weight' WHERE (`id` = 'manageauthoritygoalsar');
+UPDATE `auth`.`menu` SET `icon` = 'fa fa-superpowers', `additionalconfig` = 'Retun All Users', `accessibleactions` = 'Update Expected Weight,Update Weight' WHERE (`id` = 'manageauthoritygoalsen');
+UPDATE `auth`.`menu` SET `icon` = 'fa fa-briefcase', `additionalconfig` = 'Retun All Users' WHERE (`id` = 'managedepartmentgoalsar');
+UPDATE `auth`.`menu` SET `icon` = 'fa fa-briefcase', `additionalconfig` = 'Retun All Users' WHERE (`id` = 'managedepartmentgoalsen');
+UPDATE `auth`.`menu` SET `icon` = 'fa fa-tasks', `additionalconfig` = 'Retun All Users', `opendropdownlist` = b'1' WHERE (`id` = 'managesectiongoalsar');
+UPDATE `auth`.`menu` SET `icon` = 'fa fa-tasks', `additionalconfig` = 'Retun All Users', `opendropdownlist` = b'1' WHERE (`id` = 'managesectiongoalsen');
+UPDATE `auth`.`menu` SET `opendropdownlist` = b'1' WHERE (`id` = 'managestrategyar');
+UPDATE `auth`.`menu` SET `opendropdownlist` = b'1' WHERE (`id` = 'managestrategyen');
+
+
+INSERT INTO `auth`.`authorization` (`user_role`, `api`, `date_time`, `enable`) VALUES ('Admin', '/api/admin/team/list', '2025-02-06 15:29:31', b'1');
+INSERT INTO `auth`.`authorization` (`user_role`, `api`, `date_time`, `enable`) VALUES ('Admin', '/api/admin/team/remove', '2025-02-07 10:45:19', b'1');
+INSERT INTO `auth`.`authorization` (`user_role`, `api`, `date_time`, `enable`) VALUES ('Admin', '/api/admin/team/save', '2025-02-07 10:44:35', b'1');
+INSERT INTO `auth`.`authorization` (`user_role`, `api`, `date_time`, `enable`) VALUES ('GRCAdmin', '/api/admin/team/list', '2025-02-07 09:47:03', b'1');
+INSERT INTO `auth`.`authorization` (`user_role`, `api`, `date_time`, `enable`) VALUES ('GRCAdmin', '/api/admin/team/remove', '2025-02-07 10:45:19', b'1');
+INSERT INTO `auth`.`authorization` (`user_role`, `api`, `date_time`, `enable`) VALUES ('GRCAdmin', '/api/admin/team/save', '2025-02-07 10:44:35', b'1');
+
+INSERT INTO `auth`.`menu_authorization` (`menu_auth_id`, `api`, `date_time`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`) VALUES ('manageteams', '/api/admin/team/list', '2025-02-06 12:18:02', b'1', b'0', b'0', b'0', b'0');
+INSERT INTO `auth`.`menu_authorization` (`menu_auth_id`, `api`, `date_time`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`) VALUES ('manageroles', '/api/admin/team/list', '2025-02-06 12:21:20', b'1', b'0', b'0', b'0', b'0');
+INSERT INTO `auth`.`menu_authorization` (`menu_auth_id`, `api`, `date_time`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`) VALUES ('manageteams', '/api/admin/team/save', '2025-02-07 10:44:35', b'0', b'1', b'1', b'0', b'0');
+INSERT INTO `auth`.`menu_authorization` (`menu_auth_id`, `api`, `date_time`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`) VALUES ('manageteams', '/api/admin/team/remove', '2025-02-07 10:45:19', b'0', b'0', b'0', b'1', b'0');
+
+
+
+INSERT INTO `auth`.`menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`, `additionalconfig`, `parent_id`, `auth_id`, `showdropdownlist`, `opendropdownlist`) VALUES ('manageteamsar', 'ar', 'الفرق', 'manageteams', 'fa fa-code-fork', '235', b'0', b'0', b'0', b'0', b'0', 'managear', 'manageteams', b'1', b'1', b'0');
+INSERT INTO `auth`.`menu` (`id`, `lang`, `name`, `href`, `icon`, `order`, `isget`, `ispost`, `isupdate`, `isdelete`, `isconfiguration`, `additionalconfig`, `parent_id`, `auth_id`, `showdropdownlist`, `opendropdownlist`) VALUES ('manageteamsen', 'en', 'Teams', 'manageteams', 'fa fa-code-fork', '225', b'0', b'0', b'0', b'0', b'0', 'manageen', 'manageteams', b'1', b'1', b'0');

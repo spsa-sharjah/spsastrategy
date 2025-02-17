@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.spsa.strategy.config.SanitizedStringDeserializer;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Sectiongoals;
+import com.spsa.strategy.model.Users;
 
 public class SectiongoalSaveRq {
 	
@@ -38,7 +39,7 @@ public class SectiongoalSaveRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String solution;
 
-	public Sectiongoals returnSectiongoals(String username, String userrole) {
+	public Sectiongoals returnSectiongoals(String username, Users user) {
 		Sectiongoals goal = new Sectiongoals();
 		goal.setDate_time(new Date());
 		goal.setDepgoalid(this.depgoalid);
@@ -52,7 +53,8 @@ public class SectiongoalSaveRq {
 		goal.setUsername(username);
 		goal.setReason(this.reason);
 		goal.setSolution(this.solution);
-		goal.setUserrole(userrole);
+		goal.setUserrole(user.getUser_role());
+		goal.setTeam(user.getTeam());
 		return goal;
 	}
 	

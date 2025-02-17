@@ -28,4 +28,11 @@ public interface AuthoritygoalsRepository extends JpaRepository<Authoritygoals, 
 
     @Query("SELECT SUM(g.yearlyexpectedweight) FROM Authoritygoals g WHERE g.year = :year AND g.id <> :goalid")
     Integer findSumOfGoalsByYearNotMatchingGoalid(@Param("year") String year, @Param("goalid") String goalid);
+
+    @Query("SELECT g FROM Authoritygoals g WHERE g.year = :year ORDER BY date_time DESC")
+    List<Authoritygoals> findByYear(@Param("year") String year);
+
+    @Query("SELECT g FROM Authoritygoals g WHERE g.year = :year AND g.team = :team ORDER BY date_time DESC")
+    List<Authoritygoals> findByYearAndTean(@Param("year") String year, @Param("team") String team);
+
 }

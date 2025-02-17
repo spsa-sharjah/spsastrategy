@@ -5,10 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.SanitizedStringDeserializer;
 import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.enumeration.CustomAction;
+import com.spsa.strategy.enumeration.GoalStatus;
 import com.spsa.strategy.model.Authoritygoals;
+import com.spsa.strategy.model.Users;
 
 public class AuthoritygoalSaveRq {
 	
@@ -42,17 +44,29 @@ public class AuthoritygoalSaveRq {
     
 	private List<String> roles;
 
-	public Authoritygoals returnAuthoritygoals(String username, String userrole, List<String> authorizedapis) {
+	public Authoritygoals returnAuthoritygoals(String username, Users user) {
+		List<String> authorizedapis = user.getAuthorizedapis();
+		String userrole = user.getUser_role(); 
 		Authoritygoals goal = new Authoritygoals();
 		goal.setDate_time(new Date());
 		goal.setId(this.id);
 		goal.setGoal(this.goal);
 		goal.setGoalar(this.goalar);
-		goal.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
-		if (authorizedapis.contains(Constants.UpdateExpectedWeight))
+		goal.setTeam(user.getTeam());
+		if (authorizedapis.contains(CustomAction.UpdateWeight.name()))
+			goal.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
+		if (authorizedapis.contains(CustomAction.UpdateExpectedWeight.name()))
 			goal.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));
-		goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
-		goal.setStatus(this.status);
+
+		if (authorizedapis.contains(CustomAction.UpdateGoalDeadline.name()))
+			goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
+
+			
+		if (authorizedapis.contains(CustomAction.UpdateGoalStatus.name()))
+			goal.setStatus(this.status);
+		else if (goal.getStatus() == null)
+				goal.setStatus(GoalStatus.New.name());
+		
 		goal.setUsername(username);
 		goal.setYear(this.year);
 		goal.setFromdate(Utils.convertStringToDate(this.fromdate, null));

@@ -35,6 +35,8 @@ public class Users {
 	
 	private String parentrole;
 	
+	private String team;
+	
     private List<String> authorizedapis;
     
 	public Users() {
@@ -55,6 +57,7 @@ public class Users {
 		this.date_time = verifyAuthResponse.has("date_time") && !verifyAuthResponse.get("date_time").equals(null) ? verifyAuthResponse.getString("date_time") : null;
 		
 		this.parentrole = verifyAuthResponse.has("parentrole") && !verifyAuthResponse.get("parentrole").equals(null) ? verifyAuthResponse.getString("parentrole") : null;
+		this.team = verifyAuthResponse.has("team") && !verifyAuthResponse.get("team").equals(null) ? verifyAuthResponse.getString("team") : null;
 		
 		JSONArray authorizedapisarray = verifyAuthResponse.has("authorizedapis") && !verifyAuthResponse.get("authorizedapis").equals(null) ? verifyAuthResponse.getJSONArray("authorizedapis") : new JSONArray();
 	
@@ -182,5 +185,13 @@ public class Users {
 
 	public void setParentrole(String parentrole) {
 		this.parentrole = parentrole;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
 	}
 }

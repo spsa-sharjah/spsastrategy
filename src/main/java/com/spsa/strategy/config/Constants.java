@@ -29,7 +29,7 @@ public class Constants {
 	public static final String SECTION_KEY = "SECT-";
 	public static final String EVIDENCE_KEY = "EVID";
 	public static final String DEFAULT_WIDTH = "120px";
-	public static final Object UpdateExpectedWeight = "UpdateExpectedWeight";
+	
 	
 	public static String generateOTP(int length) {
 		String numbers = "0123456789";

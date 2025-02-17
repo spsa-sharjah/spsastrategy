@@ -1,6 +1,7 @@
 package com.spsa.strategy.model;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spsa.strategy.config.Constants;
@@ -47,9 +48,18 @@ public class Departmentgoals {
 	@Size(max = 50)
 	private String userrole;
 
+	@Size(max = 200)
+	private String team;
+
 //	weight calculation fields - per parent goal id
 	@Transient
 	private Integer remainingweight;
+	
+	@Transient
+	private List<Sectiongoals> sectiongoalslist;
+	
+	@Transient
+	private List<Evidence> evidencelist;
 
 	public String getId() {
 		return id;
@@ -161,5 +171,29 @@ public class Departmentgoals {
 
 	public void setRemainingweight(Integer remainingweight) {
 		this.remainingweight = remainingweight;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public List<Sectiongoals> getSectiongoalslist() {
+		return sectiongoalslist;
+	}
+
+	public void setSectiongoalslist(List<Sectiongoals> sectiongoalslist) {
+		this.sectiongoalslist = sectiongoalslist;
+	}
+
+	public List<Evidence> getEvidencelist() {
+		return evidencelist;
+	}
+
+	public void setEvidencelist(List<Evidence> evidencelist) {
+		this.evidencelist = evidencelist;
 	}
 }

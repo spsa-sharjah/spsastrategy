@@ -21,7 +21,6 @@ import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Departmentgoals;
-import com.spsa.strategy.model.Sectiongoals;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.repository.AuthoritygoalsRepository;
 import com.spsa.strategy.repository.DepartmentgoalsRepository;
@@ -74,7 +73,7 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
 			
-			Departmentgoals obj = req.returnDepartmentgoals(username, user.getUser_role());
+			Departmentgoals obj = req.returnDepartmentgoals(username, user);
 			obj = goalsRepository.save(obj);
 			
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
@@ -188,9 +187,9 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 
 	@Override
 	public String deletebyauthgoalid(Locale locale, Users user, String authgoalid) {
-		List<Sectiongoals> list = goalsRepository.findByAuthgoalid(authgoalid);
-		for (Sectiongoals secgoal : list) 
-			goalremove(locale, secgoal.getId(), user.getUsername(), user);
+		List<Departmentgoals> list = goalsRepository.findByAuthgoalid(authgoalid);
+		for (Departmentgoals depgoal : list) 
+			goalremove(locale, depgoal.getId(), user.getUsername(), user);
 		return "success";
 	}
 }

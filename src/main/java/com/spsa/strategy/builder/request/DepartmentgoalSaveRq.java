@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.spsa.strategy.config.SanitizedStringDeserializer;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Departmentgoals;
+import com.spsa.strategy.model.Users;
 
 public class DepartmentgoalSaveRq {
 	
@@ -41,7 +42,7 @@ public class DepartmentgoalSaveRq {
     
 	private List<String> roles;
 
-	public Departmentgoals returnDepartmentgoals(String username, String userrole) {
+	public Departmentgoals returnDepartmentgoals(String username, Users user) {
 		Departmentgoals goal = new Departmentgoals();
 		goal.setDate_time(new Date());
 		goal.setAuthgoalid(this.authgoalid);
@@ -55,7 +56,8 @@ public class DepartmentgoalSaveRq {
 		goal.setUsername(username);
 		goal.setReason(this.reason);
 		goal.setSolution(this.solution);
-		goal.setUserrole(userrole);
+		goal.setUserrole(user.getUser_role());
+		goal.setTeam(user.getTeam());
 		return goal;
 	}
 	

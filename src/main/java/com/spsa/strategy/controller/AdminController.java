@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spsa.strategy.builder.request.AuthoritygoalSaveRq;
 import com.spsa.strategy.builder.request.DepartmentgoalSaveRq;
+import com.spsa.strategy.builder.request.EndorseGoalsRq;
 import com.spsa.strategy.builder.request.EvidenceCommentSaveRq;
 import com.spsa.strategy.builder.request.EvidenceSaveRq;
 import com.spsa.strategy.builder.request.SectiongoalSaveRq;
@@ -24,7 +25,7 @@ import com.spsa.strategy.service.AuthService;
 import com.spsa.strategy.service.AuthoritygoalService;
 import com.spsa.strategy.service.DepartmentgoalService;
 import com.spsa.strategy.service.EvidenceService;
-import com.spsa.strategy.service.GoalStatusService;
+import com.spsa.strategy.service.GoalService;
 import com.spsa.strategy.service.SectiongoalService;
 import com.spsa.strategy.service.SettingsService;
 
@@ -52,7 +53,7 @@ public class AdminController {
 	private EvidenceService evidenceService;
 	
 	@Autowired
-	private GoalStatusService goalStatusService;
+	private GoalService goalService;
 	
 	@Autowired
 	private SettingsService settingsService;
@@ -67,10 +68,11 @@ public class AdminController {
 								  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
 						          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw,
 								  @RequestHeader(name = "all", required = false, defaultValue = "false") Boolean all,
-								  @RequestHeader(name = "year", required = false) String year) {
+								  @RequestHeader(name = "year", required = false) String year,
+								  @RequestHeader(name = "team", required = false) String team) {
 
         Users user = (Users) request.getAttribute("user");
-		return authoritygoalService.list(locale, page, size, search, sortcolumn, descending, draw, null, user, all, year);
+		return authoritygoalService.list(locale, page, size, search, sortcolumn, descending, draw, null, user, all, year, team);
 	}
 	
 	@RequestMapping(value = "/authority/goal/save", method = RequestMethod.POST)
@@ -356,7 +358,7 @@ public class AdminController {
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
 
         Users user = (Users) request.getAttribute("user");
-		return goalStatusService.list(locale, user);
+		return goalService.list(locale, user);
 	}
 
 	@RequestMapping(value = "/year/list", method = RequestMethod.GET)
@@ -364,5 +366,27 @@ public class AdminController {
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
 
 		return settingsService.yearslist(2023);
+	}
+
+	@RequestMapping(value = "/authority/goal/tree", method = RequestMethod.POST)
+	public ResponseEntity<?> authoritygoaltree(HttpServletRequest request,
+			  							@RequestHeader(name = "Accept-Language", required = false) Locale locale,
+			  							@RequestHeader(name = "showdepartment", required = true) boolean showdepartment,
+			  							@RequestHeader(name = "showsection", required = true) boolean showsection,
+			  							@RequestHeader(name = "showevidence", required = true) boolean showevidence,
+									    @RequestHeader(name = "year", required = true) String year,
+									    @RequestHeader(name = "team", required = false) String team) {
+
+        Users user = (Users) request.getAttribute("user");
+		return goalService.authoritygoaltree(user, locale, year, team, showdepartment, showsection, showevidence);
+	}
+
+	@RequestMapping(value = "/authority/goal/endorse", method = RequestMethod.POST)
+	public ResponseEntity<?> authoritygoalendorse(HttpServletRequest request,
+												  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+										  		  @Valid @RequestBody EndorseGoalsRq req) {
+
+        Users user = (Users) request.getAttribute("user");
+		return goalService.authoritygoalendorse(user, locale, req);
 	}
 }

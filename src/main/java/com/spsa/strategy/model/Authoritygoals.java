@@ -46,6 +46,9 @@ public class Authoritygoals {
 
 	@Size(max = 50)
 	private String userrole;
+
+	@Size(max = 200)
+	private String team;
 	
 	public Authoritygoals() {
 	}
@@ -152,5 +155,13 @@ public class Authoritygoals {
 
 	public void setUserrole(String userrole) {
 		this.userrole = userrole;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
 	}
 }
