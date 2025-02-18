@@ -66,22 +66,25 @@ public class GoalServiceImpl implements GoalService {
 
 			List<Departmentgoals> departmentgoalslist = showdepartment ? departmentgoalsRepository.findByAuthgoalid(authoritygoals.getId()) : new ArrayList<Departmentgoals>();
 
-			for (Departmentgoals departmentgoals : departmentgoalslist) {
-
-				List<Evidence> departmentevidencelist = showevidence ? evidenceRepository.findByGoalid(departmentgoals.getId()) : new ArrayList<Evidence>();
-				departmentgoals.setEvidencelist(departmentevidencelist);
-
-				List<Sectiongoals> sectiongoalslist = showsection ? sectiongoalsRepository.findByDepgoalid(departmentgoals.getId()) : new ArrayList<Sectiongoals>();
-				departmentgoals.setSectiongoalslist(sectiongoalslist);
-
-				List<Evidence> sectionevidencelist = showevidence ? evidenceRepository.findByGoalid(authoritygoals.getId()) : new ArrayList<Evidence>();
-				for (Sectiongoals section : sectiongoalslist) {
-					section.setEvidencelist(sectionevidencelist);
+			if (departmentgoalslist != null && departmentgoalslist.size() > 0) {
+				for (Departmentgoals departmentgoals : departmentgoalslist) {
+	
+					List<Evidence> departmentevidencelist = showevidence ? evidenceRepository.findByGoalid(departmentgoals.getId()) : new ArrayList<Evidence>();
+					departmentgoals.setEvidencelist(departmentevidencelist);
+	
+					List<Sectiongoals> sectiongoalslist = showsection ? sectiongoalsRepository.findByDepgoalid(departmentgoals.getId()) : new ArrayList<Sectiongoals>();
+					departmentgoals.setSectiongoalslist(sectiongoalslist);
+	
+					if (sectiongoalslist != null && sectiongoalslist.size() > 0) 
+						for (Sectiongoals section : sectiongoalslist) {
+							List<Evidence> sectionevidencelist = showevidence ? evidenceRepository.findByGoalid(section.getId()) : new ArrayList<Evidence>();
+							section.setEvidencelist(sectionevidencelist);
+						}
 				}
+					
+				GoalsTree goalsTree = new GoalsTree(authoritygoals, departmentgoalslist);
+				goalstree.add(goalsTree);
 			}
-				
-			GoalsTree goalsTree = new GoalsTree(authoritygoals, departmentgoalslist);
-			goalstree.add(goalsTree);
 		}
 		return ResponseEntity.ok(goalstree);
 	}
@@ -97,7 +100,7 @@ public class GoalServiceImpl implements GoalService {
 			Authoritygoals authoritygoals = authoritygoalopt.get();
 			int totalpercentage = authoritygoals.getYearlyexpectedweight();
 			int sumdeppercentage = 0;
-			for (EndorseRq depgoal : req.getChoosendepgoallist()) {
+			for (EndorseRq depgoal : req.getDepgoallist()) {
 
 				Optional<Departmentgoals> departmentgoalopt = departmentgoalsRepository.findById(depgoal.getDepgoalid());
 				if (departmentgoalopt.isPresent()) {

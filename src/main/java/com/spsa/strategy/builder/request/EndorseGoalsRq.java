@@ -5,7 +5,7 @@ import java.util.List;
 public class EndorseGoalsRq {
 	private String authgoalid;
 	
-	private List<EndorseRq> choosendepgoallist;
+	private List<EndorseRq> depgoallist;
 
 	public String getAuthgoalid() {
 		return authgoalid;
@@ -15,11 +15,11 @@ public class EndorseGoalsRq {
 		this.authgoalid = authgoalid;
 	}
 
-	public List<EndorseRq> getChoosendepgoallist() {
-		return choosendepgoallist;
+	public List<EndorseRq> getDepgoallist() {
+		return depgoallist;
 	}
 
-	public void setChoosendepgoallist(List<EndorseRq> choosendepgoallist) {
-		this.choosendepgoallist = choosendepgoallist;
+	public void setDepgoallist(List<EndorseRq> depgoallist) {
+		this.depgoallist = depgoallist;
 	}
 }

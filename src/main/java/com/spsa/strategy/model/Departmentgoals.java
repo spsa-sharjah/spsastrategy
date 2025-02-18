@@ -60,6 +60,10 @@ public class Departmentgoals {
 	
 	@Transient
 	private List<Evidence> evidencelist;
+	
+	private boolean chosenbydefault;
+
+	private String endorsementreason;
 
 	public String getId() {
 		return id;
@@ -195,5 +199,21 @@ public class Departmentgoals {
 
 	public void setEvidencelist(List<Evidence> evidencelist) {
 		this.evidencelist = evidencelist;
+	}
+
+	public boolean isChosenbydefault() {
+		return chosenbydefault;
+	}
+
+	public void setChosenbydefault(boolean choosenbydefault) {
+		this.chosenbydefault = choosenbydefault;
+	}
+
+	public String getEndorsementreason() {
+		return endorsementreason;
+	}
+
+	public void setEndorsementreason(String endorsementreason) {
+		this.endorsementreason = endorsementreason;
 	}
 }

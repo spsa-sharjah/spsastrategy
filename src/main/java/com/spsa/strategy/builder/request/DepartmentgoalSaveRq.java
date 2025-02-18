@@ -10,6 +10,8 @@ import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Users;
 
+import jakarta.validation.constraints.Size;
+
 public class DepartmentgoalSaveRq {
 	
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
@@ -41,6 +43,14 @@ public class DepartmentgoalSaveRq {
 	private String solution;
     
 	private List<String> roles;
+	
+	private boolean chosenbydefault;
+
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String endorsementreason;
+
+	@Size(max = 200)
+	private String team;
 
 	public Departmentgoals returnDepartmentgoals(String username, Users user) {
 		Departmentgoals goal = new Departmentgoals();
@@ -58,6 +68,9 @@ public class DepartmentgoalSaveRq {
 		goal.setSolution(this.solution);
 		goal.setUserrole(user.getUser_role());
 		goal.setTeam(user.getTeam());
+		goal.setChosenbydefault(chosenbydefault);
+		goal.setTeam(user.getTeam());
+		goal.setEndorsementreason(this.endorsementreason);
 		return goal;
 	}
 	
@@ -147,5 +160,29 @@ public class DepartmentgoalSaveRq {
 
 	public void setRoles(List<String> roles) {
 		this.roles = roles;
+	}
+
+	public boolean isChosenbydefault() {
+		return chosenbydefault;
+	}
+
+	public void setChosenbydefault(boolean chosenbydefault) {
+		this.chosenbydefault = chosenbydefault;
+	}
+
+	public String getTeam() {
+		return team;
+	}
+
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	public String getEndorsementreason() {
+		return endorsementreason;
+	}
+
+	public void setEndorsementreason(String endorsementreason) {
+		this.endorsementreason = endorsementreason;
 	}
 }
