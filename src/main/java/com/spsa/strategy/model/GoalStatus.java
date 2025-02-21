@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 public class GoalStatus {
 
     @Id
+    @Column(name = "code", nullable = false, length = 200)
+    private String code;
+
     @Column(name = "nameen", nullable = false, length = 200)
     private String nameen;
 
@@ -45,5 +48,13 @@ public class GoalStatus {
 
 	public void setNamear(String namear) {
 		this.namear = namear;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 }

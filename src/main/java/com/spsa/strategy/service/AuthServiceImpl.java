@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.spsa.strategy.builder.request.ResrictedGoalRolesRq;
 import com.spsa.strategy.builder.response.MessageResponse;
-import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.Restrictedgoalsuserlevel;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.repository.RestrictedgoalsuserlevelRepository;
@@ -59,11 +58,7 @@ public class AuthServiceImpl implements AuthService {
 			}
 
 			Users user = new Users(verifyAuthResponse);
-			if (!Utils.isapiauthorized(url, user.getAuthorizedapis())) {
-
-				MessageResponse messageResponse = new MessageResponse("Not authorized to use the " + url + " API", 401);
-				return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.OK);
-			}
+			
 			return new ResponseEntity<Users>(user, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

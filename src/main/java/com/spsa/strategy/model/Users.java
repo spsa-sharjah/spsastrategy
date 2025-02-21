@@ -37,7 +37,7 @@ public class Users {
 	
 	private String team;
 	
-    private List<String> authorizedapis;
+    private List<Authorization> authorizedapis;
     
 	public Users() {
 	}
@@ -61,9 +61,10 @@ public class Users {
 		
 		JSONArray authorizedapisarray = verifyAuthResponse.has("authorizedapis") && !verifyAuthResponse.get("authorizedapis").equals(null) ? verifyAuthResponse.getJSONArray("authorizedapis") : new JSONArray();
 	
-		this.authorizedapis = new ArrayList<String>();
+		this.authorizedapis = new ArrayList<Authorization>();
 		for (Object obj : authorizedapisarray) {
-			this.authorizedapis.add(obj.toString());
+			JSONObject jsonObject = (JSONObject) obj; 
+			this.authorizedapis.add(new Authorization(jsonObject));
 		}
 	}
 
@@ -171,11 +172,11 @@ public class Users {
 		this.otp = otp;
 	}
 
-	public List<String> getAuthorizedapis() {
+	public List<Authorization> getAuthorizedapis() {
 		return authorizedapis;
 	}
 
-	public void setAuthorizedapis(List<String> authorizedapis) {
+	public void setAuthorizedapis(List<Authorization> authorizedapis) {
 		this.authorizedapis = authorizedapis;
 	}
 

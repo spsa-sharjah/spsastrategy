@@ -10,6 +10,7 @@ import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.enumeration.CustomAction;
 import com.spsa.strategy.enumeration.GoalStatus;
 import com.spsa.strategy.model.Authoritygoals;
+import com.spsa.strategy.model.Authorization;
 import com.spsa.strategy.model.Users;
 
 public class AuthoritygoalSaveRq {
@@ -44,8 +45,8 @@ public class AuthoritygoalSaveRq {
     
 	private List<String> roles;
 
-	public Authoritygoals returnAuthoritygoals(String username, Users user) {
-		List<String> authorizedapis = user.getAuthorizedapis();
+	public Authoritygoals returnAuthoritygoals(String username, Users user, String menuauthid) {
+		List<Authorization> authorizedapis = user.getAuthorizedapis();
 		String userrole = user.getUser_role(); 
 		Authoritygoals goal = new Authoritygoals();
 		goal.setDate_time(new Date());
@@ -53,16 +54,16 @@ public class AuthoritygoalSaveRq {
 		goal.setGoal(this.goal);
 		goal.setGoalar(this.goalar);
 		goal.setTeam(user.getTeam());
-		if (authorizedapis.contains(CustomAction.UpdateWeight.name()))
+		
+		if (Utils.isapiauthorized(CustomAction.UpdateWeight.name(), menuauthid, authorizedapis))
 			goal.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
-		if (authorizedapis.contains(CustomAction.UpdateExpectedWeight.name()))
+		if (Utils.isapiauthorized(CustomAction.UpdateExpectedWeight.name(), menuauthid, authorizedapis))
 			goal.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));
 
-		if (authorizedapis.contains(CustomAction.UpdateGoalDeadline.name()))
+		if (Utils.isapiauthorized(CustomAction.UpdateGoalDeadline.name(), menuauthid, authorizedapis))
 			goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
 
-			
-		if (authorizedapis.contains(CustomAction.UpdateGoalStatus.name()))
+		if (Utils.isapiauthorized(CustomAction.UpdateGoalStatus.name(), menuauthid, authorizedapis))
 			goal.setStatus(this.status);
 		else if (goal.getStatus() == null)
 				goal.setStatus(GoalStatus.New.name());

@@ -19,6 +19,7 @@ import com.spsa.strategy.builder.response.IntRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.enumeration.Menuauthid;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.repository.AuthoritygoalsRepository;
@@ -69,7 +70,7 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
 			
-			Authoritygoals obj = req.returnAuthoritygoals(username, user);
+			Authoritygoals obj = req.returnAuthoritygoals(username, user, Menuauthid.manageauthoritygoals.name());
 			obj = goalsRepository.save(obj);
 			
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());

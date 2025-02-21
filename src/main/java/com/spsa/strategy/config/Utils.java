@@ -9,13 +9,19 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spsa.strategy.model.Authorization;
 
 public class Utils {
 
-	public static boolean isapiauthorized(String url, List<String> authorizedapis) {
-		for (String authapi : authorizedapis)
-			if (url.contains(authapi))
-				return true;
+	public static boolean isapiauthorized(String url, String menuauthid, List<Authorization> authorizedapis) {
+    	if (authorizedapis == null || authorizedapis.size() == 0)
+    		return false;
+    	for (Authorization auth : authorizedapis) {
+    		if (url.contains(auth.getApi()) && menuauthid != null && auth.getMenuauthid().equals(menuauthid))
+    			return true;
+    		else if (url.contains(auth.getApi()))
+    			return true;
+    	}
 		return false;
 	}
 
