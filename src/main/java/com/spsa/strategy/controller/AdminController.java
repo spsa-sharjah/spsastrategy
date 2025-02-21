@@ -20,6 +20,7 @@ import com.spsa.strategy.builder.request.EndorseGoalsRq;
 import com.spsa.strategy.builder.request.EvidenceCommentSaveRq;
 import com.spsa.strategy.builder.request.EvidenceSaveRq;
 import com.spsa.strategy.builder.request.SectiongoalSaveRq;
+import com.spsa.strategy.builder.request.YearlySettingsRq;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.service.AuthService;
 import com.spsa.strategy.service.AuthoritygoalService;
@@ -388,5 +389,32 @@ public class AdminController {
 
         Users user = (Users) request.getAttribute("user");
 		return goalService.authoritygoalendorse(user, locale, req);
+	}
+
+	@RequestMapping(value = "/authority/yearly/settings", method = RequestMethod.POST)
+	public ResponseEntity<?> yearlysettings(HttpServletRequest request,
+												  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+												  @RequestHeader(name = "year", required = true) String year) {
+
+        Users user = (Users) request.getAttribute("user");
+		return goalService.yearlysettings(user, locale, year);
+	}
+	
+	@RequestMapping(value = "/authority/yearly/setting/save", method = RequestMethod.POST)
+	public ResponseEntity<?> yearlysettingsave(HttpServletRequest request,
+												  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+												  @Valid @RequestBody YearlySettingsRq req) {
+
+        Users user = (Users) request.getAttribute("user");
+		return goalService.yearlysettingsave(user, locale, req);
+	}
+	
+	@RequestMapping(value = "/authority/yearly/setting/endorsement/ready", method = RequestMethod.POST)
+	public ResponseEntity<?> yearlysettingendorsementready(HttpServletRequest request,
+												  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+												  @RequestHeader(name = "year", required = true) String year) {
+
+        Users user = (Users) request.getAttribute("user");
+		return goalService.yearlysettingendorsementready(user, locale, year);
 	}
 }

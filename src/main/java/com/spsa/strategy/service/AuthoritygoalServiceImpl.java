@@ -19,6 +19,8 @@ import com.spsa.strategy.builder.response.IntRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.enumeration.CustomAction;
+import com.spsa.strategy.enumeration.GoalStatus;
 import com.spsa.strategy.enumeration.Menuauthid;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Users;
@@ -64,8 +66,9 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			if(yearlyweight < 0 || yearlyexpectedweight < 0)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 112));
 
-			if(yearlyweight > remainingweight || yearlyexpectedweight > remainingweight)
-				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 113));
+			if (Utils.isapiauthorized(CustomAction.VerifyPercentage.name(), Menuauthid.manageauthoritygoals.name(), user.getAuthorizedapis()))
+				if(yearlyweight > remainingweight || yearlyexpectedweight > remainingweight)
+					return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 113));
 
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
@@ -91,7 +94,11 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			String getbyusername = null;
 			Page<Authoritygoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername, user.getUser_role(), year, team);
+
+			String status = null;
+			if (Utils.isapiauthorized(CustomAction.ShowApprovedOnly.name(), Menuauthid.manageauthoritygoals.name(), user.getAuthorizedapis()))
+				status = GoalStatus.New.name(); // Show all not new = already approved and more
+			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername, user.getUser_role(), year, team, status);
 
 			if (all != null && all == true) {
 				List<Authoritygoals> allusersbysearch = goalsRepository.findAll(spec);

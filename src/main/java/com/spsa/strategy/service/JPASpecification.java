@@ -18,7 +18,7 @@ import jakarta.persistence.criteria.Subquery;
 
 public class JPASpecification {
 	
-	public static Specification<Authoritygoals> returnAuthoritygoalSpecification(String search, String sortColumn, boolean descending, String username, String currrentuserrole, String year, String team) {
+	public static Specification<Authoritygoals> returnAuthoritygoalSpecification(String search, String sortColumn, boolean descending, String username, String currrentuserrole, String year, String team, String status) {
 	  return (root, query, criteriaBuilder) -> {
 	      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
 	
@@ -35,6 +35,9 @@ public class JPASpecification {
 	      
 	      if (team != null)
 		      andPredicates.add(criteriaBuilder.equal(root.get("team"), team));
+	      
+	      if (status != null)
+	    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), status));
 	      
 	      if (search != null) {
 	          String searchPattern =  "%" + search + "%";
@@ -71,7 +74,7 @@ public class JPASpecification {
 	}
 
 	public static Specification<Departmentgoals> returnDepartmentgoalSpecification(String search, String sortColumn,
-			boolean descending, String goalid, String currrentuserrole, String parentrole) {
+			boolean descending, String goalid, String currrentuserrole, String parentrole, String status) {
 		 return (root, query, criteriaBuilder) -> {
 		      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
 		
@@ -85,6 +88,9 @@ public class JPASpecification {
 
 		      if (parentrole != null)
 		    	  andPredicates.add(criteriaBuilder.equal(root.get("userrole"), parentrole));
+
+		      if (status != null)
+		    	  andPredicates.add(criteriaBuilder.equal(root.get("status"), status));
 		      
 		      if (search != null) {
 		          String searchPattern =  "%" + search + "%";

@@ -19,11 +19,17 @@ import com.spsa.strategy.builder.response.IntRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.enumeration.CustomAction;
+import com.spsa.strategy.enumeration.GoalStatus;
+import com.spsa.strategy.enumeration.Menuauthid;
+import com.spsa.strategy.enumeration.YearlyGoalStatus;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Users;
+import com.spsa.strategy.model.YearlyGoalsSettings;
 import com.spsa.strategy.repository.AuthoritygoalsRepository;
 import com.spsa.strategy.repository.DepartmentgoalsRepository;
+import com.spsa.strategy.repository.YearlyGoalsSettingsRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -47,6 +53,9 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 	@Autowired
 	SectiongoalService sectiongoalService;
 
+	@Autowired
+	YearlyGoalsSettingsRepository yearlyGoalsSettingsRepository;
+
 	@Override
 	public ResponseEntity<?> goalsave(Locale locale, @Valid DepartmentgoalSaveRq req, String username, Users user) {
 
@@ -67,14 +76,19 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			if(yearlyweight < 0 || yearlyexpectedweight < 0)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 112));
 
-			if(yearlyweight > remainingweight || yearlyexpectedweight > remainingweight)
-				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 113));
+			if (Utils.isapiauthorized(CustomAction.VerifyPercentage.name(), Menuauthid.managedepartmentgoals.name(), user.getAuthorizedapis())) 
+				if(yearlyweight > remainingweight || yearlyexpectedweight > remainingweight)
+					return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 113));
 
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
 			
 			Departmentgoals obj = req.returnDepartmentgoals(username, user);
 			obj = goalsRepository.save(obj);
+			
+			goalsRepository.updategoalendorsementstatus(req.getAuthgoalid(), GoalStatus.New.name());
+			
+			updateyearlysettingsstatus(req.getAuthgoalid());
 			
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
 			authService.rolegoalsaccesssave(locale, user, rq);
@@ -85,14 +99,31 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
 	}
-
+	private void updateyearlysettingsstatus(String authgoalid) {
+		Optional<Authoritygoals> opt = authoritygoalsRepository.findById(authgoalid);
+		if (opt.isPresent()) {
+			Authoritygoals authoritygoals = opt.get();
+			Optional<YearlyGoalsSettings> optyg = yearlyGoalsSettingsRepository.findByYear(authoritygoals.getYear());
+			if (optyg.isPresent()) {
+				YearlyGoalsSettings yearlyGoalsSettings = optyg.get();
+				yearlyGoalsSettings.setStatus(YearlyGoalStatus.NEW.name());
+				yearlyGoalsSettingsRepository.save(yearlyGoalsSettings);
+			}
+		}
+	}
+	
 	@Override
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
 			Boolean descending, Integer draw, String goalid, Users user, Boolean all) {
 		try {
 			Page<Departmentgoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Departmentgoals> spec = JPASpecification.returnDepartmentgoalSpecification(search, sortcolumn, descending, goalid, user.getUser_role(), user.getParentrole());
+			
+			String status = null;
+			if (Utils.isapiauthorized(CustomAction.ShowApprovedOnly.name(), Menuauthid.managedepartmentgoals.name(), user.getAuthorizedapis()))
+				status = GoalStatus.Approved.name(); // Show all not new = already approved and more
+			
+			Specification<Departmentgoals> spec = JPASpecification.returnDepartmentgoalSpecification(search, sortcolumn, descending, goalid, user.getUser_role(), user.getParentrole(), status);
 
 			if (all != null && all == true) {
 				List<Departmentgoals> allusersbysearch = goalsRepository.findAll(spec);

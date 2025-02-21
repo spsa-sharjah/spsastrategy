@@ -18,6 +18,8 @@ import com.spsa.strategy.builder.response.IntRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.enumeration.CustomAction;
+import com.spsa.strategy.enumeration.Menuauthid;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Sectiongoals;
 import com.spsa.strategy.model.Users;
@@ -63,8 +65,9 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 			if(yearlyweight < 0 || yearlyexpectedweight < 0)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 112));
 
-			if(yearlyweight > remainingweight || yearlyexpectedweight > remainingweight)
-				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 113));
+			if (Utils.isapiauthorized(CustomAction.VerifyPercentage.name(), Menuauthid.managesectiongoals.name(), user.getAuthorizedapis()))
+				if(yearlyweight > remainingweight || yearlyexpectedweight > remainingweight)
+					return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 113));
 
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));

@@ -29,6 +29,8 @@ public class Constants {
 	public static final String SECTION_KEY = "SECT-";
 	public static final String EVIDENCE_KEY = "EVID";
 	public static final String DEFAULT_WIDTH = "120px";
+	public static final Integer DEFAULT_DEADLINE_NOTIFICATION_DAYS = 15;
+	public static final int DEFAULT_ENDORSEMENT_DEADLINE_NBR_MONTH = 4;
 	
 	
 	public static String generateOTP(int length) {

@@ -12,19 +12,23 @@ import org.springframework.stereotype.Service;
 
 import com.spsa.strategy.builder.request.EndorseGoalsRq;
 import com.spsa.strategy.builder.request.EndorseRq;
+import com.spsa.strategy.builder.request.YearlySettingsRq;
 import com.spsa.strategy.builder.response.GoalsTree;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.enumeration.GoalStatus;
+import com.spsa.strategy.enumeration.YearlyGoalStatus;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Evidence;
 import com.spsa.strategy.model.Sectiongoals;
 import com.spsa.strategy.model.Users;
+import com.spsa.strategy.model.YearlyGoalsSettings;
 import com.spsa.strategy.repository.AuthoritygoalsRepository;
 import com.spsa.strategy.repository.DepartmentgoalsRepository;
 import com.spsa.strategy.repository.EvidenceRepository;
 import com.spsa.strategy.repository.GoalStatusRepository;
 import com.spsa.strategy.repository.SectiongoalsRepository;
+import com.spsa.strategy.repository.YearlyGoalsSettingsRepository;
 
 import jakarta.validation.Valid;
 
@@ -48,6 +52,9 @@ public class GoalServiceImpl implements GoalService {
 	
 	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private YearlyGoalsSettingsRepository yearlyGoalsSettingsRepository;
 
 	@Override
 	public ResponseEntity<?> list(Locale locale, Users user) {
@@ -109,11 +116,13 @@ public class GoalServiceImpl implements GoalService {
 
 					departmentgoals.setStatus(depgoal.isApproved() ? GoalStatus.Approved.name() : GoalStatus.Unapproved.name());
 					if (depgoal.getReason() != null)
-						departmentgoals.setReason(depgoal.getReason());
+						departmentgoals.setEndorsementreason(depgoal.getReason());
 					selecteddepartmentgoals.add(departmentgoals);
 					
-					int deppercentage = departmentgoals.getYearlyexpectedweight();
-					sumdeppercentage += deppercentage;
+					if (depgoal.isApproved()) {
+						int deppercentage = departmentgoals.getYearlyexpectedweight();
+						sumdeppercentage += deppercentage;
+					}
 				}
 			}
 			
@@ -124,11 +133,55 @@ public class GoalServiceImpl implements GoalService {
 			for (Departmentgoals depgoal : selecteddepartmentgoals) {
 				departmentgoalsRepository.save(depgoal);
 			}
+			
+			authoritygoals.setStatus(GoalStatus.EndorsementCompleted.name());
+			authoritygoalsRepository.save(authoritygoals);
 
 			return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("success_operation", locale)), HttpStatus.OK);
 		}
 
 		return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("server_error", locale), 413), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<?> yearlysettings(Users user, Locale locale, String year) {
+		Optional<YearlyGoalsSettings> optional = yearlyGoalsSettingsRepository.findByYear(year);
+		if (optional.isPresent()) {
+			return ResponseEntity.ok(optional.get());
+		}
+		
+		YearlyGoalsSettings yearlysGoalsSettings = new YearlyGoalsSettings(year);
+		yearlysGoalsSettings = yearlyGoalsSettingsRepository.save(yearlysGoalsSettings); // save default settings
+		return ResponseEntity.ok(yearlysGoalsSettings);
+	}
+
+	@Override
+	public ResponseEntity<?> yearlysettingsave(Users user, Locale locale, @Valid YearlySettingsRq req) {
+		YearlyGoalsSettings yearlysGoalsSettings = new YearlyGoalsSettings(req);
+		
+		Optional<YearlyGoalsSettings> optional = yearlyGoalsSettingsRepository.findByYear(req.getYear());
+		if (optional.isPresent()) {
+			yearlysGoalsSettings = optional.get();
+			Long id = yearlysGoalsSettings.getId();
+			yearlysGoalsSettings = new YearlyGoalsSettings(req);
+			yearlysGoalsSettings.setId(id);
+		}
+		
+		yearlysGoalsSettings = yearlyGoalsSettingsRepository.save(yearlysGoalsSettings);
+		return ResponseEntity.ok(yearlysGoalsSettings);
+	}
+
+	@Override
+	public ResponseEntity<?> yearlysettingendorsementready(Users user, Locale locale, String year) {
+
+		Optional<YearlyGoalsSettings> optional = yearlyGoalsSettingsRepository.findByYear(year);
+		if (!optional.isPresent())
+			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
+			
+		YearlyGoalsSettings yearlysGoalsSettings = optional.get();
+		yearlysGoalsSettings.setStatus(YearlyGoalStatus.READY_FOR_ENDORSEMENT.name());
+		yearlysGoalsSettings = yearlyGoalsSettingsRepository.save(yearlysGoalsSettings); 
+		return ResponseEntity.ok(yearlysGoalsSettings);
 	}
 
 }

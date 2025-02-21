@@ -3,6 +3,7 @@ package com.spsa.strategy.config;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -71,5 +72,11 @@ public class Utils {
             e.printStackTrace();
         }
         return null;
+    }
+    public static Date addMonthsToDate(Date date, int months) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);  // Set the calendar's time to the given date
+        calendar.add(Calendar.MONTH, months);  // Add the specified number of months
+        return calendar.getTime();  // Return the updated date
     }
 }
