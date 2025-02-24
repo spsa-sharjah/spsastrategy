@@ -22,9 +22,12 @@ import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.enumeration.CustomAction;
 import com.spsa.strategy.enumeration.GoalStatus;
 import com.spsa.strategy.enumeration.Menuauthid;
+import com.spsa.strategy.enumeration.YearlyGoalStatus;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Users;
+import com.spsa.strategy.model.YearlyGoalsSettings;
 import com.spsa.strategy.repository.AuthoritygoalsRepository;
+import com.spsa.strategy.repository.YearlyGoalsSettingsRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -44,6 +47,9 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 
 	@Autowired
 	DepartmentgoalService departmentgoalService;
+	
+	@Autowired
+	YearlyGoalsSettingsRepository yearlyGoalsSettingsRepository;
 	
 	@Override
 	public ResponseEntity<?> goalsave(Locale locale, @Valid AuthoritygoalSaveRq req, String username, Users user) {
@@ -72,12 +78,24 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
+
+			Optional<YearlyGoalsSettings> optyg = yearlyGoalsSettingsRepository.findByYear(req.getYear());
+			boolean skipendorsement = false;
+			if (optyg.isPresent()) {
+				YearlyGoalsSettings yearlyGoalsSettings = optyg.get();
+				skipendorsement = yearlyGoalsSettings.isSkipendorsement();
+				String status = YearlyGoalStatus.New.name();
+				if (skipendorsement) status = YearlyGoalStatus.EndorsementCompleted.name();
+				yearlyGoalsSettings.setStatus(status);
+				yearlyGoalsSettingsRepository.save(yearlyGoalsSettings);
+			}
 			
-			Authoritygoals obj = req.returnAuthoritygoals(username, user, Menuauthid.manageauthoritygoals.name());
+			Authoritygoals obj = req.returnAuthoritygoals(username, user, Menuauthid.manageauthoritygoals.name(), skipendorsement);
 			obj = goalsRepository.save(obj);
 			
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
 			authService.rolegoalsaccesssave(locale, user, rq);
+			
 			
 			return ResponseEntity.ok(obj);
 		} catch (Exception e) {

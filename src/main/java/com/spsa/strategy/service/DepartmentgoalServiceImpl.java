@@ -86,9 +86,7 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			Departmentgoals obj = req.returnDepartmentgoals(username, user);
 			obj = goalsRepository.save(obj);
 			
-			goalsRepository.updategoalendorsementstatus(req.getAuthgoalid(), GoalStatus.New.name());
-			
-			updateyearlysettingsstatus(req.getAuthgoalid());
+			updatestatus(req.getAuthgoalid());
 			
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
 			authService.rolegoalsaccesssave(locale, user, rq);
@@ -99,15 +97,21 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
 	}
-	private void updateyearlysettingsstatus(String authgoalid) {
+	private void updatestatus(String authgoalid) {
 		Optional<Authoritygoals> opt = authoritygoalsRepository.findById(authgoalid);
 		if (opt.isPresent()) {
 			Authoritygoals authoritygoals = opt.get();
+
 			Optional<YearlyGoalsSettings> optyg = yearlyGoalsSettingsRepository.findByYear(authoritygoals.getYear());
 			if (optyg.isPresent()) {
 				YearlyGoalsSettings yearlyGoalsSettings = optyg.get();
-				yearlyGoalsSettings.setStatus(YearlyGoalStatus.NEW.name());
+
+				String status = yearlyGoalsSettings.isSkipendorsement() ? YearlyGoalStatus.EndorsementCompleted.name(): YearlyGoalStatus.New.name();
+				
+				yearlyGoalsSettings.setStatus(status);
 				yearlyGoalsSettingsRepository.save(yearlyGoalsSettings);
+				
+				goalsRepository.updategoalendorsementstatus(authgoalid, status);
 			}
 		}
 	}

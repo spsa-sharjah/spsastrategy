@@ -15,7 +15,10 @@ import com.spsa.strategy.builder.request.EndorseRq;
 import com.spsa.strategy.builder.request.YearlySettingsRq;
 import com.spsa.strategy.builder.response.GoalsTree;
 import com.spsa.strategy.builder.response.MessageResponse;
+import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.enumeration.CustomAction;
 import com.spsa.strategy.enumeration.GoalStatus;
+import com.spsa.strategy.enumeration.Menuauthid;
 import com.spsa.strategy.enumeration.YearlyGoalStatus;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Departmentgoals;
@@ -137,6 +140,15 @@ public class GoalServiceImpl implements GoalService {
 			authoritygoals.setStatus(GoalStatus.EndorsementCompleted.name());
 			authoritygoalsRepository.save(authoritygoals);
 
+			List<Authoritygoals> authorities = authoritygoalsRepository.findByYearAndStatus(authoritygoals.getYear(), GoalStatus.New.name());
+			if (authorities != null && authorities.size() == 0) {
+				Optional<YearlyGoalsSettings> ygsopt = yearlyGoalsSettingsRepository.findByYear(authoritygoals.getYear());
+				if (ygsopt.isPresent()) {
+					YearlyGoalsSettings ygs = ygsopt.get();
+					ygs.setStatus(YearlyGoalStatus.EndorsementCompleted.name());
+					yearlyGoalsSettingsRepository.save(ygs);
+				}
+			}
 			return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("success_operation", locale)), HttpStatus.OK);
 		}
 
@@ -157,17 +169,30 @@ public class GoalServiceImpl implements GoalService {
 
 	@Override
 	public ResponseEntity<?> yearlysettingsave(Users user, Locale locale, @Valid YearlySettingsRq req) {
-		YearlyGoalsSettings yearlysGoalsSettings = new YearlyGoalsSettings(req);
+		
+		boolean authorizedtoskipendorsement = Utils.isapiauthorized(CustomAction.SkipEndorsement.name(), Menuauthid.manageauthoritygoals.name(), user.getAuthorizedapis());
+		
+		YearlyGoalsSettings yearlysGoalsSettings = new YearlyGoalsSettings(req, authorizedtoskipendorsement);
 		
 		Optional<YearlyGoalsSettings> optional = yearlyGoalsSettingsRepository.findByYear(req.getYear());
 		if (optional.isPresent()) {
 			yearlysGoalsSettings = optional.get();
 			Long id = yearlysGoalsSettings.getId();
-			yearlysGoalsSettings = new YearlyGoalsSettings(req);
+			String status = yearlysGoalsSettings.getStatus();
+			yearlysGoalsSettings = new YearlyGoalsSettings(req, authorizedtoskipendorsement);
 			yearlysGoalsSettings.setId(id);
+			yearlysGoalsSettings.setStatus(status);
 		}
 		
 		yearlysGoalsSettings = yearlyGoalsSettingsRepository.save(yearlysGoalsSettings);
+
+		if (req.isChangegoalsstatus() && authorizedtoskipendorsement &&
+				Utils.isapiauthorized(CustomAction.UpdateEndorsementStatuses.name(), Menuauthid.manageauthoritygoals.name(), user.getAuthorizedapis())) {
+			String status = yearlysGoalsSettings.isSkipendorsement() ? YearlyGoalStatus.EndorsementCompleted.name() : YearlyGoalStatus.New.name();
+			authoritygoalsRepository.updateGoalsStatusByYear(req.getYear(), status);
+			departmentgoalsRepository.updateGoalsStatusByYear(req.getYear(), status);
+		}
+		
 		return ResponseEntity.ok(yearlysGoalsSettings);
 	}
 
@@ -179,7 +204,7 @@ public class GoalServiceImpl implements GoalService {
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 			
 		YearlyGoalsSettings yearlysGoalsSettings = optional.get();
-		yearlysGoalsSettings.setStatus(YearlyGoalStatus.READY_FOR_ENDORSEMENT.name());
+		yearlysGoalsSettings.setStatus(YearlyGoalStatus.ReadyForEndorsement.name());
 		yearlysGoalsSettings = yearlyGoalsSettingsRepository.save(yearlysGoalsSettings); 
 		return ResponseEntity.ok(yearlysGoalsSettings);
 	}

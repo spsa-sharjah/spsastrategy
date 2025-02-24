@@ -29,6 +29,10 @@ public class YearlySettingsRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
     private String endorsementDeadline;
 
+    private boolean skipendorsement;
+    
+    private boolean changegoalsstatus;
+
 	public String getYear() {
 		return year;
 	}
@@ -83,5 +87,21 @@ public class YearlySettingsRq {
 
 	public void setEndorsementDeadline(String endorsementDeadline) {
 		this.endorsementDeadline = endorsementDeadline;
+	}
+
+	public boolean isSkipendorsement() {
+		return skipendorsement;
+	}
+
+	public void setSkipendorsement(boolean skipendorsement) {
+		this.skipendorsement = skipendorsement;
+	}
+
+	public boolean isChangegoalsstatus() {
+		return changegoalsstatus;
+	}
+
+	public void setChangegoalsstatus(boolean changegoalsstatus) {
+		this.changegoalsstatus = changegoalsstatus;
 	}
 }

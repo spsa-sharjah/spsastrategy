@@ -7,11 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.spsa.strategy.model.Authoritygoals;
+
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface AuthoritygoalsRepository extends JpaRepository<Authoritygoals, String> {
@@ -34,5 +37,13 @@ public interface AuthoritygoalsRepository extends JpaRepository<Authoritygoals, 
 
     @Query("SELECT g FROM Authoritygoals g WHERE g.year = :year AND g.team = :team ORDER BY date_time DESC")
     List<Authoritygoals> findByYearAndTean(@Param("year") String year, @Param("team") String team);
+
+    @Query("SELECT g FROM Authoritygoals g WHERE g.year = :year AND g.status = :status")
+	List<Authoritygoals> findByYearAndStatus(@Param("year") String year, @Param("status") String status);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Authoritygoals g SET g.status = :status WHERE g.year = :year ")
+	void updateGoalsStatusByYear(@Param("year") String year, @Param("status") String status);
 
 }

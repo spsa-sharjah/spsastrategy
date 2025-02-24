@@ -54,6 +54,9 @@ public class YearlyGoalsSettings {
     @Column(name = "status", length = 200)
     private String status;
 
+    @Column(name = "skip_endorsement")
+    private boolean skipendorsement;
+
     public YearlyGoalsSettings() {
 		super();
     }
@@ -67,7 +70,8 @@ public class YearlyGoalsSettings {
 		this.quarter4Date = getQuarterDeadline(yr, Calendar.DECEMBER);
 		this.deadlineNotificationDays = Constants.DEFAULT_DEADLINE_NOTIFICATION_DAYS;
 		this.endorsementDeadline = Utils.addMonthsToDate(this.quarter1Date, Constants.DEFAULT_ENDORSEMENT_DEADLINE_NBR_MONTH);
-		this.status = YearlyGoalStatus.NEW.name();
+		this.status = YearlyGoalStatus.New.name();
+		this.skipendorsement = false;
 	}
 
     private Date getQuarterDeadline(int year, int month) {
@@ -77,7 +81,7 @@ public class YearlyGoalsSettings {
         return calendar.getTime();
     }
 
-	public YearlyGoalsSettings(YearlySettingsRq req) {
+	public YearlyGoalsSettings(YearlySettingsRq req, boolean authorizedtoskipendorsement) {
 		super();
 		this.year = req.getYear();
 		this.quarter1Date = Utils.convertStringToDate(req.getQuarter1Date(), null);
@@ -86,6 +90,7 @@ public class YearlyGoalsSettings {
 		this.quarter4Date = Utils.convertStringToDate(req.getQuarter4Date(), null);
 		this.deadlineNotificationDays = Utils.concertStringtoInteger(req.getDeadlineNotificationDays());
 		this.endorsementDeadline =  Utils.convertStringToDate(req.getEndorsementDeadline(), null);
+		this.skipendorsement = authorizedtoskipendorsement ? req.isSkipendorsement() : false;
 	}
 
 	public Long getId() {
@@ -156,5 +161,13 @@ public class YearlyGoalsSettings {
 	}
 	public void setEndorsementDeadline(Date endorsementDeadline) {
 		this.endorsementDeadline = endorsementDeadline;
+	}
+
+	public boolean isSkipendorsement() {
+		return skipendorsement;
+	}
+
+	public void setSkipendorsement(boolean skipendorsement) {
+		this.skipendorsement = skipendorsement;
 	}
 }

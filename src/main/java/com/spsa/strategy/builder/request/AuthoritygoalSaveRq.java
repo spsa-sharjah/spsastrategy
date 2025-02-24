@@ -45,7 +45,7 @@ public class AuthoritygoalSaveRq {
     
 	private List<String> roles;
 
-	public Authoritygoals returnAuthoritygoals(String username, Users user, String menuauthid) {
+	public Authoritygoals returnAuthoritygoals(String username, Users user, String menuauthid, boolean skipendorsement) {
 		List<Authorization> authorizedapis = user.getAuthorizedapis();
 		String userrole = user.getUser_role(); 
 		Authoritygoals goal = new Authoritygoals();
@@ -66,7 +66,7 @@ public class AuthoritygoalSaveRq {
 		if (Utils.isapiauthorized(CustomAction.UpdateGoalStatus.name(), menuauthid, authorizedapis))
 			goal.setStatus(this.status);
 		else if (goal.getStatus() == null)
-				goal.setStatus(GoalStatus.New.name());
+				goal.setStatus(skipendorsement ? GoalStatus.EndorsementCompleted.name() : GoalStatus.New.name());
 		
 		goal.setUsername(username);
 		goal.setYear(this.year);
