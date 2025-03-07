@@ -38,6 +38,6 @@ public interface DepartmentgoalsRepository extends JpaRepository<Departmentgoals
     
     @Modifying
     @Transactional
-    @Query(value = "UPDATE departmentgoals g INNER JOIN authoritygoals a ON g.authgoalid = a.id SET g.status = :status WHERE a.year = :year ", nativeQuery = true)
+    @Query(value = "UPDATE departmentgoals g INNER JOIN authoritygoals a ON g.authgoalid = a.id SET g.status = :status, endorsementreason = NULL WHERE a.year = :year ", nativeQuery = true)
     void updateGoalsStatusByYear(@Param("year") String year, @Param("status") String status);
 }

@@ -22,9 +22,11 @@ public class Evidence {
 
 	private String username;
 	
-	private String comment;
+	private String description;
     
 	private String goalid;
+	
+	private String comment;
     
     private String status;
 
@@ -88,5 +90,13 @@ public class Evidence {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

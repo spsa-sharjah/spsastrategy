@@ -15,6 +15,7 @@ import com.spsa.strategy.builder.request.EndorseRq;
 import com.spsa.strategy.builder.request.YearlySettingsRq;
 import com.spsa.strategy.builder.response.GoalsTree;
 import com.spsa.strategy.builder.response.MessageResponse;
+import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.enumeration.CustomAction;
 import com.spsa.strategy.enumeration.GoalStatus;
@@ -60,8 +61,9 @@ public class GoalServiceImpl implements GoalService {
 	private YearlyGoalsSettingsRepository yearlyGoalsSettingsRepository;
 
 	@Override
-	public ResponseEntity<?> list(Locale locale, Users user) {
-		return ResponseEntity.ok(goalStatusRepository.findAll());
+	public ResponseEntity<?> list(Locale locale, Users user, String menuauthid) {
+		return menuauthid != null ? ResponseEntity.ok(menuauthid.equalsIgnoreCase(Constants.ALL) ? goalStatusRepository.findAll() : goalStatusRepository.findByMenuauthid(menuauthid))
+								  : ResponseEntity.ok(goalStatusRepository.findEmptyMenuauthid());
 	}
 
 	@Override
@@ -129,15 +131,15 @@ public class GoalServiceImpl implements GoalService {
 				}
 			}
 			
-			if (totalpercentage != sumdeppercentage)
+			if (totalpercentage < sumdeppercentage)
 				return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("match_total_percentage", locale), 413), HttpStatus.OK);
-				
+
+			authoritygoals.setStatus(totalpercentage > sumdeppercentage ? GoalStatus.PartiallyEndorsed.name() : GoalStatus.EndorsementCompleted.name());
 			
 			for (Departmentgoals depgoal : selecteddepartmentgoals) {
 				departmentgoalsRepository.save(depgoal);
 			}
 			
-			authoritygoals.setStatus(GoalStatus.EndorsementCompleted.name());
 			authoritygoalsRepository.save(authoritygoals);
 
 			List<Authoritygoals> authorities = authoritygoalsRepository.findByYearAndStatus(authoritygoals.getYear(), GoalStatus.New.name());
@@ -184,14 +186,16 @@ public class GoalServiceImpl implements GoalService {
 			yearlysGoalsSettings.setStatus(status);
 		}
 		
-		yearlysGoalsSettings = yearlyGoalsSettingsRepository.save(yearlysGoalsSettings);
-
 		if (req.isChangegoalsstatus() && authorizedtoskipendorsement &&
 				Utils.isapiauthorized(CustomAction.UpdateEndorsementStatuses.name(), Menuauthid.manageauthoritygoals.name(), user.getAuthorizedapis())) {
 			String status = yearlysGoalsSettings.isSkipendorsement() ? YearlyGoalStatus.EndorsementCompleted.name() : YearlyGoalStatus.New.name();
 			authoritygoalsRepository.updateGoalsStatusByYear(req.getYear(), status);
-			departmentgoalsRepository.updateGoalsStatusByYear(req.getYear(), status);
+			String depstatus = yearlysGoalsSettings.isSkipendorsement() ? GoalStatus.Approved.name() : GoalStatus.New.name();
+			departmentgoalsRepository.updateGoalsStatusByYear(req.getYear(), depstatus);
+			yearlysGoalsSettings.setStatus(status);
 		}
+
+		yearlysGoalsSettings = yearlyGoalsSettingsRepository.save(yearlysGoalsSettings);
 		
 		return ResponseEntity.ok(yearlysGoalsSettings);
 	}

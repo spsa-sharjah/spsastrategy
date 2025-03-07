@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 
 public interface GoalService {
 
-	ResponseEntity<?> list(Locale locale, Users user);
+	ResponseEntity<?> list(Locale locale, Users user, String menuauthid);
 
 	ResponseEntity<?> authoritygoaltree(Users user, Locale locale, String year, String team, boolean showdepartment,
 			boolean showsection, boolean showevidence);

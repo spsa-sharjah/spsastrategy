@@ -11,6 +11,8 @@ public class EvidenceSaveRq {
 	@NotNull
 	private String goalid;
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
+	private String description;
+    @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String comment;
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String status;
@@ -49,5 +51,13 @@ public class EvidenceSaveRq {
 
 	public void setGoalid(String goalid) {
 		this.goalid = goalid;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

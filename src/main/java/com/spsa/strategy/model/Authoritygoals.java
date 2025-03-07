@@ -50,6 +50,9 @@ public class Authoritygoals {
 	@Size(max = 200)
 	private String team;
 	
+	@Size(max = 500)
+	private String relatedgoalid;
+	
 	public Authoritygoals() {
 	}
 
@@ -163,5 +166,13 @@ public class Authoritygoals {
 
 	public void setTeam(String team) {
 		this.team = team;
+	}
+
+	public String getRelatedgoalid() {
+		return relatedgoalid;
+	}
+
+	public void setRelatedgoalid(String relatedgoalid) {
+		this.relatedgoalid = relatedgoalid;
 	}
 }

@@ -19,6 +19,11 @@ public class GoalStatus {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "menuauthid", length = 255)
+    private String menuauthid;
+    
+    private Integer order;
+
     public GoalStatus() {}
 
     public GoalStatus(String nameen, String namear, String description) {
@@ -56,5 +61,21 @@ public class GoalStatus {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getMenuauthid() {
+		return menuauthid;
+	}
+
+	public void setMenuauthid(String menuauthid) {
+		this.menuauthid = menuauthid;
+	}
+
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
 	}
 }

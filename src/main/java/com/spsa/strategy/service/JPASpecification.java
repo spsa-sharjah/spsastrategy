@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import com.spsa.strategy.enumeration.GoalStatus;
 import com.spsa.strategy.model.Authoritygoals;
 import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Evidence;
@@ -18,7 +19,7 @@ import jakarta.persistence.criteria.Subquery;
 
 public class JPASpecification {
 	
-	public static Specification<Authoritygoals> returnAuthoritygoalSpecification(String search, String sortColumn, boolean descending, String username, String currrentuserrole, String year, String team, String status) {
+	public static Specification<Authoritygoals> returnAuthoritygoalSpecification(String search, String sortColumn, boolean descending, String username, String currrentuserrole, String year, String team, boolean showApprovedOnly) {
 	  return (root, query, criteriaBuilder) -> {
 	      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
 	
@@ -36,8 +37,10 @@ public class JPASpecification {
 	      if (team != null)
 		      andPredicates.add(criteriaBuilder.equal(root.get("team"), team));
 	      
-	      if (status != null)
-	    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), status));
+	      if (showApprovedOnly) {
+	    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.New.name()));
+	    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.PartiallyEndorsed.name()));
+	      }
 	      
 	      if (search != null) {
 	          String searchPattern =  "%" + search + "%";
@@ -74,7 +77,7 @@ public class JPASpecification {
 	}
 
 	public static Specification<Departmentgoals> returnDepartmentgoalSpecification(String search, String sortColumn,
-			boolean descending, String goalid, String currrentuserrole, String parentrole, String status) {
+			boolean descending, String goalid, String currrentuserrole, String parentrole, boolean showApprovedOnly) {
 		 return (root, query, criteriaBuilder) -> {
 		      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
 		
@@ -89,8 +92,10 @@ public class JPASpecification {
 		      if (parentrole != null)
 		    	  andPredicates.add(criteriaBuilder.equal(root.get("userrole"), parentrole));
 
-		      if (status != null)
-		    	  andPredicates.add(criteriaBuilder.equal(root.get("status"), status));
+		      if (showApprovedOnly) {
+		    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.New.name()));
+		    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.PartiallyEndorsed.name()));
+		      }
 		      
 		      if (search != null) {
 		          String searchPattern =  "%" + search + "%";

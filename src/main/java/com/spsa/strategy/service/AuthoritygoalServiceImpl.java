@@ -20,7 +20,6 @@ import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.enumeration.CustomAction;
-import com.spsa.strategy.enumeration.GoalStatus;
 import com.spsa.strategy.enumeration.Menuauthid;
 import com.spsa.strategy.enumeration.YearlyGoalStatus;
 import com.spsa.strategy.model.Authoritygoals;
@@ -113,10 +112,10 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			Page<Authoritygoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
 
-			String status = null;
+			boolean showApprovedOnly = false;
 			if (Utils.isapiauthorized(CustomAction.ShowApprovedOnly.name(), Menuauthid.manageauthoritygoals.name(), user.getAuthorizedapis()))
-				status = GoalStatus.New.name(); // Show all not new = already approved and more
-			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername, user.getUser_role(), year, team, status);
+				showApprovedOnly = true; // Show all not new = already approved and more
+			Specification<Authoritygoals> spec = JPASpecification.returnAuthoritygoalSpecification(search, sortcolumn, descending, getbyusername, user.getUser_role(), year, team, showApprovedOnly);
 
 			if (all != null && all == true) {
 				List<Authoritygoals> allusersbysearch = goalsRepository.findAll(spec);

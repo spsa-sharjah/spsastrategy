@@ -356,10 +356,11 @@ public class AdminController {
 
 	@RequestMapping(value = "/goal/status/list", method = RequestMethod.GET)
 	public ResponseEntity<?> goalstatuslist(HttpServletRequest request,
-											  @RequestHeader(name = "Accept-Language", required = false) Locale locale) {
+											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+									          @RequestHeader(name = "id", required = false) String menuauthid) {
 
         Users user = (Users) request.getAttribute("user");
-		return goalService.list(locale, user);
+		return goalService.list(locale, user, menuauthid);
 	}
 
 	@RequestMapping(value = "/year/list", method = RequestMethod.GET)

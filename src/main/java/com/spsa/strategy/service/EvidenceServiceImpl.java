@@ -32,6 +32,8 @@ import com.spsa.strategy.builder.response.IdRs;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.enumeration.CustomAction;
+import com.spsa.strategy.enumeration.Menuauthid;
 import com.spsa.strategy.model.Evidence;
 import com.spsa.strategy.model.EvidenceReply;
 import com.spsa.strategy.model.FileEvidence;
@@ -401,8 +403,14 @@ public class EvidenceServiceImpl implements EvidenceService {
                 evidence.setUsername(user.getUsername());
                 evidence.setGoalid(req.getGoalid());
             }
-            evidence.setComment(req.getComment());
-            evidence.setStatus(req.getStatus());
+            evidence.setDescription(req.getDescription());
+            
+            String menuauthid = req.getGoalid().contains(Constants.SECTION_KEY) ? Menuauthid.managesectiongoals.name() : Menuauthid.managedepartmentgoals.name();
+    		if (Utils.isapiauthorized(CustomAction.UpdateEvidenceStatus.name(), menuauthid, user.getAuthorizedapis())) {
+                evidence.setComment(req.getComment());
+                evidence.setStatus(req.getStatus());
+    		}
+            
             evidence = evidenceRepository.save(evidence);
         	return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
         	
