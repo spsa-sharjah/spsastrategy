@@ -1,11 +1,27 @@
 package com.spsa.strategy.service;
 
-import com.google.firebase.messaging.FirebaseMessagingException;
+import java.util.Locale;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+
+import com.spsa.strategy.model.Users;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface NotificationService {
 
-    public void registerToken(String token);
+    public void registertoken(HttpServletRequest request, Users user, Map<String, String> payload);
 
-    public void sendNotification(String title, String message) throws FirebaseMessagingException;
+	public boolean sendnotification(String username, Map<String, String> payload);
+
+	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
+			Boolean descending, Integer draw, Users user, boolean isadmin, Boolean assender);
+
+	public ResponseEntity<?> newnotifications(Locale locale, Users user);
+
+	public ResponseEntity<?> notificationdetails(Locale locale, Users user, Long id, boolean isadmin);
+
+	public ResponseEntity<?> notificationsaw(Locale locale, Users user, Long id);
 
 }

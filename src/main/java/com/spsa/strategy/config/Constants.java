@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Constants {
 
-	public static final String[] EXCLUDED_PATHS = {"/api/public/", "/api/notifications"};
+	public static final String[] EXCLUDED_PATHS = {"/api/public/"};
 	public static final String ADMIN_PATH = "/api/admin/";
 	
 	public static final String ACCESS_TOKEN_KEY = "access_token";
@@ -32,6 +32,14 @@ public class Constants {
 	public static final Integer DEFAULT_DEADLINE_NOTIFICATION_DAYS = 15;
 	public static final int DEFAULT_ENDORSEMENT_DEADLINE_NBR_MONTH = 4;
 	public static final String ALL = "all";
+	public static final String TOKEN_ID = "TOKENID";
+	public static final String SYSTEM_NOTIF = "SYSTEM_NOTIFICATION";
+	public static final String TOKEN_PARAM = "token";
+	public static final String USERAGENT_PARAM = "useragent";
+	public static final String PLATFORM_PARAM = "platform";
+	public static final String TIMEZONE_PARAM = "timezone";
+	public static final String TITLE_PARAM = "title";
+	public static final String MESSAGE_PARAM = "message";
 	
 	
 	public static String generateOTP(int length) {

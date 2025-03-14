@@ -27,6 +27,7 @@ import com.spsa.strategy.service.AuthoritygoalService;
 import com.spsa.strategy.service.DepartmentgoalService;
 import com.spsa.strategy.service.EvidenceService;
 import com.spsa.strategy.service.GoalService;
+import com.spsa.strategy.service.NotificationService;
 import com.spsa.strategy.service.SectiongoalService;
 import com.spsa.strategy.service.SettingsService;
 
@@ -55,6 +56,9 @@ public class AdminController {
 	
 	@Autowired
 	private GoalService goalService;
+	
+	@Autowired
+	private NotificationService notificationService;
 	
 	@Autowired
 	private SettingsService settingsService;
@@ -417,5 +421,28 @@ public class AdminController {
 
         Users user = (Users) request.getAttribute("user");
 		return goalService.yearlysettingendorsementready(user, locale, year);
+	}
+	
+	@RequestMapping(value = "/notification/list", method = RequestMethod.POST)
+	public ResponseEntity<?> list(HttpServletRequest request,
+													  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+													  @RequestHeader(name = "page", required = false, defaultValue = "0") Integer page,
+													  @RequestHeader(name = "size", required = false, defaultValue = "0") Integer size,
+													  @RequestHeader(name = "search", required = false) String search,
+													  @RequestHeader(name = "sortcolumn", required = false) String sortcolumn,
+													  @RequestHeader(name = "descending", required = false, defaultValue = "false") Boolean descending,
+											          @RequestHeader(name = "draw", required = false, defaultValue = "1") Integer draw) {
+
+        Users user = (Users) request.getAttribute("user");
+		return notificationService.list(locale, page, size, search, sortcolumn, descending, draw, user, true, null);
+	}
+	
+	@RequestMapping(value = "/notification/details", method = RequestMethod.POST)
+	public ResponseEntity<?> notificationdetails(HttpServletRequest request,
+								  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
+								  @RequestHeader(name = "id", required = true) Long id) {
+
+        Users user = (Users) request.getAttribute("user");
+		return notificationService.notificationdetails(locale, user, id, true);
 	}
 }

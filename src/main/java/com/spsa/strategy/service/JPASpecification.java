@@ -12,6 +12,8 @@ import com.spsa.strategy.model.Evidence;
 import com.spsa.strategy.model.EvidenceReply;
 import com.spsa.strategy.model.Restrictedgoalsuserlevel;
 import com.spsa.strategy.model.Sectiongoals;
+import com.spsa.strategy.model.SystemNotification;
+import com.spsa.strategy.model.Users;
 
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
@@ -215,6 +217,42 @@ public class JPASpecification {
 		          Predicate orCondition = criteriaBuilder.or(
 		                  criteriaBuilder.like(root.get("username"), searchPattern),
 		                  criteriaBuilder.like(root.get("comment"), searchPattern)
+		              );
+		
+		          // Add the OR condition to the list of AND predicates
+		          andPredicates.add(orCondition);
+		      }
+		
+		      // Combine all AND predicates with an AND condition
+		      return criteriaBuilder.and(andPredicates.toArray(new Predicate[0]));
+		  };
+	}
+
+	public static Specification<SystemNotification> returnSystemNotificationSpecification(String search,
+			String sortColumn, Boolean descending, Users user, boolean isadmin, Boolean assender) {
+
+		 return (root, query, criteriaBuilder) -> {
+		      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
+		
+		      if (descending) 
+		          query.orderBy(criteriaBuilder.desc(root.get(sortColumn)));
+		      else 
+		          query.orderBy(criteriaBuilder.asc(root.get(sortColumn)));
+
+		      if (!isadmin)
+		    	  if (assender != null && assender)
+		    		  andPredicates.add(criteriaBuilder.equal(root.get("senderusername"), user.getUsername()));
+		    	  else
+		    		  andPredicates.add(criteriaBuilder.equal(root.get("receiverusername"), user.getUsername()));
+
+		      if (search != null) {
+		          String searchPattern =  "%" + search + "%";
+		          // Combine OR predicates into one OR condition
+		          Predicate orCondition = criteriaBuilder.or(
+		                  criteriaBuilder.like(root.get("senderusername"), searchPattern),
+		                  criteriaBuilder.like(root.get("receiverusername"), searchPattern),
+		                  criteriaBuilder.like(root.get("title"), searchPattern),
+		                  criteriaBuilder.like(root.get("message"), searchPattern)
 		              );
 		
 		          // Add the OR condition to the list of AND predicates
