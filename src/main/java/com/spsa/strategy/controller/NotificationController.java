@@ -80,12 +80,12 @@ public class NotificationController {
 		return service.notificationdetails(locale, user, id, false);
 	}
 	
-	@RequestMapping(value = "/saw", method = RequestMethod.POST)
-	public ResponseEntity<?> notificationsaw(HttpServletRequest request,
+	@RequestMapping(value = "/seen", method = RequestMethod.POST)
+	public ResponseEntity<?> notificationseen(HttpServletRequest request,
 								  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 								  @RequestHeader(name = "id", required = true) Long id) {
 
         Users user = (Users) request.getAttribute("user");
-		return service.notificationsaw(locale, user, id);
+		return service.notificationseen(locale, user, id);
 	}
 }

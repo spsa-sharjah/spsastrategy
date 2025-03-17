@@ -18,7 +18,7 @@ public interface SystemNotificationRepository extends JpaRepository<SystemNotifi
 
 	Page<SystemNotification> findAll(Specification<SystemNotification> spec, Pageable pageable);
 
-    @Query("SELECT g FROM SystemNotification g WHERE g.receiverusername = :receiverusername AND saw = false ORDER BY g.datetime DESC ")
+    @Query("SELECT g FROM SystemNotification g WHERE g.receiverusername = :receiverusername AND seen = false ORDER BY g.datetime DESC ")
 	List<SystemNotification> findnewusernotifications(@Param("receiverusername") String username);
 
     @Query("SELECT g FROM SystemNotification g WHERE g.id = :id AND (g.senderusername = :username OR g.receiverusername = :username) ")

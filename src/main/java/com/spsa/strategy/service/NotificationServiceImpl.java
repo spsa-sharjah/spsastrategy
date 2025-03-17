@@ -152,14 +152,16 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public ResponseEntity<?> notificationsaw(Locale locale, Users user, Long id) {
+	public ResponseEntity<?> notificationseen(Locale locale, Users user, Long id) {
 		try {
 			Optional<SystemNotification> notifopt = systemNotificationRepository.findByIdAndReceiverusername(id, user.getUsername());
 			if (notifopt.isPresent()) {
 				SystemNotification notif = notifopt.get();
-				notif.setSaw(true);
-				systemNotificationRepository.save(notif);
-				return ResponseEntity.ok(notifopt.get());
+				if (notif.isSeen())
+					return ResponseEntity.ok(notif);
+				notif.setSeen(true);
+				notif = systemNotificationRepository.save(notif);
+				return ResponseEntity.ok(notif);
 			}
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("resource_not_found", locale), 200));
 	        

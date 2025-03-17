@@ -22,6 +22,6 @@ public interface NotificationService {
 
 	public ResponseEntity<?> notificationdetails(Locale locale, Users user, Long id, boolean isadmin);
 
-	public ResponseEntity<?> notificationsaw(Locale locale, Users user, Long id);
+	public ResponseEntity<?> notificationseen(Locale locale, Users user, Long id);
 
 }

@@ -28,7 +28,7 @@ public class SystemNotification {
     
     private String message;
 
-    private boolean saw;
+    private boolean seen;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATETIME_FORMAT)
     private Date datetime;
@@ -45,7 +45,7 @@ public class SystemNotification {
 		this.receiverusername = receiverusername;
 		this.title = title;
 		this.message = message;
-		this.saw = false;
+		this.seen = false;
 		this.datetime = new Date();
 	}
 
@@ -97,12 +97,12 @@ public class SystemNotification {
 		this.message = message;
 	}
 
-	public boolean isSaw() {
-		return saw;
+	public boolean isSeen() {
+		return seen;
 	}
 
-	public void setSaw(boolean saw) {
-		this.saw = saw;
+	public void setSeen(boolean seen) {
+		this.seen = seen;
 	}
 
 	public Date getDatetime() {
