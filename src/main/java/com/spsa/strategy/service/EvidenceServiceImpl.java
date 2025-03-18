@@ -33,14 +33,22 @@ import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.enumeration.CustomAction;
+import com.spsa.strategy.enumeration.EvidenceStatus;
+import com.spsa.strategy.enumeration.GoalStatus;
 import com.spsa.strategy.enumeration.Menuauthid;
+import com.spsa.strategy.model.Authoritygoals;
+import com.spsa.strategy.model.Departmentgoals;
 import com.spsa.strategy.model.Evidence;
 import com.spsa.strategy.model.EvidenceReply;
 import com.spsa.strategy.model.FileEvidence;
+import com.spsa.strategy.model.Sectiongoals;
 import com.spsa.strategy.model.Users;
+import com.spsa.strategy.repository.AuthoritygoalsRepository;
+import com.spsa.strategy.repository.DepartmentgoalsRepository;
 import com.spsa.strategy.repository.EvidenceReplyRepository;
 import com.spsa.strategy.repository.EvidenceRepository;
 import com.spsa.strategy.repository.FileEvidenceRepository;
+import com.spsa.strategy.repository.SectiongoalsRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -61,6 +69,15 @@ public class EvidenceServiceImpl implements EvidenceService {
 	
 	@Autowired
 	EvidenceReplyRepository evidenceReplyRepository;
+
+	@Autowired
+	DepartmentgoalsRepository departmentgoalsRepository;
+
+	@Autowired
+	AuthoritygoalsRepository authoritygoalsRepository;
+	
+	@Autowired
+	SectiongoalsRepository sectiongoalsRepository;
 
 	@Value("${spring.file.uploaddir}") 
     private String fileuploaddir;
@@ -404,13 +421,17 @@ public class EvidenceServiceImpl implements EvidenceService {
                 evidence.setGoalid(req.getGoalid());
             }
             evidence.setDescription(req.getDescription());
-            
+
+            evidence.setStatus(EvidenceStatus.EvidenceNew.name());
             String menuauthid = req.getGoalid().contains(Constants.SECTION_KEY) ? Menuauthid.managesectiongoals.name() : Menuauthid.managedepartmentgoals.name();
     		if (Utils.isapiauthorized(CustomAction.UpdateEvidenceStatus.name(), menuauthid, user.getAuthorizedapis())) {
                 evidence.setComment(req.getComment());
                 evidence.setStatus(req.getStatus());
+                
+            	// update parent status & parent percentages
+                updateparentstatusespercentages(req);
     		}
-            
+             
             evidence = evidenceRepository.save(evidence);
         	return ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale)));
         	
@@ -419,6 +440,59 @@ public class EvidenceServiceImpl implements EvidenceService {
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
 	}
+
+	private void updateparentstatusespercentages(@Valid EvidenceSaveRq req) {
+		try {
+            String parentstatus = req.getStatus().equals(EvidenceStatus.EvidenceApproved.name()) ? GoalStatus.EvidenceApproved.name() : GoalStatus.EvidenceInProgress.name();
+        	if (req.getGoalid().contains(Constants.SECTION_KEY)) { // operation
+        		Optional<Sectiongoals> parentgoalopt = sectiongoalsRepository.findById(req.getGoalid());
+        		if (parentgoalopt.isPresent()) {
+            		Sectiongoals parentgoal = parentgoalopt.get();
+            		parentgoal.setYearlyweight(parentgoal.getYearlyexpectedweight());
+                    parentgoal.setStatus(parentstatus);
+                    sectiongoalsRepository.save(parentgoal);
+                    
+                    int sumofpercentage = sectiongoalsRepository.findSumOfPercentageGoalsByDepgoalid(parentgoal.getDepgoalid());
+            		Optional<Departmentgoals> depgoalopt = departmentgoalsRepository.findById(parentgoal.getDepgoalid());
+            		if (parentgoalopt.isPresent()) {
+            			Departmentgoals depgoal = depgoalopt.get();
+            			depgoal.setYearlyweight(sumofpercentage);
+            			depgoal.setStatus(sumofpercentage == depgoal.getYearlyexpectedweight() ?  GoalStatus.EvidenceApproved.name() : GoalStatus.EvidenceInProgress.name());
+                        departmentgoalsRepository.save(depgoal);
+
+                        int sumofauthpercentage = departmentgoalsRepository.findSumOfPercentageGoalsByAuthgoalid(depgoal.getAuthgoalid());
+                		Optional<Authoritygoals> authgoalopt = authoritygoalsRepository.findById(depgoal.getAuthgoalid());
+                		if (parentgoalopt.isPresent()) {
+                			Authoritygoals authgoal = authgoalopt.get();
+                			authgoal.setYearlyweight(sumofauthpercentage);
+                			authgoal.setStatus(sumofpercentage == authgoal.getYearlyexpectedweight() ?  GoalStatus.EvidenceApproved.name() : GoalStatus.EvidenceInProgress.name());
+                			authoritygoalsRepository.save(authgoal);
+                		}
+            		}
+        		}
+        	} else {
+        		Optional<Departmentgoals> parentgoalopt = departmentgoalsRepository.findById(req.getGoalid());
+        		if (parentgoalopt.isPresent()) {
+        			Departmentgoals parentgoal = parentgoalopt.get();
+            		parentgoal.setYearlyweight(parentgoal.getYearlyexpectedweight());
+                    parentgoal.setStatus(parentstatus);
+                    departmentgoalsRepository.save(parentgoal);
+                    
+                    int sumofpercentage = departmentgoalsRepository.findSumOfPercentageGoalsByAuthgoalid(parentgoal.getAuthgoalid());
+            		Optional<Authoritygoals> authgoalopt = authoritygoalsRepository.findById(parentgoal.getAuthgoalid());
+            		if (parentgoalopt.isPresent()) {
+            			Authoritygoals authgoal = authgoalopt.get();
+            			authgoal.setYearlyweight(sumofpercentage);
+            			authgoal.setStatus(sumofpercentage == authgoal.getYearlyexpectedweight() ?  GoalStatus.EvidenceApproved.name() : GoalStatus.EvidenceInProgress.name());
+            			authoritygoalsRepository.save(authgoal);
+            		}
+        		}
+        	}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+	
 
 	@Override
 	public String removebygoalid(Locale locale, Users user, String goalid) {

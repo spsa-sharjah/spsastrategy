@@ -2,5 +2,6 @@ package com.spsa.strategy.enumeration;
 
 public enum GoalStatus {
 
-	New, Approved, Unapproved, PartiallyEndorsed, EndorsementCompleted;
+	New, EndorsedApproved, EndorsedUnapproved, EndorsedPartially, EndorsementSkipped, EndorsementCompleted,
+	EvidenceInProgress, EvidenceApproved;
 }

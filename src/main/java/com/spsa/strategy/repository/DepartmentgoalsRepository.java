@@ -40,4 +40,7 @@ public interface DepartmentgoalsRepository extends JpaRepository<Departmentgoals
     @Transactional
     @Query(value = "UPDATE departmentgoals g INNER JOIN authoritygoals a ON g.authgoalid = a.id SET g.status = :status, endorsementreason = NULL WHERE a.year = :year ", nativeQuery = true)
     void updateGoalsStatusByYear(@Param("year") String year, @Param("status") String status);
+
+    @Query("SELECT SUM(g.yearlyweight) FROM Departmentgoals g WHERE g.authgoalid = :authgoalid")
+    Integer findSumOfPercentageGoalsByAuthgoalid(@Param("authgoalid") String authgoalid);
 }

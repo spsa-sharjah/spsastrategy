@@ -84,12 +84,13 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 				YearlyGoalsSettings yearlyGoalsSettings = optyg.get();
 				skipendorsement = yearlyGoalsSettings.isSkipendorsement();
 				String status = YearlyGoalStatus.New.name();
-				if (skipendorsement) status = YearlyGoalStatus.EndorsementCompleted.name();
+				if (skipendorsement) status = YearlyGoalStatus.EndorsementSkipped.name();
 				yearlyGoalsSettings.setStatus(status);
 				yearlyGoalsSettingsRepository.save(yearlyGoalsSettings);
 			}
 			
-			Authoritygoals obj = req.returnAuthoritygoals(username, user, Menuauthid.manageauthoritygoals.name(), skipendorsement);
+			String reference = returnuniquereference(req.getYear());
+			Authoritygoals obj = req.returnAuthoritygoals(username, user, Menuauthid.manageauthoritygoals.name(), skipendorsement, reference);
 			obj = goalsRepository.save(obj);
 			
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
@@ -101,6 +102,12 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			e.printStackTrace();
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
+	}
+
+	private String returnuniquereference(String year) {
+		int yearlycount = goalsRepository.countyearlygoals(year);
+		yearlycount++;
+		return Constants.SA.replace("*YEAR*", year) + yearlycount;
 	}
 
 	@Override

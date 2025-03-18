@@ -18,6 +18,8 @@ public class Authoritygoals {
 	@Size(max = 500)
 	private String id;
 
+	private String ref;
+
 	private String goal;
 
 	private String goalar;
@@ -174,5 +176,13 @@ public class Authoritygoals {
 
 	public void setRelatedgoalid(String relatedgoalid) {
 		this.relatedgoalid = relatedgoalid;
+	}
+
+	public String getRef() {
+		return ref;
+	}
+
+	public void setRef(String ref) {
+		this.ref = ref;
 	}
 }

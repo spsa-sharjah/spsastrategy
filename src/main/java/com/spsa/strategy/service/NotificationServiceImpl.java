@@ -17,11 +17,13 @@ import org.springframework.stereotype.Service;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import com.spsa.strategy.builder.request.EmailDetailsRq;
 import com.spsa.strategy.builder.response.DatatableResponse;
 import com.spsa.strategy.builder.response.MessageResponse;
 import com.spsa.strategy.config.Constants;
 import com.spsa.strategy.config.Utils;
 import com.spsa.strategy.model.NotificationToken;
+import com.spsa.strategy.model.Settings;
 import com.spsa.strategy.model.SystemNotification;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.repository.NotificationTokenRepository;
@@ -37,9 +39,16 @@ public class NotificationServiceImpl implements NotificationService {
 	
 	@Autowired
     private NotificationTokenRepository repository;
-	
+
 	@Autowired
     private SystemNotificationRepository systemNotificationRepository;
+	
+	@Autowired
+    private SettingsService settingsService;
+
+	@Autowired
+    private EmailService emailService;
+	
 
     public void registertoken(HttpServletRequest request, Users user, Map<String, String> payload) {
     	if (!payload.containsKey(Constants.TOKEN_PARAM))
@@ -60,11 +69,17 @@ public class NotificationServiceImpl implements NotificationService {
 		return newid;
 	}
 
-	public boolean sendnotification(String username, Map<String, String> payload) {
+	public boolean sendnotification(Locale locale, String username, Map<String, String> payload) {
 		try {
+			if (!payload.containsKey(Constants.TITLE_PARAM) ||
+					!payload.containsKey(Constants.MESSAGE_PARAM) ||
+					!payload.containsKey(Constants.TOUSER_PARAM))
+				return false;
+			
 			String title = payload.get(Constants.TITLE_PARAM);
 			String message = payload.get(Constants.MESSAGE_PARAM);
-			String touser = payload.get(Constants.MESSAGE_PARAM);
+			String touser = payload.get(Constants.TOUSER_PARAM);
+			String toemail = payload.containsKey(Constants.TOEMAIL_PARAM) ? payload.get(Constants.TOEMAIL_PARAM) : null;
 	        List<NotificationToken> notiftokens = repository.findByUsername(touser);
 	        List<String> tokens = new ArrayList<String>();
 	        if (notiftokens != null && notiftokens.size() > 0)
@@ -90,6 +105,16 @@ public class NotificationServiceImpl implements NotificationService {
 	        String tokenid = tokens.size() > 0 ? String.join(", ", tokens) : null;
 	        SystemNotification sysnotif = new SystemNotification(tokenid, touser, username, title, message);
 	        systemNotificationRepository.save(sysnotif);
+	        
+	        Settings settings = settingsService.returndefaultSettings(); 
+	        if (settings != null &&
+	        		toemail != null &&
+	        		settings.isSendemailnotif()) {
+				String subject = messageService.getMessage("notification", locale);
+				String msgBody = "You received a new SPSA notification in the Strategy service, from the '" + username + "', " + message;
+				EmailDetailsRq rq = new EmailDetailsRq(toemail, msgBody, subject + title);
+				emailService.sendSimpleMail(rq);
+	        }
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -169,5 +194,11 @@ public class NotificationServiceImpl implements NotificationService {
 			e.printStackTrace();
 			return ResponseEntity.ok(new MessageResponse(messageService.getMessage("exception_case", locale), 111));
 		}
+	}
+
+	@Override
+	public boolean sendnotifications(Locale locale, String team, String role, Map<String, String> payload) {
+		// Call auth service to get all users by team or by role
+		return false;
 	}
 }

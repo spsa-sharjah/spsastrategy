@@ -26,7 +26,7 @@ public class Constants {
 	public static final String DATETIME_FORMAT_ID = "yyyyMMddHHmmss";
 	public static final String AUTHORITY_KEY = "AUTH-";
 	public static final String DEPARTMENT_KEY = "DEPT-";
-	public static final String SECTION_KEY = "SECT-";
+	public static final String SECTION_KEY = "OPER-";
 	public static final String EVIDENCE_KEY = "EVID";
 	public static final String DEFAULT_WIDTH = "120px";
 	public static final Integer DEFAULT_DEADLINE_NOTIFICATION_DAYS = 15;
@@ -40,7 +40,9 @@ public class Constants {
 	public static final String TIMEZONE_PARAM = "timezone";
 	public static final String TITLE_PARAM = "title";
 	public static final String MESSAGE_PARAM = "message";
-	
+	public static final String TOUSER_PARAM = "touser";
+	public static final String TOEMAIL_PARAM = "toemail";
+	public static final String SA = "SA#*YEAR*#";
 	
 	public static String generateOTP(int length) {
 		String numbers = "0123456789";

@@ -41,7 +41,7 @@ public class JPASpecification {
 	      
 	      if (showApprovedOnly) {
 	    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.New.name()));
-	    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.PartiallyEndorsed.name()));
+	    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.EndorsedPartially.name()));
 	      }
 	      
 	      if (search != null) {
@@ -96,7 +96,7 @@ public class JPASpecification {
 
 		      if (showApprovedOnly) {
 		    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.New.name()));
-		    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.PartiallyEndorsed.name()));
+		    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.EndorsedPartially.name()));
 		      }
 		      
 		      if (search != null) {

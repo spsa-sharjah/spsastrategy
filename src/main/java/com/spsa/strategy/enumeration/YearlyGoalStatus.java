@@ -1,5 +1,5 @@
 package com.spsa.strategy.enumeration;
 
 public enum YearlyGoalStatus {
-	New, ReadyForEndorsement, EndorsementCompleted
+	New, ReadyForEndorsement, EndorsementSkipped, EndorsementCompleted, Completed 
 }

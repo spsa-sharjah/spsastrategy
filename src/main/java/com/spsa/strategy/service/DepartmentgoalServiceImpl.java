@@ -105,7 +105,7 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			if (optyg.isPresent()) {
 				YearlyGoalsSettings yearlyGoalsSettings = optyg.get();
 
-				String status = yearlyGoalsSettings.isSkipendorsement() ? YearlyGoalStatus.EndorsementCompleted.name(): YearlyGoalStatus.New.name();
+				String status = yearlyGoalsSettings.isSkipendorsement() ? YearlyGoalStatus.EndorsementSkipped.name(): YearlyGoalStatus.New.name();
 				
 				yearlyGoalsSettings.setStatus(status);
 				yearlyGoalsSettingsRepository.save(yearlyGoalsSettings);

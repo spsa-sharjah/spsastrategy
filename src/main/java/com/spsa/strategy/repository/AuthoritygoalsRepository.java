@@ -46,4 +46,6 @@ public interface AuthoritygoalsRepository extends JpaRepository<Authoritygoals, 
     @Query("UPDATE Authoritygoals g SET g.status = :status WHERE g.year = :year ")
 	void updateGoalsStatusByYear(@Param("year") String year, @Param("status") String status);
 
+    @Query("SELECT COUNT(g) FROM Authoritygoals g WHERE g.year = :year ")
+	int countyearlygoals(@Param("year") String year);
 }

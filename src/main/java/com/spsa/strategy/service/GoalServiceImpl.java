@@ -119,7 +119,7 @@ public class GoalServiceImpl implements GoalService {
 
 					Departmentgoals departmentgoals = departmentgoalopt.get();
 
-					departmentgoals.setStatus(depgoal.isApproved() ? GoalStatus.Approved.name() : GoalStatus.Unapproved.name());
+					departmentgoals.setStatus(depgoal.isApproved() ? GoalStatus.EndorsedApproved.name() : GoalStatus.EndorsedUnapproved.name());
 					if (depgoal.getReason() != null)
 						departmentgoals.setEndorsementreason(depgoal.getReason());
 					selecteddepartmentgoals.add(departmentgoals);
@@ -134,7 +134,7 @@ public class GoalServiceImpl implements GoalService {
 			if (totalpercentage < sumdeppercentage)
 				return new ResponseEntity<MessageResponse>(new MessageResponse(messageService.getMessage("match_total_percentage", locale), 413), HttpStatus.OK);
 
-			authoritygoals.setStatus(totalpercentage > sumdeppercentage ? GoalStatus.PartiallyEndorsed.name() : GoalStatus.EndorsementCompleted.name());
+			authoritygoals.setStatus(totalpercentage > sumdeppercentage ? GoalStatus.EndorsedPartially.name() : GoalStatus.EndorsementCompleted.name());
 			
 			for (Departmentgoals depgoal : selecteddepartmentgoals) {
 				departmentgoalsRepository.save(depgoal);
@@ -188,9 +188,9 @@ public class GoalServiceImpl implements GoalService {
 		
 		if (req.isChangegoalsstatus() && authorizedtoskipendorsement &&
 				Utils.isapiauthorized(CustomAction.UpdateEndorsementStatuses.name(), Menuauthid.manageauthoritygoals.name(), user.getAuthorizedapis())) {
-			String status = yearlysGoalsSettings.isSkipendorsement() ? YearlyGoalStatus.EndorsementCompleted.name() : YearlyGoalStatus.New.name();
+			String status = yearlysGoalsSettings.isSkipendorsement() ? YearlyGoalStatus.EndorsementSkipped.name() : YearlyGoalStatus.New.name();
 			authoritygoalsRepository.updateGoalsStatusByYear(req.getYear(), status);
-			String depstatus = yearlysGoalsSettings.isSkipendorsement() ? GoalStatus.Approved.name() : GoalStatus.New.name();
+			String depstatus = yearlysGoalsSettings.isSkipendorsement() ? GoalStatus.EndorsedApproved.name() : GoalStatus.New.name();
 			departmentgoalsRepository.updateGoalsStatusByYear(req.getYear(), depstatus);
 			yearlysGoalsSettings.setStatus(status);
 		}

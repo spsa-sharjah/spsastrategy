@@ -7,8 +7,6 @@ import com.spsa.strategy.config.SanitizedStringDeserializer;
 public class EmailDetailsRq {
 
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
-	private String name;
-    @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String recipient;
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String msgBody;
@@ -17,11 +15,17 @@ public class EmailDetailsRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String captchaToken;
 	
-	private boolean useAccela;
-	
 	public EmailDetailsRq() {
 		super();
 	}
+	
+	public EmailDetailsRq(String recipient, String msgBody, String subject) {
+		super();
+		this.recipient = recipient;
+		this.msgBody = msgBody;
+		this.subject = subject;
+	}
+
 	public String getRecipient() {
 		return recipient;
 	}
@@ -42,20 +46,5 @@ public class EmailDetailsRq {
 	}
 	public String getCaptchaToken() {
 		return captchaToken;
-	}
-	public void setCaptchaToken(String captchaToken) {
-		this.captchaToken = captchaToken;
-	}
-	public boolean isUseAccela() {
-		return useAccela;
-	}
-	public void setUseAccela(boolean useAccela) {
-		this.useAccela = useAccela;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
 	}
 }

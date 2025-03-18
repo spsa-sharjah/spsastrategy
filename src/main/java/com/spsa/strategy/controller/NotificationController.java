@@ -43,7 +43,7 @@ public class NotificationController {
 											  @RequestHeader(name = "Accept-Language", required = false) Locale locale,
 											  @RequestBody Map<String, String> payload) {
         Users user = (Users) request.getAttribute("user");
-        boolean sent = service.sendnotification(user.getUsername(), payload);
+        boolean sent = service.sendnotification(locale, user.getUsername(), payload);
 		return sent ? ResponseEntity.ok(new MessageResponse(messageService.getMessage("success_operation", locale))) : 
 					  ResponseEntity.ok(new MessageResponse(messageService.getMessage("server_error", locale), 504));
     }

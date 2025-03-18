@@ -20,6 +20,8 @@ public class Settings {
 	private String adminkey;
 	
 	private boolean isdefault;
+
+	private boolean sendemailnotif;
 	
 	public Settings() {
 	}
@@ -52,5 +54,13 @@ public class Settings {
 
 	public void setIsdefault(boolean isdefault) {
 		this.isdefault = isdefault;
+	}
+
+	public boolean isSendemailnotif() {
+		return sendemailnotif;
+	}
+
+	public void setSendemailnotif(boolean sendemailnotif) {
+		this.sendemailnotif = sendemailnotif;
 	}
 }
