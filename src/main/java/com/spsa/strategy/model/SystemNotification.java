@@ -25,8 +25,10 @@ public class SystemNotification {
     private String receiverusername;
 
     private String title;
-    
+
     private String message;
+    
+    private String link;
 
     private boolean seen;
 
@@ -38,7 +40,7 @@ public class SystemNotification {
 	}
 
 	public SystemNotification(String tokenid, String senderusername, String receiverusername, String title,
-			String message) {
+			String message, String link) {
 		super();
 		this.tokenid = tokenid;
 		this.senderusername = senderusername;
@@ -46,6 +48,7 @@ public class SystemNotification {
 		this.title = title;
 		this.message = message;
 		this.seen = false;
+		this.link = link;
 		this.datetime = new Date();
 	}
 
@@ -111,5 +114,13 @@ public class SystemNotification {
 
 	public void setDatetime(Date datetime) {
 		this.datetime = datetime;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 }

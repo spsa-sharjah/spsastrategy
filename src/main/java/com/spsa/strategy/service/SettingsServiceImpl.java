@@ -20,6 +20,12 @@ public class SettingsServiceImpl implements SettingsService {
 
 	@Value("${spring.spsalogs.api.key}") 
 	private String spsalogsapikey;
+
+	@Value("${spring.serverkey}") 
+	private String serverkey;
+
+	@Value("${spring.serverpass}") 
+	private String serverpass;
 	
 	@Autowired
 	private SettingsRepository settingsRepository;
@@ -50,4 +56,14 @@ public class SettingsServiceImpl implements SettingsService {
         }
 		return ResponseEntity.ok(years);
     }
+
+	@Override
+	public String returnServerkey() {
+		return serverkey;
+	}
+
+	@Override
+	public String returnServerpass() {
+		return serverpass;
+	}
 }

@@ -87,7 +87,7 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 		try {
 			Page<Sectiongoals> pages = null;
 			if (sortcolumn == null) sortcolumn = "date_time";
-			Specification<Sectiongoals> spec = JPASpecification.returnSectiongoalSpecification(search, sortcolumn, descending, goalid, user.getParentrole());
+			Specification<Sectiongoals> spec = JPASpecification.returnSectiongoalSpecification(search, sortcolumn, descending, goalid, user.getParentrole(), user.getUser_role());
 		    Pageable pageable = PageRequest.of(page, size);
 		    pages = goalsRepository.findAll(spec, pageable);
 

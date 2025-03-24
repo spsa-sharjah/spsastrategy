@@ -15,7 +15,7 @@ public interface NotificationService {
 
 	public boolean sendnotification(Locale locale, String username, Map<String, String> payload);
 
-	public boolean sendnotifications(Locale locale, String team, String role, Map<String, String> payload);
+	public String sendnotifications(HttpServletRequest request, Locale locale, String fromusername, String team, String role, Map<String, String> payload);
 
 	public ResponseEntity<?> list(Locale locale, Integer page, Integer size, String search, String sortcolumn,
 			Boolean descending, Integer draw, Users user, boolean isadmin, Boolean assender);

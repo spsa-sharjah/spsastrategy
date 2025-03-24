@@ -8,6 +8,7 @@ import com.spsa.strategy.builder.request.EndorseGoalsRq;
 import com.spsa.strategy.builder.request.YearlySettingsRq;
 import com.spsa.strategy.model.Users;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 public interface GoalService {
@@ -17,12 +18,12 @@ public interface GoalService {
 	ResponseEntity<?> authoritygoaltree(Users user, Locale locale, String year, String team, boolean showdepartment,
 			boolean showsection, boolean showevidence);
 
-	ResponseEntity<?> authoritygoalendorse(Users user, Locale locale, @Valid EndorseGoalsRq req);
+	ResponseEntity<?> authoritygoalendorse(HttpServletRequest request, Users user, Locale locale, @Valid EndorseGoalsRq req);
 
 	ResponseEntity<?> yearlysettings(Users user, Locale locale, String year);
 
 	ResponseEntity<?> yearlysettingsave(Users user, Locale locale, @Valid YearlySettingsRq req);
 
-	ResponseEntity<?> yearlysettingendorsementready(Users user, Locale locale, String year);
+	ResponseEntity<?> yearlysettingendorsementready(HttpServletRequest request, Users user, Locale locale, String year);
 
 }

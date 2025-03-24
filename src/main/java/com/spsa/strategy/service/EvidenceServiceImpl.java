@@ -82,6 +82,9 @@ public class EvidenceServiceImpl implements EvidenceService {
 	@Value("${spring.file.uploaddir}") 
     private String fileuploaddir;
 
+	@Value("${spring.strategy.endpoint.api}") 
+    private String strategyendpointapi;
+
 	@Value("${spring.file.accessurl}") 
     private String fileaccessurl;
 
@@ -179,7 +182,7 @@ public class EvidenceServiceImpl implements EvidenceService {
             // Save file metadata to the database
             FileEvidence metadata = new FileEvidence();
             metadata.setFilename(fileName);
-            metadata.setFilepath(fileaccessurl + fileName);
+            metadata.setFilepath(strategyendpointapi + fileaccessurl + fileName);
             metadata.setFileimage(metadata.getFilepath());
             metadata.setUsername(user.getUsername()); // uploaded by username
             metadata.setDate_time(new Date());

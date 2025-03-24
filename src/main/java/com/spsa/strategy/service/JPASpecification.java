@@ -91,8 +91,17 @@ public class JPASpecification {
 		      if (goalid != null)
 		    	  andPredicates.add(criteriaBuilder.equal(root.get("authgoalid"), goalid));
 
-		      if (parentrole != null)
+		      if (parentrole != null && currrentuserrole != null) {
+		          Predicate orCondition = criteriaBuilder.or(
+	                  criteriaBuilder.like(root.get("userrole"), parentrole),
+	                  criteriaBuilder.like(root.get("userrole"), currrentuserrole)
+	              );
+		          andPredicates.add(orCondition);
+		      }
+		      else if (parentrole != null)
 		    	  andPredicates.add(criteriaBuilder.equal(root.get("userrole"), parentrole));
+		      else if (currrentuserrole != null)
+		    	  andPredicates.add(criteriaBuilder.equal(root.get("userrole"), currrentuserrole));
 
 		      if (showApprovedOnly) {
 		    	  andPredicates.add(criteriaBuilder.notEqual(root.get("status"), GoalStatus.New.name()));
@@ -116,9 +125,9 @@ public class JPASpecification {
 				Root<Restrictedgoalsuserlevel> restrictedGoalsRoot = subquery.from(Restrictedgoalsuserlevel.class);  // From restrictedgoals table
 				subquery.select(restrictedGoalsRoot.get("goalid"));  // Selecting goalId from restrictedgoals
 				
-				// Add the condition where userrole in restrictedgoals should match the provided userrole
-		        Predicate userroleCondition = criteriaBuilder.equal(restrictedGoalsRoot.get("userrole"), currrentuserrole);
-		        subquery.where(userroleCondition);  // Adding userrole filter to the subquery
+//				// Add the condition where userrole in restrictedgoals should match the provided userrole
+//		        Predicate userroleCondition = criteriaBuilder.equal(restrictedGoalsRoot.get("userrole"), currrentuserrole);
+//		        subquery.where(userroleCondition);  // Adding userrole filter to the subquery
 				
 				// Predicate to exclude goals in restrictedgoals
 				Predicate notInRestrictedGoals = criteriaBuilder.not(criteriaBuilder.in(root.get("id")).value(subquery));
@@ -131,7 +140,7 @@ public class JPASpecification {
 		  };
 	}
 
-	public static Specification<Sectiongoals> returnSectiongoalSpecification(String search, String sortColumn, Boolean descending, String goalid, String parentrole) {
+	public static Specification<Sectiongoals> returnSectiongoalSpecification(String search, String sortColumn, Boolean descending, String goalid, String parentrole, String currrentuserrole) {
 
 		 return (root, query, criteriaBuilder) -> {
 		      List<Predicate> andPredicates = new ArrayList<>(); // For AND conditions
@@ -144,8 +153,17 @@ public class JPASpecification {
 		      if (goalid != null)
 		    	  andPredicates.add(criteriaBuilder.equal(root.get("depgoalid"), goalid));
 
-		      if (parentrole != null)
+		      if (parentrole != null && currrentuserrole != null) {
+		          Predicate orCondition = criteriaBuilder.or(
+	                  criteriaBuilder.like(root.get("userrole"), parentrole),
+	                  criteriaBuilder.like(root.get("userrole"), currrentuserrole)
+	              );
+		          andPredicates.add(orCondition);
+		      }
+		      else if (parentrole != null)
 		    	  andPredicates.add(criteriaBuilder.equal(root.get("userrole"), parentrole));
+		      else if (currrentuserrole != null)
+		    	  andPredicates.add(criteriaBuilder.equal(root.get("userrole"), currrentuserrole));
 		      
 		      if (search != null) {
 		          String searchPattern =  "%" + search + "%";

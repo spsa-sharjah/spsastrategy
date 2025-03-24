@@ -129,8 +129,8 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			Specification<Departmentgoals> spec = JPASpecification.returnDepartmentgoalSpecification(search, sortcolumn, descending, goalid, user.getUser_role(), user.getParentrole(), showApprovedOnly);
 
 			if (all != null && all == true) {
-				List<Departmentgoals> allusersbysearch = goalsRepository.findAll(spec);
-				return ResponseEntity.ok(allusersbysearch);
+				List<Departmentgoals> allbysearch = goalsRepository.findAll(spec);
+				return ResponseEntity.ok(allbysearch);
 			}
 			
 			Pageable pageable = PageRequest.of(page, size);

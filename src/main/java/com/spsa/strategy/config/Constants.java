@@ -43,6 +43,7 @@ public class Constants {
 	public static final String TOUSER_PARAM = "touser";
 	public static final String TOEMAIL_PARAM = "toemail";
 	public static final String SA = "SA#*YEAR*#";
+	public static final String LINK_PARAM = "link";
 	
 	public static String generateOTP(int length) {
 		String numbers = "0123456789";

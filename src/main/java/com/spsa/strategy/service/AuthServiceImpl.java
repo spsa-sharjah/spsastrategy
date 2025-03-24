@@ -24,8 +24,10 @@ import jakarta.validation.Valid;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+	@Value("${spring.auth.endpoint.api}") 
+	private String authendpointapi;
 	@Value("${spring.spsa.auth.api}") 
-	private String api;
+	private String authapi;
 
 	@Autowired
 	MessageService messageService;
@@ -42,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
 				MessageResponse messageResponse = new MessageResponse("token is required", 310);
 				return new ResponseEntity<MessageResponse>(messageResponse, HttpStatus.OK);
 			}
-			VerifyAuth verifyAuth = new VerifyAuth(api, apikey, apisecret, username, token, lang);
+			VerifyAuth verifyAuth = new VerifyAuth(authendpointapi + authapi, apikey, apisecret, username, token, lang);
 			String verifyAuthRes = verifyAuth.callAsPost();
 			if (verifyAuthRes == null) {
 

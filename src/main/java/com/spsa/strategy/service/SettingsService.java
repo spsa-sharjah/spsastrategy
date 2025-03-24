@@ -11,4 +11,7 @@ public interface SettingsService {
 	String getspsalogskey();
 	
 	ResponseEntity<?> yearslist(int fromyear);
+
+	String returnServerkey();
+	String returnServerpass();
 }

@@ -6,7 +6,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +31,7 @@ import com.spsa.strategy.model.SystemNotification;
 import com.spsa.strategy.model.Users;
 import com.spsa.strategy.repository.NotificationTokenRepository;
 import com.spsa.strategy.repository.SystemNotificationRepository;
+import com.spsa.strategy.rest.call.TeamRoleUsersList;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -48,6 +52,12 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Autowired
     private EmailService emailService;
+
+	@Value("${spring.auth.endpoint.api}") 
+	private String authendpointapi;
+
+	@Value("${spring.spsa.teamroleuserslist.api}") 
+	private String teamroleuserslistapi;
 	
 
     public void registertoken(HttpServletRequest request, Users user, Map<String, String> payload) {
@@ -69,7 +79,7 @@ public class NotificationServiceImpl implements NotificationService {
 		return newid;
 	}
 
-	public boolean sendnotification(Locale locale, String username, Map<String, String> payload) {
+	public boolean sendnotification(Locale locale, String fromusername, Map<String, String> payload) {
 		try {
 			if (!payload.containsKey(Constants.TITLE_PARAM) ||
 					!payload.containsKey(Constants.MESSAGE_PARAM) ||
@@ -79,6 +89,7 @@ public class NotificationServiceImpl implements NotificationService {
 			String title = payload.get(Constants.TITLE_PARAM);
 			String message = payload.get(Constants.MESSAGE_PARAM);
 			String touser = payload.get(Constants.TOUSER_PARAM);
+			String link = payload.containsKey(Constants.LINK_PARAM) ? payload.get(Constants.LINK_PARAM) : null;
 			String toemail = payload.containsKey(Constants.TOEMAIL_PARAM) ? payload.get(Constants.TOEMAIL_PARAM) : null;
 	        List<NotificationToken> notiftokens = repository.findByUsername(touser);
 	        List<String> tokens = new ArrayList<String>();
@@ -103,7 +114,7 @@ public class NotificationServiceImpl implements NotificationService {
 		    		}
 		        }
 	        String tokenid = tokens.size() > 0 ? String.join(", ", tokens) : null;
-	        SystemNotification sysnotif = new SystemNotification(tokenid, touser, username, title, message);
+	        SystemNotification sysnotif = new SystemNotification(tokenid, fromusername, touser, title, message, link);
 	        systemNotificationRepository.save(sysnotif);
 	        
 	        Settings settings = settingsService.returndefaultSettings(); 
@@ -111,7 +122,7 @@ public class NotificationServiceImpl implements NotificationService {
 	        		toemail != null &&
 	        		settings.isSendemailnotif()) {
 				String subject = messageService.getMessage("notification", locale);
-				String msgBody = "You received a new SPSA notification in the Strategy service, from the '" + username + "', " + message;
+				String msgBody = "You received a new SPSA notification in the Strategy service, from the '" + fromusername + "', " + message;
 				EmailDetailsRq rq = new EmailDetailsRq(toemail, msgBody, subject + title);
 				emailService.sendSimpleMail(rq);
 	        }
@@ -197,8 +208,39 @@ public class NotificationServiceImpl implements NotificationService {
 	}
 
 	@Override
-	public boolean sendnotifications(Locale locale, String team, String role, Map<String, String> payload) {
-		// Call auth service to get all users by team or by role
-		return false;
+	public String sendnotifications(HttpServletRequest request, Locale locale, String fromusername, String team, String role, Map<String, String> payload) {
+
+		try {
+			String apikey = request.getHeader("apikey");
+			String apisecret = request.getHeader("apisecret");
+			TeamRoleUsersList teamRoleUsersList = new TeamRoleUsersList(authendpointapi + teamroleuserslistapi, apikey, apisecret, settingsService.returnServerkey(), settingsService.returnServerpass(), locale.getLanguage(), team, role);
+			String teamRoleUsersListRes = teamRoleUsersList.callAsPost();
+			if (teamRoleUsersListRes == null)
+				return "ERROR_RETRIEVE_USERS_LIST";
+	
+			JSONArray teamRoleUsersListResonse = new JSONArray(teamRoleUsersListRes);
+			if (teamRoleUsersListResonse == null || teamRoleUsersListResonse.length() == 0)
+				return "EMPTY_RESPONSE";
+
+			List<Users> users = new ArrayList<Users>();
+			for (int i = 0; i < teamRoleUsersListResonse.length(); i++) {
+			    JSONObject jsonObject = teamRoleUsersListResonse.getJSONObject(i);
+				Users user = new Users(jsonObject);
+				users.add(user);
+			}
+			
+			for (Users usr : users) {
+				payload.put(Constants.TOUSER_PARAM, usr.getUsername());
+				payload.put(Constants.TOEMAIL_PARAM, usr.getEmail());
+				sendnotification(locale, fromusername, payload);
+			}
+			
+			return "SUCCESS";
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "EXCEPTION";
+		}
+		
 	}
 }

@@ -393,7 +393,7 @@ public class AdminController {
 										  		  @Valid @RequestBody EndorseGoalsRq req) {
 
         Users user = (Users) request.getAttribute("user");
-		return goalService.authoritygoalendorse(user, locale, req);
+		return goalService.authoritygoalendorse(request, user, locale, req);
 	}
 
 	@RequestMapping(value = "/authority/yearly/settings", method = RequestMethod.POST)
@@ -420,7 +420,7 @@ public class AdminController {
 												  @RequestHeader(name = "year", required = true) String year) {
 
         Users user = (Users) request.getAttribute("user");
-		return goalService.yearlysettingendorsementready(user, locale, year);
+		return goalService.yearlysettingendorsementready(request, user, locale, year);
 	}
 	
 	@RequestMapping(value = "/notification/list", method = RequestMethod.POST)
