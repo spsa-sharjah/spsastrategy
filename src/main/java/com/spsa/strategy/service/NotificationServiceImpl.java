@@ -95,23 +95,25 @@ public class NotificationServiceImpl implements NotificationService {
 	        List<String> tokens = new ArrayList<String>();
 	        if (notiftokens != null && notiftokens.size() > 0)
 		        for (NotificationToken token : notiftokens) {
-		        	try {
-			            Notification notification = Notification.builder()
-			                    .setTitle(title)
-			                    .setBody(message)
-			                    .build();
-			
-			            Message firebaseMessage = Message.builder()
-			                    .setToken(token.getToken())
-			                    .setNotification(notification)
-			                    .build();
-			
-			            FirebaseMessaging.getInstance().send(firebaseMessage);
-			            tokens.add(token.getToken());
-		    		} catch (Exception e) {
-		    			e.printStackTrace();
-		    			repository.deleteByToken(token.getToken()); // revoked by Firebase
-		    		}
+		            tokens.add(token.getToken());
+		        	new Thread(() -> {
+			        	try {
+				            Notification notification = Notification.builder()
+				                    .setTitle(title)
+				                    .setBody(message)
+				                    .build();
+				
+				            Message firebaseMessage = Message.builder()
+				                    .setToken(token.getToken())
+				                    .setNotification(notification)
+				                    .build();
+				
+				            FirebaseMessaging.getInstance().send(firebaseMessage);
+			    		} catch (Exception e) {
+			    			e.printStackTrace();
+			    			repository.deleteByToken(token.getToken()); // revoked by Firebase
+			    		}
+		        	}).start();
 		        }
 	        String tokenid = tokens.size() > 0 ? String.join(", ", tokens) : null;
 	        SystemNotification sysnotif = new SystemNotification(tokenid, fromusername, touser, title, message, link);

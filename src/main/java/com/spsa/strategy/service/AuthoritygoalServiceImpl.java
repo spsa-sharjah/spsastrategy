@@ -96,7 +96,6 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
 			authService.rolegoalsaccesssave(locale, user, rq);
 			
-			
 			return ResponseEntity.ok(obj);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -15,7 +15,8 @@ import com.spsa.strategy.model.Authorization;
 public class Utils {
 
 	public static boolean isapiauthorized(String url, String menuauthid, List<Authorization> authorizedapis) {
-    	if (authorizedapis == null || authorizedapis.size() == 0)
+
+		if (authorizedapis == null || authorizedapis.size() == 0)
     		return false;
     	for (Authorization auth : authorizedapis) {
     		if (url.contains(auth.getApi()) && menuauthid != null && auth.getMenuauthid().equals(menuauthid))
