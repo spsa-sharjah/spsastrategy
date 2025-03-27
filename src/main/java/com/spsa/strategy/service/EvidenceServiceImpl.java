@@ -451,7 +451,7 @@ public class EvidenceServiceImpl implements EvidenceService {
         		Optional<Sectiongoals> parentgoalopt = sectiongoalsRepository.findById(req.getGoalid());
         		if (parentgoalopt.isPresent()) {
             		Sectiongoals parentgoal = parentgoalopt.get();
-            		parentgoal.setYearlyweight(parentgoal.getYearlyexpectedweight());
+            		parentgoal.setYearlyweight(req.getStatus().equals(EvidenceStatus.EvidenceApproved.name()) ? parentgoal.getYearlyexpectedweight() : 0);
                     parentgoal.setStatus(parentstatus);
                     sectiongoalsRepository.save(parentgoal);
                     

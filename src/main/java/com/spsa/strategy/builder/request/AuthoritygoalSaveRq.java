@@ -51,7 +51,7 @@ public class AuthoritygoalSaveRq {
 		Authoritygoals goal = new Authoritygoals();
 		goal.setDate_time(new Date());
 		goal.setId(this.id);
-		goal.setGoal(this.goal);
+		goal.setGoal(Utils.decodeString(this.goal));
 		goal.setGoalar(this.goalar);
 		goal.setTeam(user.getTeam());
 		goal.setRef(reference);

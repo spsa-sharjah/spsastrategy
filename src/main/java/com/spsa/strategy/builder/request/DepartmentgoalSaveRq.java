@@ -59,7 +59,7 @@ public class DepartmentgoalSaveRq {
 		goal.setDate_time(new Date());
 		goal.setAuthgoalid(this.authgoalid);
 		goal.setId(this.id);
-		goal.setGoal(this.goal);
+		goal.setGoal(Utils.decodeString(this.goal));
 		goal.setGoalar(this.goalar);
 		goal.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
 		goal.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));

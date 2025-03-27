@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spsa.strategy.model.Authorization;
@@ -79,5 +81,13 @@ public class Utils {
         calendar.setTime(date);  // Set the calendar's time to the given date
         calendar.add(Calendar.MONTH, months);  // Add the specified number of months
         return calendar.getTime();  // Return the updated date
+    }
+    
+    public static String decodeString(String str) {
+    	try {
+    		return StringEscapeUtils.unescapeHtml4(str);
+    	} catch (Exception e) {
+    	}
+    	return str;
     }
 }
