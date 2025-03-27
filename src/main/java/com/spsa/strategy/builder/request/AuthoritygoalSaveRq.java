@@ -45,7 +45,7 @@ public class AuthoritygoalSaveRq {
     
 	private List<String> roles;
 
-	public Authoritygoals returnAuthoritygoals(String username, Users user, String menuauthid, boolean skipendorsement, String reference) {
+	public Authoritygoals returnAuthoritygoals(String username, Users user, String menuauthid, boolean skipendorsement, String reference, Authoritygoals existingauthgoal) {
 		List<Authorization> authorizedapis = user.getAuthorizedapis();
 		String userrole = user.getUser_role(); 
 		Authoritygoals goal = new Authoritygoals();
@@ -55,16 +55,21 @@ public class AuthoritygoalSaveRq {
 		goal.setGoalar(this.goalar);
 		goal.setTeam(user.getTeam());
 		goal.setRef(reference);
-		
+
+		if (existingauthgoal != null) goal.setYearlyweight(existingauthgoal.getYearlyweight()); // save old data
 		if (Utils.isapiauthorized(CustomAction.UpdateWeight.name(), menuauthid, authorizedapis))
 			goal.setYearlyweight(Utils.concertStringtoInteger(this.yearlyweight));
+
+		if (existingauthgoal != null) goal.setYearlyexpectedweight(existingauthgoal.getYearlyexpectedweight());
 		if (Utils.isapiauthorized(CustomAction.UpdateExpectedWeight.name(), menuauthid, authorizedapis))
 			goal.setYearlyexpectedweight(Utils.concertStringtoInteger(this.yearlyexpectedweight));
 
+		if (existingauthgoal != null) goal.setDeadline(existingauthgoal.getDeadline());
 		if (Utils.isapiauthorized(CustomAction.UpdateGoalDeadline.name(), menuauthid, authorizedapis))
 			goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
 
-		goal.setStatus(GoalStatus.New.name());
+		if (existingauthgoal != null) goal.setDeadline(existingauthgoal.getDeadline());
+		else goal.setStatus(GoalStatus.New.name());
 		if (Utils.isapiauthorized(CustomAction.UpdateGoalStatus.name(), menuauthid, authorizedapis))
 			goal.setStatus(this.status);
 		else if (goal.getStatus() == null)

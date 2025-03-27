@@ -54,12 +54,14 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 	public ResponseEntity<?> goalsave(Locale locale, @Valid AuthoritygoalSaveRq req, String username, Users user) {
 
 		try {
-			
+			Authoritygoals existingauthgoal = null;
 			Integer remainingweight = calculateweight(req.getYear(), req.getId());
 			if (req.getId() != null && !req.getId().trim().equals("")) {
 				Optional<Authoritygoals> opt = goalsRepository.findById(req.getId());
-				if (opt.isPresent())
-					req.setId(opt.get().getId());
+				if (opt.isPresent()) {
+					existingauthgoal = opt.get();
+					req.setId(existingauthgoal.getId());
+				}
 				else 
 					req.setId(generateUniqueId());
 			}
@@ -89,8 +91,8 @@ public class AuthoritygoalServiceImpl implements AuthoritygoalService {
 				yearlyGoalsSettingsRepository.save(yearlyGoalsSettings);
 			}
 			
-			String reference = returnuniquereference(req.getYear());
-			Authoritygoals obj = req.returnAuthoritygoals(username, user, Menuauthid.manageauthoritygoals.name(), skipendorsement, reference);
+			String reference = existingauthgoal == null ? returnuniquereference(req.getYear()) : existingauthgoal.getRef();
+			Authoritygoals obj = req.returnAuthoritygoals(username, user, Menuauthid.manageauthoritygoals.name(), skipendorsement, reference, existingauthgoal);
 			obj = goalsRepository.save(obj);
 			
 			ResrictedGoalRolesRq rq = new ResrictedGoalRolesRq(req.getId(), req.getRoles());
