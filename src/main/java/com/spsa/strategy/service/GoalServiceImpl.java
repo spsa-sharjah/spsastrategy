@@ -203,7 +203,7 @@ public class GoalServiceImpl implements GoalService {
 
 			Map<String, String> payload = new HashMap<String, String>();
 	        payload.put(Constants.TITLE_PARAM, "Authority goal endorsed");
-	        payload.put(Constants.MESSAGE_PARAM, "The Chairman has endorsed the Authority goal reference" + reference);
+	        payload.put(Constants.MESSAGE_PARAM, "The Chairman has endorsed the Authority goal reference " + reference);
 	        payload.put(Constants.LINK_PARAM, reference);
 			for (Users usr : users) {
 				payload.put(Constants.TOUSER_PARAM, usr.getUsername());

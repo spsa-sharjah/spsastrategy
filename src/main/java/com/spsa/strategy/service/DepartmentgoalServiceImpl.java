@@ -60,11 +60,13 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 
 		try {
 			Integer remainingweight = calculateweight(req.getAuthgoalid(), req.getId());
+			Departmentgoals existingdeptgoal = null;
 			if (req.getId() != null && !req.getId().trim().equals("")) {
 				Optional<Departmentgoals> opt = goalsRepository.findById(req.getId());
-				if (opt.isPresent())
-					req.setId(opt.get().getId());
-				else 
+				if (opt.isPresent()) {
+					existingdeptgoal = opt.get();
+					req.setId(existingdeptgoal.getId());
+				} else 
 					req.setId(generateUniqueId());
 			}
 			else
@@ -82,7 +84,7 @@ public class DepartmentgoalServiceImpl implements DepartmentgoalService {
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
 			
-			Departmentgoals obj = req.returnDepartmentgoals(username, user);
+			Departmentgoals obj = req.returnDepartmentgoals(username, user, existingdeptgoal);
 			obj = goalsRepository.save(obj);
 			
 			updatestatus(req.getAuthgoalid());

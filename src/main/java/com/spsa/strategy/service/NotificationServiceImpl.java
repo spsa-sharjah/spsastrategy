@@ -118,15 +118,21 @@ public class NotificationServiceImpl implements NotificationService {
 	        String tokenid = tokens.size() > 0 ? String.join(", ", tokens) : null;
 	        SystemNotification sysnotif = new SystemNotification(tokenid, fromusername, touser, title, message, link);
 	        systemNotificationRepository.save(sysnotif);
-	        
+
 	        Settings settings = settingsService.returndefaultSettings(); 
 	        if (settings != null &&
 	        		toemail != null &&
 	        		settings.isSendemailnotif()) {
-				String subject = messageService.getMessage("notification", locale);
-				String msgBody = "You received a new SPSA notification in the Strategy service, from the '" + fromusername + "', " + message;
-				EmailDetailsRq rq = new EmailDetailsRq(toemail, msgBody, subject + title);
-				emailService.sendSimpleMail(rq);
+	        	new Thread(() -> {
+	        		try {
+							String subject = messageService.getMessage("notification", locale);
+							String msgBody = "You received a new SPSA notification in the Strategy service, from the '" + fromusername + "', " + message;
+							EmailDetailsRq rq = new EmailDetailsRq(toemail, msgBody, subject + title);
+							emailService.sendSimpleMail(rq);
+		    		} catch (Exception e) {
+		    			e.printStackTrace();
+		    		}
+	        	});
 	        }
 		} catch (Exception e) {
 			e.printStackTrace();

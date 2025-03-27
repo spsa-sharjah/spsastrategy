@@ -6,6 +6,8 @@ import java.util.Date;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.spsa.strategy.config.SanitizedStringDeserializer;
 import com.spsa.strategy.config.Utils;
+import com.spsa.strategy.enumeration.CustomAction;
+import com.spsa.strategy.enumeration.Menuauthid;
 import com.spsa.strategy.model.Sectiongoals;
 import com.spsa.strategy.model.Users;
 
@@ -39,7 +41,7 @@ public class SectiongoalSaveRq {
     @JsonDeserialize(using = SanitizedStringDeserializer.class)
 	private String solution;
 
-	public Sectiongoals returnSectiongoals(String username, Users user) {
+	public Sectiongoals returnSectiongoals(String username, Users user, Sectiongoals sectgoal) {
 		Sectiongoals goal = new Sectiongoals();
 		goal.setDate_time(new Date());
 		goal.setDepgoalid(this.depgoalid);
@@ -51,8 +53,15 @@ public class SectiongoalSaveRq {
 		goal.setDeadline(Utils.convertStringToDate(this.deadline, null));
 		goal.setStatus(this.status);
 		goal.setUsername(username);
-		goal.setReason(this.reason);
-		goal.setSolution(this.solution);
+		
+		if (sectgoal != null) goal.setReason(sectgoal.getReason()); // save old data
+		if (Utils.isapiauthorized(CustomAction.UpdateReason.name(), Menuauthid.managedepartmentgoals.name(), user.getAuthorizedapis())) 
+			goal.setReason(this.reason);
+
+		if (sectgoal != null) goal.setSolution(sectgoal.getSolution());
+		if (Utils.isapiauthorized(CustomAction.UpdateSolution.name(), Menuauthid.managedepartmentgoals.name(), user.getAuthorizedapis())) 
+			goal.setSolution(this.solution);
+		
 		goal.setUserrole(user.getUser_role());
 		goal.setTeam(user.getTeam());
 		return goal;

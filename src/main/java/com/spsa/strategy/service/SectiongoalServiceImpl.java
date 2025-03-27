@@ -50,11 +50,13 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 
 		try {
 			Integer remainingweight = calculateweight(req.getDepgoalid(), req.getId());
+			Sectiongoals existingsectgoal = null;
 			if (req.getId() != null && !req.getId().trim().equals("")) {
 				Optional<Sectiongoals> opt = goalsRepository.findById(req.getId());
-				if (opt.isPresent())
-					req.setId(opt.get().getId());
-				else 
+				if (opt.isPresent()) {
+					existingsectgoal = opt.get();
+					req.setId(existingsectgoal.getId());
+				} else 
 					req.setId(generateUniqueId());
 			}
 			else
@@ -72,7 +74,7 @@ public class SectiongoalServiceImpl implements SectiongoalService {
 			if(yearlyweight > yearlyexpectedweight)
 				return ResponseEntity.ok(new MessageResponse(messageService.getMessage("invalid_params", locale), 114));
 			
-			Sectiongoals obj = req.returnSectiongoals(username, user);
+			Sectiongoals obj = req.returnSectiongoals(username, user, existingsectgoal);
 			obj = goalsRepository.save(obj);
 			return ResponseEntity.ok(obj);
 		} catch (Exception e) {
